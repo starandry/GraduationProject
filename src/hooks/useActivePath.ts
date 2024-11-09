@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+/*import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../stores/store.ts';
 import { addPoints } from '../stores/slices/pathSlice.ts';
 
@@ -11,4 +11,4 @@ export const useActivePath = () => {
     };
 
     return { activePath, handleLinkClick };
-};
+};*/

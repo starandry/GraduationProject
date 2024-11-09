@@ -3,7 +3,7 @@ import styles from './userProfile.module.scss';
 import { Hamburger } from "../../UI/Icon/icon.component.tsx";
 import { menuItems } from '../../../routes/menuRoutes.tsx';
 import { Link } from "react-router-dom";
-import { useActivePath } from '../../../hooks/useActivePath.ts';
+/*import { useActivePath } from '../../../hooks/useActivePath.ts';*/
 
 interface UserProfileProps {
     name: string;
@@ -12,7 +12,7 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ name, circleColor }) => {
     const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
-    const { activePath, handleLinkClick } = useActivePath();
+   /* const { activePath, handleLinkClick } = useActivePath();*/
 
     const toggleHamburger = () => {
         setIsHamburgerOpen(!isHamburgerOpen);
@@ -36,8 +36,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ name, circleColor }) => {
                     <Link
                         key={item.path}
                         to={item.path}
-                        className={`${styles.menuLink} ${activePath === item.path ? styles.active : ''}`}
-                        onClick={() => handleLinkClick(item.path)}
+                      /*  className={`${styles.menuLink} ${activePath === item.path ? styles.active : ''}`}
+                        onClick={() => handleLinkClick(item.path)}*/
                     >
                         {item.icon}
                         <span className={styles.text}>{item.label}</span>

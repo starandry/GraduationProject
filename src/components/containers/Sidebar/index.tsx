@@ -2,10 +2,10 @@ import React from "react";
 import {Routes, Route, Link} from 'react-router-dom';
 import styles from './sidebar.module.scss';
 import { menuItems, routes } from '../../../routes/menuRoutes.tsx';
-import {useActivePath} from "../../../hooks/useActivePath.ts";
+/*import {useActivePath} from "../../../hooks/useActivePath.ts";*/
 
 const Sidebar: React.FC = () => {
-    const { activePath, handleLinkClick } = useActivePath();
+   /* const { activePath, handleLinkClick } = useActivePath();*/
 
     return (
         <div className={styles.sidebarWrapp}>
@@ -15,8 +15,8 @@ const Sidebar: React.FC = () => {
                         <li key={index} className={styles.navItem}>
                             <Link
                                 to={item.path}
-                                className={`${styles.menuLink} ${activePath === item.path ? styles.active : ''}`}
-                                onClick={() => handleLinkClick(item.path)}
+                                /*className={`${styles.menuLink} ${activePath === item.path ? styles.active : ''}`}
+                                onClick={() => handleLinkClick(item.path)}*/
                             >
                                 {item.icon}
                                 <span className={styles.text}>{item.label}</span>

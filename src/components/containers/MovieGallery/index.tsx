@@ -1,27 +1,27 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {MovieCard} from '../../UI/MovieCard';
 import styles from './movieGallery.module.scss';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchHighRatedMoviesAsync, fetchMoviesAsync} from '../../../stores/slices/moviesSlice.ts';
-import {AppDispatch, RootState} from '../../../stores/store.ts';
-import {useLocation} from 'react-router-dom';
-import {MIN_RATING} from "../../../constants/APIconstats.ts";
+import {useFetchMoviesQuery} from "../../../services/moviesApi.ts";
 
 const MovieGallery: React.FC = () => {
-   const dispatch = useDispatch<AppDispatch>();
-   const location = useLocation();
-   const { movies, loading, error, page } = useSelector((state: RootState) => state.movies);
+   const { data: movies, error, isLoading } = useFetchMoviesQuery(1);
 
-   useEffect(() => {
+
+   /*const location = useLocation();*/
+   /*useEffect(() => {
       if (location.pathname === '/' ) {
          dispatch(fetchMoviesAsync(page));
       } else if (location.pathname === '/trends') {
          dispatch(fetchHighRatedMoviesAsync({ page, minRating: MIN_RATING }))
       }
-   }, [dispatch, location.pathname, page]);
+   }, [dispatch, location.pathname, page]);*/
 
-   if (loading && movies.length === 0) return <p>Загрузка...</p>;
-   if (error) return <p>{error}</p>;
+   if (isLoading) return <p>Загрузка...</p>;
+   if (error) {
+      const errorMessage = 'status' in error ? `Ошибка ${error.status}` : 'Неизвестная ошибка';
+      return <p>Ошибка: {errorMessage}</p>;
+   }
+   if (!movies || movies.length === 0) return <p>Нет данных для отображения</p>;
 
    return (
        <div className={styles.movieGallery}>

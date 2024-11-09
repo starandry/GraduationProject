@@ -6,19 +6,19 @@ import {UserProfile} from "../../components/containers/UserProfile";
 import {Header} from "../../components/containers/Header";
 import {Sidebar} from "../../components/containers/Sidebar";
 import styles from './main.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
+/*import { useDispatch, useSelector } from 'react-redux';
 import { incrementPage, loadMoreMoviesAsync } from '../../stores/slices/moviesSlice.ts';
-import {AppDispatch, RootState} from '../../stores/store';
+import {AppDispatch, RootState} from '../../stores/store';*/
 
 
 const Main: React.FC = () => {
-    const dispatch = useDispatch<AppDispatch>();
+   /* const dispatch = useDispatch<AppDispatch>();
     const { page } = useSelector((state: RootState) => state.movies);
 
     const handleShowMore = () => {
         dispatch(incrementPage());
         dispatch(loadMoreMoviesAsync(page));
-    };
+    };*/
 
     const handleSearchChange = (value: string) => {
         // Заглушка: здесь можно будет добавить обработку ввода
@@ -35,7 +35,7 @@ const Main: React.FC = () => {
             <Sidebar/>
             <Footer>
                 <Copyright className='sidebarCopyright'/>
-                <Button className={styles.showMoreButton} type='button' onClick={handleShowMore}>
+                <Button className={styles.showMoreButton} type='button'>
                     <span>Show more</span>
                     <SpinnerIcon/>
                 </Button>
