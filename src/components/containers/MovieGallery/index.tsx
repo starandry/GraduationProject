@@ -5,7 +5,8 @@ import {useFetchMoviesQuery} from "../../../services/moviesApi.ts";
 
 const MovieGallery: React.FC = () => {
    const { data: movies, error, isLoading } = useFetchMoviesQuery(1);
-
+   console.log("Ответ сервера:", movies);
+   console.log("Ошибка:", error);
 
    /*const location = useLocation();*/
    /*useEffect(() => {
@@ -15,7 +16,6 @@ const MovieGallery: React.FC = () => {
          dispatch(fetchHighRatedMoviesAsync({ page, minRating: MIN_RATING }))
       }
    }, [dispatch, location.pathname, page]);*/
-
    if (isLoading) return <p>Загрузка...</p>;
    if (error) {
       const errorMessage = 'status' in error ? `Ошибка ${error.status}` : 'Неизвестная ошибка';
