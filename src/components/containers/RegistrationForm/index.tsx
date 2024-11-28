@@ -5,8 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../../../firebase';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import styles from './registrationForm.module.scss';
-import { useDispatch } from 'react-redux';
-import { setAuthenticated, setUsername as setReduxUsername } from '../../../stores/slices/authSlice.ts'; // Переименовываем экшен
+import {useDispatch, useSelector} from 'react-redux';
+import { setAuthenticated, setUsername as setReduxUsername } from '../../../stores/slices/authSlice.ts';
+import {RootState} from "../../../stores/store.ts"; // Переименовываем экшен
 
 const RegistrationForm: FC = () => {
     const [localUsername, setLocalUsername] = useState<string>('');
@@ -14,8 +15,18 @@ const RegistrationForm: FC = () => {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
+    const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    let form, title;
+
+    if (isDark) {
+        form = styles.registrationForm;
+        title = styles.title;
+    } else {
+        form = `${styles.registrationForm} ${styles.registrationFormLight}`;
+        title = `${styles.title} ${styles.titleLight}`;
+    }
 
     // Проверка существующего пользователя по email
     const isEmailTaken = async (email: string): Promise<boolean> => {
@@ -84,8 +95,8 @@ const RegistrationForm: FC = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.registrationForm}>
-            <h2 className={styles.title}>Sign Up</h2>
+        <form onSubmit={handleSubmit} className={form}>
+            <h2 className={title}>Sign Up</h2>
 
             {error && <p className={styles.error}>{error}</p>}
 

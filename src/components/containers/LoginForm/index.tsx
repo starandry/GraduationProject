@@ -14,6 +14,16 @@ const LoginForm: FC = () => {
     const [error, setError] = useState<string | null>(null); //  для ошибки
     const dispatch = useDispatch();
     const successMessage = useSelector((state: RootState) => state.auth.successMessage);
+    const isDark = useSelector((state: RootState) => state.theme.isDark);
+    let title, form;
+
+    if (isDark) {
+        title = styles.title;
+        form = styles.loginForm;
+    } else {
+        title = `${styles.title} ${styles.titleLight}`;
+        form = `${styles.loginForm} ${styles.loginFormLight}`;
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -31,10 +41,9 @@ const LoginForm: FC = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.loginForm}>
-            <h2 className={styles.title}>Sign In</h2>
+        <form onSubmit={handleSubmit} className={form}>
+            <h2 className={title}>Sign In</h2>
 
-            {/*  сообщение об ошибке, если оно есть */}
             {error && <p className={styles.error}>{error}</p>}
             {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
 

@@ -3,12 +3,24 @@ import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
 import styles from './resetPasswordForm.module.scss';
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { FirebaseError } from "firebase/app"; // FirebaseError для обработки ошибок
+import { FirebaseError } from "firebase/app";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../stores/store.ts"; // FirebaseError для обработки ошибок
 
 const ResetPasswordForm: FC = () => {
     const [email, setEmail] = useState<string>('');
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const isDark = useSelector((state: RootState) => state.theme.isDark);
+    let title, form;
+
+    if (isDark) {
+        title = styles.title;
+        form = styles.resetPasswordForm;
+    } else {
+        title = `${styles.title} ${styles.titleLight}`;
+        form = `${styles.resetPasswordForm} ${styles.resetPasswordFormLight}`;
+    }
 
     const isValidEmail = (email: string): boolean => {
         // Регулярное выражение для проверки email
@@ -59,8 +71,8 @@ const ResetPasswordForm: FC = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.resetPasswordForm}>
-            <h2 className={styles.title}>Reset Password</h2>
+        <form onSubmit={handleSubmit} className={form}>
+            <h2 className={title}>Reset Password</h2>
 
             {message && <p className={styles.success}>{message}</p>}
             {error && <p className={styles.error}>{error}</p>}

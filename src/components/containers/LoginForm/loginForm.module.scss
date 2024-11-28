@@ -10,9 +10,17 @@
   background-color: #242426;
 }
 
+.loginFormLight {
+  background-color: #fff;
+}
+
 .title {
   @include fonts(600, 24px, white, 36px);
   padding-bottom: 40px;
+}
+
+.titleLight {
+  color: #242426;
 }
 
 .forgotPassword {
@@ -44,6 +52,7 @@
 .btnLogin {
   @include fonts(600, 16px, #fff, 24px);
   padding: 16px 0;
+  border: none;
   border-radius: 10px;
   background-color: #7B61FF;
 }

@@ -24,12 +24,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
     const username = useSelector((state: RootState) => state.auth.username);
     const userInitials = username ? username.slice(0, 2).toUpperCase() : "";
     const [showLogout, setShowLogout] = useState(false); //  для отображения компонента logout
-    let compName, compUserIfo;
+    let compName, compUserIfo, compMenuItems;
 
     if (isDark) {
         compName = styles.userName;
+        compMenuItems = styles.menuItems;
     } else {
         compName = `${styles.userName} ${styles.lightUserName}`;
+        compMenuItems = `${styles.menuItems} ${styles.menuItemsLight}`;
     }
 
     if (isHamburgerOpen) {
@@ -62,7 +64,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
                 {showLogout && <Logout/>}
             </div>
 
-            <div className={`${styles.menuItems} ${isHamburgerOpen ? styles.open : ''}`}>
+            <div className={`${compMenuItems} ${isHamburgerOpen ? styles.open : ''}`}>
                 <div className={styles.closeIcon} onClick={closeHamburger}>
                     <CloseIcon />
                 </div>

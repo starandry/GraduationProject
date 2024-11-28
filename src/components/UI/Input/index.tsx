@@ -1,12 +1,20 @@
 import React, { FC } from 'react';
 import styles from './input.module.scss';
 import {InputProps} from "../../../types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../stores/store.ts";
 
 const Input: FC<InputProps> = ({ type, id, label, value, onChange, onInput, placeholder, required = false, className,
                                    containerClassName, labelClassName }) => {
-    const inputClassName = `${styles.input} ${className || ''}`;
+    let inputClassName = `${styles.input} ${className || ''}`;
     const containerClass = `${styles.inputContainer} ${containerClassName || ''}`;
-    const labelClass = `${styles.label} ${labelClassName || ''}`;
+    let labelClass = `${styles.label} ${labelClassName || ''}`;
+    const isDark = useSelector((state: RootState) => state.theme.isDark);
+
+    if (!isDark) {
+        labelClass = `${styles.label} ${labelClassName} ${styles.labelLight}`;
+        inputClassName = `${styles.input} ${className} ${styles.inputLight}`;
+    }
 
     return (
         <div className={containerClass}>

@@ -26,7 +26,7 @@ export type InputProps = {
     label?: string;
     value?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onInput?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     placeholder: string;
     required?: boolean;
     className?: string;

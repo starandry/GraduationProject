@@ -10,9 +10,17 @@
   background-color: #242426;
 }
 
+.registrationFormLight {
+  background-color: #ffffff;
+}
+
 .title {
   @include fonts(600, 24px, white, 36px);
   padding-bottom: 40px;
+}
+
+.titleLight {
+  color: #242426;
 }
 
 .basement {
@@ -37,6 +45,7 @@
   color: white;
   border-radius: 10px;
   background-color: #7B61FF;
+  border: none;
 }
 
 .inputUsername,
