@@ -1,15 +1,12 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import styles from './background.module.scss';
 import {useLocation} from "react-router-dom";
 import { RootState } from '../../../stores/store.ts';
 import {useSelector} from "react-redux";
 import '../../../styles/_globals.scss';
+import { ComponentWithChildren } from "../../../types";
 
-type BackgroundProps = {
-    children: ReactNode;
-};
-
-const Background: React.FC<BackgroundProps> = ({ children }) => {
+const Background: React.FC<ComponentWithChildren> = ({ children }) => {
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     const location = useLocation();
     const currentPath = location.pathname;

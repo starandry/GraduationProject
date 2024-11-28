@@ -44,6 +44,19 @@
   background-color: #323537;
 }
 
+.iconPanelLight {
+  background-color: #80858B;
+
+  svg path:hover{
+    fill: #fff;
+  }
+
+  svg:hover circle,
+  svg:hover path {
+    stroke: #fff;
+  }
+}
+
 .divider {
   @include sizes(2px);
   background-color: #000;
@@ -67,10 +80,8 @@
   color: #000;
 }
 
-.movieInfo {
-  .plotLight, .desc {
-    color: #000;
-  }
+.plot.plotLight, .desc.descLight {
+  color: #000;
 }
 
 .infoBadges {

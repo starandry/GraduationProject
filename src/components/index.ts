@@ -14,6 +14,7 @@ export * from './containers/UserSettings';
 export * from './containers/MovieDetails';
 export * from './containers/CardSlider';
 export * from './containers/FilterModal';
+export * from './containers/Logout';
 export * from './UI/Сopyright';
 export * from './UI/MovieCard';
 export * from './UI/SectionTitle';

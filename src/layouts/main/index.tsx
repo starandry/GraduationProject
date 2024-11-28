@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {Background, Button, Copyright, Footer} from "../../components";
 import {Logo, SpinnerIcon} from "../../components/UI/Icon/icon.component.tsx";
 import {SearchInput} from "../../components/UI/SearchInput";
@@ -7,17 +7,27 @@ import {Header} from "../../components/containers/Header";
 import {Sidebar} from "../../components/containers/Sidebar";
 import styles from './main.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { incrementPage, loadMoreMoviesAsync } from '../../stores/slices/moviesSlice.ts';
+import { incrementPage, loadMoreMoviesAsync, fetchMoviesBySearchAsync, setSearchTrue, setSearchFalse } from '../../stores/slices/moviesSlice.ts';
 import {AppDispatch, RootState} from '../../stores/store';
 import {useLocation} from "react-router-dom";
 
+const debounce = (func: (...args: never[]) => void, delay: number) => {
+    let timer: NodeJS.Timeout;
+    return (...args: never[]) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};
 
 const Main: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const location = useLocation();
-    const { page } = useSelector((state: RootState) => state.movies);
+    const { page, search } = useSelector((state: RootState) => state.movies);
     const currentPath = location.pathname;
     const isDark = useSelector((state: RootState) => state.theme.isDark);
+    const [searchTerm, setSearchTerm] = useState("");
     let btnClas, customFooter;
 
     const handleShowMore = () => {
@@ -32,27 +42,53 @@ const Main: React.FC = () => {
         btnClas = `${styles.showMoreButton}`;
     }
 
+    if (search) btnClas = `${styles.showMoreButton} ${styles.btnNone}`;
+
     if (isDark) {
         btnClas += ` ${styles.btnDark}`;
     } else {
         btnClas += ` ${styles.btnLigth}`;
     }
 
-    const handleSearchChange = (value: string) => {
-        // Заглушка: здесь можно будет добавить обработку ввода
-        console.log("Введенное значение:", value);
+    const handleSearchChange = () => {
+        /*setSearchTerm(value);
+        debouncedSearch();
+        if (value.length > 0) {
+            dispatch(setSearchTrue());
+        } else {
+            dispatch(setSearchFalse());
+        }*/
+    };
+
+    const fetchMovies = useCallback(() => {
+        dispatch(fetchMoviesBySearchAsync({ query: searchTerm, page: 1 })); // Фильтруем фильмы
+    }, [dispatch, searchTerm]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedSearch = useCallback(debounce(() => {
+        fetchMovies();
+    }, 700), [fetchMovies]);
+
+    const handleSearchInput = (value: string) => {
+        setSearchTerm(value);
+        debouncedSearch();
+        if (value.length > 0) {
+            dispatch(setSearchTrue());
+        } else {
+            dispatch(setSearchFalse());
+        }
     };
 
     return (
         <Background>
             <Header>
                 <Logo/>
-                <SearchInput placeholder="Search" onChange={handleSearchChange} />
-                <UserProfile name='Artem Lapitsky' circleColor='#7B61FF'/>
+                <SearchInput placeholder="Search" onChange={handleSearchChange} onInput={handleSearchInput}/>
+                <UserProfile circleColor='#7B61FF'/>
             </Header>
             <Sidebar/>
             <Footer className={customFooter}>
-                <Copyright className='sidebarCopyright'/>
+                <Copyright className={styles.sidebarCopyright}/>
                 <Button className={btnClas} type='button' onClick={handleShowMore}>
                     <span>Show more</span>
                     <SpinnerIcon/>

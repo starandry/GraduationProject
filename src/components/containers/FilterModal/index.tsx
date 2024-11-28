@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setFilters } from '../../../stores/slices/filtersSlice.ts';
+import React, {useState} from 'react';
+import {setFilters} from '../../../stores/slices/filtersSlice.ts';
 import styles from './filterModal.module.scss';
-import { Input } from '../../UI/Input';
-import { SubTitle } from '../../UI/SubTitle';
-import { Button } from '../../UI/Button';
-import { Wrapper } from "../Wrapper";
-import { BigCloseIcon } from "../../UI/Icon/icon.component.tsx";
+import {Input} from '../../UI/Input';
+import {SubTitle} from '../../UI/SubTitle';
+import {Button} from '../../UI/Button';
+import {Wrapper} from "../Wrapper";
+import {BigCloseIcon} from "../../UI/Icon/icon.component.tsx";
+import {fetchMoviesByFilterAsync} from "../../../stores/slices/moviesSlice.ts";
+import {useAppDispatch} from "../../../hooks/useAppDispatch.ts";
 
-interface FilterModalProps {
+export type FilterModalProps = {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
-    const dispatch = useDispatch();
-
+const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
+    const dispatch = useAppDispatch();
     const initialGenres = ['Adventure', 'Drama', 'Documental', 'Thriller'];
     const [selectedSort, setSelectedSort] = useState<'Rating' | 'Year'>('Rating');
     const [genres, setGenres] = useState<string[]>(initialGenres);
     const [movieName, setMovieName] = useState<string>(''); // Состояние для текста поиска
     const [yearFrom, setYearFrom] = useState<string>(''); // Состояние для начала диапазона года
-    const [yearTo, setYearTo] = useState<string>(''); // Состояние для конца диапазона года
-    const [ratingFrom, setRatingFrom] = useState<string>(''); // Состояние для начала диапазона рейтинга
-    const [ratingTo, setRatingTo] = useState<string>(''); // Состояние для конца диапазона рейтинга
-    const [country, setCountry] = useState<string>(''); // Состояние для страны
+    const [yearTo, setYearTo] = useState<string>('');
+    const [ratingFrom, setRatingFrom] = useState<string>('');
+    const [ratingTo, setRatingTo] = useState<string>('');
+    const [country, setCountry] = useState<string>('');
 
     if (!isOpen) return null;
 
@@ -49,7 +49,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
 
     const handleShowResults = () => {
         // Отправка фильтров в Redux
-        dispatch(setFilters({
+        const filters = {
             movieName,
             genres,
             yearFrom,
@@ -58,18 +58,23 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
             ratingTo,
             country,
             sortBy: selectedSort,
-        }));
+            showButtons: true,
+        };
+        dispatch(setFilters(filters));
 
         onClose(); // Закрытие модального окна
+
+        dispatch(fetchMoviesByFilterAsync({filters}))
+
     };
 
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContainer}>
                 <Wrapper className={styles.wrappClose}>
-                    <SubTitle text="Filters" className={styles.modalTitle} />
+                    <SubTitle text="Filters" className={styles.modalTitle}/>
                     <Button className={styles.btnClose} onClick={onClose}>
-                        <BigCloseIcon width={'16'} height={'16'} />
+                        <BigCloseIcon width={'16'} height={'16'}/>
                     </Button>
                 </Wrapper>
 
@@ -108,7 +113,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
                         {genres.map((genre) => (
                             <Button key={genre} className={styles.genreButton}>
                                 <span className={styles.signGenre}>{genre}</span>
-                                <BigCloseIcon onClick={() => handleGenreRemove(genre)} />
+                                <BigCloseIcon onClick={() => handleGenreRemove(genre)}/>
                             </Button>
                         ))}
                     </div>
@@ -162,8 +167,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
                         onChange={(e) => setCountry(e.target.value)}
                     >
                         <option value="">Select country</option>
-                        <option value="USA">USA</option>
-                        <option value="UK">UK</option>
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kingdom</option>
                         <option value="France">France</option>
                         <option value="Germany">Germany</option>
                     </select>
@@ -178,4 +183,4 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose }) => {
     );
 };
 
-export { FilterModal };
+export {FilterModal};

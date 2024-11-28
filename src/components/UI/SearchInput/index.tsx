@@ -6,18 +6,27 @@ import { SortIcon } from "../Icon/icon.component.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 import {FilterModal} from "../../containers/FilterModal";
+import { FiltersState } from '../../../types';
 
-interface SearchInputProps {
+export type SearchInputProps = {
     placeholder?: string;
     onChange: (value: string) => void;
+    onInput: (value: string) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ placeholder = "Search", onChange }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ placeholder = "Search", onChange, onInput }) => {
     const [isModalOpen, setModalOpen] = useState(false); // Состояние для модального окна
     const compSearchInput = styles.searchInput;
-    const compsearchButton = styles.searchButton;
     const isDark = useSelector((state: RootState) => state.theme.isDark);
-    let compWrapp;
+    const isHamburgerOpen = useSelector((state: RootState) => state.hamburger.isOpen); // состояние гамбургера
+    const showButtons = useSelector((state: { filters: FiltersState }) => state.filters.showButtons);
+    let compWrapp, sortPoint;
+
+    if (showButtons) {
+        sortPoint = styles.sortPoint;
+    } else {
+        sortPoint = `${styles.sortPoint} ${styles.sortPointNone}`;
+    }
 
     if (isDark) {
         compWrapp = styles.searchInputContainer;
@@ -33,6 +42,14 @@ const SearchInput: React.FC<SearchInputProps> = ({ placeholder = "Search", onCha
         setModalOpen(false); // Закрываем модальное окно
     };
 
+    // Логика на основе состояния гамбургера
+    if (isHamburgerOpen) {
+        compWrapp = `${compWrapp} ${styles.serachHumb}`; // класс, если гамбургер открыт
+        if (window.innerWidth < 450) {
+            placeholder = '';
+        }
+    }
+
     return (
         <div className={compWrapp}>
             <Input
@@ -40,9 +57,11 @@ const SearchInput: React.FC<SearchInputProps> = ({ placeholder = "Search", onCha
                 className={compSearchInput}
                 placeholder={placeholder}
                 onChange={(e) => onChange(e.target.value)}
+                onInput={(e) => onInput(e.target.value)}
             />
-            <Button className={compsearchButton} onClick={handleButtonClick}>
+            <Button className={styles.searchButton} onClick={handleButtonClick}>
                 <SortIcon />
+                <div className={sortPoint}></div>
             </Button>
             <FilterModal isOpen={isModalOpen} onClose={handleCloseModal} />
         </div>

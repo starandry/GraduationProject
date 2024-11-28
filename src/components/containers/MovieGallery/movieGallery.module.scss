@@ -1,5 +1,22 @@
 @use '../../../styles/mixins' as *;
 
+.btnContainer {
+  grid-column: 1 / -1
+}
+
+.button {
+  @include fonts(500, 16px, #fff, 24px);
+  padding: 8px 30px;
+  margin-right: 20px;
+  border: none;
+  background-color: #242426;
+  border-radius: 25px;
+
+  > span {
+    padding-right: 20px;
+  }
+}
+
 .wrapGallery {
   flex-grow: 1;
 }

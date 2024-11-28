@@ -1,11 +1,7 @@
 import styles from './sectionTitle.module.scss';
+import { ComponentWithTextProps } from '../../../types'
 
-type SectionTitleProps = {
-    text: string;
-    className?: string;
-};
-
-const SectionTitle: React.FC<SectionTitleProps> = ({ text, className }) => {
+const SectionTitle: React.FC<ComponentWithTextProps> = ({ text, className }) => {
 
     return (
         <h1 className={`${className || ''} ${styles.title}`}>{text}</h1>

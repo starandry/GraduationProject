@@ -1,11 +1,7 @@
 import styles from './subTitle.module.scss';
+import {ComponentWithTextProps} from "../../../types";
 
-type SubTitle = {
-    text: string;
-    className?: string;
-};
-
-const SubTitle: React.FC<SubTitle> = ({ text, className }) => {
+const SubTitle: React.FC<ComponentWithTextProps> = ({ text, className }) => {
 
     return (
         <h2 className={`${className || ''} ${styles.title}`}>{text}</h2>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchMovies, Movie, fetchHighRatedMovies, fetchMovieDetails, fetchRecommendedMovies  } from '../../services/movieService.ts';
+import { fetchMovies, fetchMoviesByFilter, fetchHighRatedMovies, fetchMovieDetails, fetchRecommendedMovies, fetchMoviesBySearch } from '../../services/movieService.ts';
+import { Movie } from '../../types'
 
 export const fetchMovieDetailsAsync = createAsyncThunk(
     'movies/fetchMovieDetails',
@@ -8,10 +9,24 @@ export const fetchMovieDetailsAsync = createAsyncThunk(
     }
 );
 
+export const fetchMoviesBySearchAsync = createAsyncThunk(
+    'movies/fetchMoviesBySearch',
+    async ({ query, page }: { query: string; page: number }) => {
+        return await fetchMoviesBySearch(query, page);
+    }
+)
+
 export const fetchMoviesAsync = createAsyncThunk(
     'movies/fetchMovies',
     async (page: number) => {
         return await fetchMovies(page);
+    }
+);
+
+export const fetchMoviesByFilterAsync = createAsyncThunk(
+    'movies/fetchMoviesByFilter',
+    async ({ filters }: { filters: object }) => {
+        return await fetchMoviesByFilter(filters);
     }
 );
 
@@ -45,6 +60,7 @@ const moviesSlice = createSlice({
         error: null as string | null,
         page: 1,
         recommendedMovies: [] as Movie[],
+        search: false,
     },
     reducers: {
         incrementPage(state) {
@@ -53,6 +69,12 @@ const moviesSlice = createSlice({
         clearMovieDetails(state) {
             state.movieDetails = null;
         },
+        setSearchTrue(state) {
+            state.search = true;
+        },
+        setSearchFalse(state) {
+            state.search = false;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -67,6 +89,18 @@ const moviesSlice = createSlice({
             .addCase(fetchMoviesAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Не удалось загрузить фильмы';
+            })
+            .addCase(fetchMoviesByFilterAsync.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchMoviesByFilterAsync.fulfilled, (state, action) => {
+                state.loading = false;
+                state.movies = [...action.payload];
+            })
+            .addCase(fetchMoviesByFilterAsync.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Не удалось загрузить фильмы с высоким рейтингом';
             })
             .addCase(loadMoreMoviesAsync.pending, (state) => {
                 state.loading = true;
@@ -116,9 +150,21 @@ const moviesSlice = createSlice({
             .addCase(fetchRecommendedMoviesAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Не удалось загрузить рекомендации';
+            })
+            .addCase(fetchMoviesBySearchAsync.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchMoviesBySearchAsync.fulfilled, (state, action) => {
+                state.loading = false;
+                state.movies = [...action.payload]; // Замена тек фильмов результатами поиска
+            })
+            .addCase(fetchMoviesBySearchAsync.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Не удалось найти фильмы';
             });
     },
 });
 
-export const { incrementPage, clearMovieDetails } = moviesSlice.actions;
+export const { incrementPage, clearMovieDetails, setSearchTrue, setSearchFalse } = moviesSlice.actions;
 export default moviesSlice.reducer;

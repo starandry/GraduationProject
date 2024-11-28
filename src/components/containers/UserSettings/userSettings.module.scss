@@ -141,6 +141,11 @@
   flex-shrink: 0;
 }
 
+.errorMessage {
+  @include fonts(600, 14px);
+  margin-top: 5px;
+}
+
 @include screenSize(lg) {
   .spacer {
     display: none;

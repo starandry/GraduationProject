@@ -1,6 +1,6 @@
 import React from 'react';
 import { Home, Trends, Favorites, Settings } from '../components/UI/Icon/icon.component.tsx';
-import { MovieGallery, MovieDetails  } from '../components';
+import { MovieDetails, MovieGallery  } from '../components';
 import UserSettings from "../components/containers/UserSettings";
 
 // пункты меню

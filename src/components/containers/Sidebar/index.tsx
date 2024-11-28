@@ -3,12 +3,15 @@ import {Routes, Route, Link, useLocation} from 'react-router-dom';
 import styles from './sidebar.module.scss';
 import { menuItems, routes } from '../../../routes/menuRoutes.tsx';
 import {useActivePath} from "../../../hooks/useActivePath.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../stores/store.ts";
 
 const Sidebar: React.FC = () => {
     const { activePath, handleLinkClick } = useActivePath();
     const location = useLocation();
+    const { search } = useSelector((state: RootState) => state.movies);
     const currentPath = location.pathname;
-    let sidebarClass;
+    let sidebarClass, itemSearch;
 
     if (currentPath === '/trends' || currentPath === '/favorites') {
         sidebarClass = `${styles.sidebarWrapp}   ${styles.trendsSidebar}`;
@@ -20,6 +23,12 @@ const Sidebar: React.FC = () => {
         sidebarClass =  styles.sidebarWrapp;
     }
 
+    if (search) {
+        itemSearch = `${styles.active} ${styles.activeSearch}`;
+    } else {
+        itemSearch = styles.active
+    }
+
     return (
         <div className={sidebarClass}>
             <nav>
@@ -28,7 +37,7 @@ const Sidebar: React.FC = () => {
                         <li key={index} className={styles.navItem}>
                             <Link
                                 to={item.path}
-                                className={`${styles.menuLink} ${activePath === item.path ? styles.active : ''}`}
+                                className={`${styles.menuLink} ${activePath === item.path ? itemSearch : ''}`}
                                 onClick={() => handleLinkClick(item.path)}
                             >
                                 {item.icon}

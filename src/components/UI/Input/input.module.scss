@@ -1,7 +1,7 @@
 @use '../../../styles/mixins' as *;
 
 .inputContainer {
-
+  min-width: 0;
 }
 
 .passwordInput {

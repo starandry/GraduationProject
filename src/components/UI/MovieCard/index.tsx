@@ -6,12 +6,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 import {toggleFavourite} from "../../../stores/slices/favouritesSlice.ts";
 import { Movie } from '../../../types';
+import {Wrapper} from "../../containers/Wrapper";
+import '../../../styles/_globals.scss'
 
 type MovieCardProps = {
     movie: Movie;
+    wrapperClassName?: string;
 };
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, wrapperClassName }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const rating = parseFloat(movie.imdbRating);
@@ -51,9 +54,11 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         return null //карточка не показывается
     } else if (currentPath === '/favorites') {
         posterClass = `${styles.poster} ${styles.trendsPoster}`;
+        seriesCard = styles.movieCard;
     } else if (currentPath.startsWith('/movie/')) {
         posterClass = `${styles.poster} ${styles.moviePoster}`;
         seriesCard = `${styles.movieCard} ${styles.seriesCard}`;
+        fireIconClass = styles.fireIcon;
     } else {
         posterClass = styles.poster;
         fireIconClass = styles.fireIcon;
@@ -68,7 +73,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
                 <span>{movie.imdbRating}</span>
             </span>
             <span className={styles.favouriteIconWrapper} onClick={handleFavouriteClick}>
-                <FavouriteIcon isActive={isFavourite}/>
+                <Wrapper className={`${wrapperClassName ? wrapperClassName : ''}`}>
+                    <FavouriteIcon  isActive={isFavourite}/>
+                </Wrapper>
             </span>
             <Link to={`/movie/${movie.imdbID}`}>
                 <img

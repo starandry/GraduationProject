@@ -4,6 +4,7 @@
   @include rowing(center, center);
   @include fonts(500, 16px, #fff, 24px);
   position: absolute;
+  top: 0;
   right: 35%;
   padding: 10px 25px;
   border: none;
@@ -28,6 +29,10 @@
   background-color: #AFB2B6;
 }
 
+.sidebarCopyright {
+  padding-bottom: 0;
+}
+
 @include screenSize(md) {
   .showMoreButton {
     right: unset;
@@ -35,5 +40,11 @@
 
   .customFooter {
     display: none;
+  }
+}
+
+@include screenSize(xs) {
+  .showMoreButton {
+    top: -30px;
   }
 }

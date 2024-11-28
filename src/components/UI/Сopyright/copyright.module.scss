@@ -15,6 +15,11 @@
   color: #AFB2B6;
 }
 
+.copyrightMovie {
+  position: fixed;
+  @include fonts(500, 16px, #AFB2B6, 24px);
+}
+
 @include screenSize(lg) {
   .settCopyright {
     display: none;

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Movie } from '../../services/movieService';
+import { Movie } from '../../types';
+import { RootState } from '../store.ts';
 
 //определение типа FavouritesState как массива объектов типа Movie
 type FavouritesState = Movie[];
@@ -26,6 +27,6 @@ const favouritesSlice = createSlice({
     },
 });
 
+export const selectFavourites = (state: RootState) => state.favourites;
 export const { toggleFavourite } = favouritesSlice.actions;
 export default favouritesSlice.reducer;
-

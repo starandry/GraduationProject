@@ -9,6 +9,7 @@
 
 .userInfo {
   @include rowing(null, center);
+  @include sizes(250px);
 }
 
 .circle {
@@ -22,6 +23,15 @@
 .userName {
   @include fonts(600, 16px, #fff, 24px);
   color: #fff;
+  overflow: hidden;
+}
+
+.arrowDown {
+  margin-left: auto;
+}
+
+.userInitials {
+  @include fonts(700, 20px, white, 24px);
 }
 
 .lightUserName {
@@ -32,13 +42,18 @@
   display: none;
 }
 
+.wrappHamb {
+  padding-top: 60px;
+}
+
 .menuItems {
-  @include sizes(25vw, 40vh);
+  @include sizes(300px, 100%);
+  @include rowing();
   position: fixed;
-  top: 100px;
+  top: 0;
   right: 0;
   z-index: 1;
-  background-color: #2c2c2c;
+  background-color: #000;
   border-radius: 8px;
   opacity: 0;
   visibility: hidden;
@@ -54,8 +69,8 @@
   .menuLink {
     display: flex;
     align-items: center;
-    padding: 10px 16px;
-    color: #fff;
+    padding: 30px 16px;
+    color: #80858B;
     text-decoration: none;
     transition: background 0.2s;
 
@@ -65,18 +80,45 @@
 
     &.active {
       font-weight: bold;
-      color: #007bff;
+      color: #7B61FF;
+
+      svg path {
+        fill: #7B61FF;
+      }
     }
 
     .text {
-      margin-left: 8px;
+      @include fonts(600, 18px, unset, 24px);
+      margin-left: 20px;
     }
   }
+}
+
+.userInfoHumb {
+  display: none;
+}
+
+.closeIcon {
+  @include sizes(60px, 60px);
+  @include rowing(center, center);
+  position: relative;
+  top: 55px;
+  right: 60px;
+  background-color: #7B61FF;
+  border-radius: 10px;
 }
 
 @include screenSize(md-sm) {
   .userProfile {
     order: 1;
+  }
+
+  .menuItems {
+    @include sizes(230px);
+  }
+
+  .wrappHamb {
+    margin-left: -30px;
   }
 }
 
@@ -85,11 +127,15 @@
     margin: 0;
   }
 
-  .userName {
+  .userName, .userInitials {
     display: none;
   }
 
   .hamburger {
     display: block;
+  }
+
+  .userInfo {
+    @include sizes(unset);
   }
 }

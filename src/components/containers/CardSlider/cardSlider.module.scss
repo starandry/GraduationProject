@@ -29,6 +29,20 @@
   cursor: not-allowed;
 }
 
+.customPrevLight, .customNextLight {
+  background-color: #fff;
+
+  svg path {
+    fill: #000;
+  }
+}
+
+.disabledPrevLight, .disabledNextLight {
+  svg path {
+    fill: #AFB2B6;
+  }
+}
+
 @include screenSize(md) {
   .customPrev {
     right: 75px;

@@ -3,12 +3,13 @@ import {useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 
-let logoIcon;
+let logoIcon, wrapLogoIcon;
 
 export const Logo = ({ width = '158', height = '40' }) => {
     const location = useLocation();
     const currentPath = location.pathname;
     const isDark = useSelector((state: RootState) => state.theme.isDark);
+    const isHamburgerOpen = useSelector((state: RootState) => state.hamburger.isOpen); // Получаем состояние гамбургера
 
     if (currentPath === '/trends' || currentPath === '/favorites'|| currentPath === '/settings') {
         logoIcon = `${styles.logo} ${styles.logoTrends}`;
@@ -18,8 +19,15 @@ export const Logo = ({ width = '158', height = '40' }) => {
         logoIcon = `${styles.logo}`;
     }
 
+    // Логика на основе состояния гамбургера
+    if (isHamburgerOpen) {
+        wrapLogoIcon = `${styles.wrapLogo} ${styles.logoMenuOpen}`; //  класс, если гамбургер открыт
+    } else {
+        wrapLogoIcon = `${styles.wrapLogo}`;
+    }
+
     return (
-        <div className={styles.wrapLogo}>
+        <div className={wrapLogoIcon}>
             <svg width={width} height={height} className={logoIcon} viewBox="0 0 158 40" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -56,7 +64,7 @@ export const Logo = ({ width = '158', height = '40' }) => {
 export const Home = () => (
     <svg width="24" height="24" className={styles.menuIcon} viewBox="0 0 24 24" fill="none"
          xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd"
+        <path fillRule="evenodd" clipRule="evenodd"
               d="M14.4537 3.8032L19.4558 7.49793C20.4198 8.1956 20.9934 9.31112 21 10.5011V17.1895C20.938 19.3342 19.1566 21.0268 17.0116 20.979H6.99789C4.8492 21.032 3.06195 19.338 3 17.1895V10.5011C3.00659 9.31112 3.58019 8.1956 4.54421 7.49793L9.54632 3.8032C11.0068 2.73227 12.9932 2.73227 14.4537 3.8032ZM7.73684 16.9716H16.2632C16.6556 16.9716 16.9737 16.6535 16.9737 16.2611C16.9737 15.8687 16.6556 15.5506 16.2632 15.5506H7.73684C7.34443 15.5506 7.02632 15.8687 7.02632 16.2611C7.02632 16.6535 7.34443 16.9716 7.73684 16.9716Z"
               fill="#80858B"/>
     </svg>
@@ -86,7 +94,7 @@ export const Favorites = () => {
 export const Settings = () => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M19.2264 8.73077C19.4169 9.19491 19.8683 9.49854 20.37 9.5C21.0509 9.50549 21.6 10.0591 21.6 10.74V12.88C21.6 13.5648 21.0448 14.12 20.36 14.12C19.8583 14.1215 19.4069 14.4251 19.2164 14.8892C19.026 15.3534 19.134 15.8865 19.49 16.24C19.9676 16.7295 19.9676 17.5106 19.49 18L17.99 19.5C17.5005 19.9776 16.7195 19.9776 16.23 19.5C16.0042 19.2608 15.6889 19.1267 15.36 19.13C15.0294 19.1273 14.7114 19.2568 14.4767 19.4896C14.242 19.7225 14.11 20.0394 14.11 20.37C14.11 21.0548 13.5548 21.61 12.87 21.61H10.73C10.0452 21.61 9.49 21.0548 9.49 20.37C9.49001 20.0394 9.358 19.7225 9.12328 19.4896C8.88857 19.2568 8.5706 19.1273 8.24 19.13C7.91111 19.1267 7.59576 19.2608 7.37 19.5C6.88055 19.9776 6.09945 19.9776 5.61 19.5L4.11 18C3.63237 17.5106 3.63237 16.7295 4.11 16.24C4.46605 15.8865 4.57402 15.3534 4.38355 14.8892C4.19308 14.4251 3.7417 14.1215 3.24 14.12C2.91113 14.12 2.59573 13.9894 2.36319 13.7568C2.13064 13.5243 2 13.2089 2 12.88V10.74C2 10.0552 2.55517 9.5 3.24 9.5C3.7417 9.49854 4.19308 9.19491 4.38355 8.73077C4.57402 8.26664 4.46605 7.73346 4.11 7.38C3.63237 6.89055 3.63237 6.10945 4.11 5.62L5.61 4.12C6.09945 3.64237 6.88055 3.64237 7.37 4.12C7.59576 4.35919 7.91111 4.49331 8.24 4.49C8.57234 4.49269 8.89185 4.36186 9.12685 4.12685C9.36186 3.89185 9.49269 3.57234 9.49 3.24C9.49 2.55517 10.0452 2 10.73 2H12.88C13.5648 2 14.12 2.55517 14.12 3.24C14.1173 3.57234 14.2481 3.89185 14.4831 4.12685C14.7182 4.36186 15.0377 4.49269 15.37 4.49C15.6989 4.49331 16.0142 4.35919 16.24 4.12C16.7295 3.64237 17.5105 3.64237 18 4.12L19.5 5.62C19.9776 6.10945 19.9776 6.89055 19.5 7.38C19.144 7.73346 19.036 8.26664 19.2264 8.73077ZM8.34 11.81C8.34 9.8991 9.8891 8.35 11.8 8.35C12.7177 8.35 13.5977 8.71454 14.2466 9.36341C14.8955 10.0123 15.26 10.8924 15.26 11.81C15.26 13.7209 13.7109 15.27 11.8 15.27C9.8891 15.27 8.34 13.7209 8.34 11.81Z"
                   fill="#80858B"/>
         </svg>
@@ -96,7 +104,7 @@ export const Settings = () => {
 export const SortIcon = () => {
     return (
         <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M0 1C0 0.447715 0.447715 0 1 0H15C15.5523 0 16 0.447715 16 1C16 1.55228 15.5523 2 15 2H1C0.447715 2 0 1.55228 0 1ZM5 7C5 6.44772 5.44772 6 6 6H15C15.5523 6 16 6.44772 16 7C16 7.55228 15.5523 8 15 8H6C5.44772 8 5 7.55228 5 7ZM9 13C9 12.4477 9.44771 12 10 12H15C15.5523 12 16 12.4477 16 13C16 13.5523 15.5523 14 15 14H10C9.44771 14 9 13.5523 9 13Z"
                   fill="#AFB2B6"/>
         </svg>
@@ -108,7 +116,7 @@ export const SpinnerIcon = () => {
         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M7.95334 2C4.77424 3.14066 2.5 6.1842 2.5 9.75958C2.5 14.3106 6.18483 18 10.7303 18V18C14.322 18 17.3764 15.6965 18.5 12.4844"
-                stroke="#7B61FF" stroke-width="2.5" stroke-linecap="round"/>
+                stroke="#7B61FF" strokeWidth="2.5" strokeLinecap="round"/>
         </svg>
     );
 }
@@ -116,7 +124,7 @@ export const SpinnerIcon = () => {
 export const Hamburger = ( {className} ) => {
     return (
         <svg className={className} width="19.2" height="16.8" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M0 1C0 0.447715 0.447715 0 1 0H15C15.5523 0 16 0.447715 16 1C16 1.55228 15.5523 2 15 2H1C0.447715 2 0 1.55228 0 1ZM0 7C0 6.44772 0.447715 6 1 6H15C15.5523 6 16 6.44772 16 7C16 7.55228 15.5523 8 15 8H1C0.447715 8 0 7.55228 0 7ZM0 13C0 12.4477 0.447715 12 1 12H15C15.5523 12 16 12.4477 16 13C16 13.5523 15.5523 14 15 14H1C0.447715 14 0 13.5523 0 13Z"
                   fill="white"/>
         </svg>
@@ -160,10 +168,10 @@ export const IMDbBadge = () => {
 export const ShareIcon = () => {
     return (
         <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="3.54545" cy="8.63627" r="2.54545" stroke="#AFB2B6" stroke-width="2"/>
-            <circle cx="12.4544" cy="3.54545" r="2.54545" stroke="#AFB2B6" stroke-width="2"/>
-            <circle cx="12.4544" cy="13.7273" r="2.54545" stroke="#AFB2B6" stroke-width="2"/>
-            <path d="M10 13L6.09106 10.5455M6.09106 7.5L10 5" stroke="#AFB2B6" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="3.54545" cy="8.63627" r="2.54545" stroke="#AFB2B6" strokeWidth="2"/>
+            <circle cx="12.4544" cy="3.54545" r="2.54545" stroke="#AFB2B6" strokeWidth="2"/>
+            <circle cx="12.4544" cy="13.7273" r="2.54545" stroke="#AFB2B6" strokeWidth="2"/>
+            <path d="M10 13L6.09106 10.5455M6.09106 7.5L10 5" stroke="#AFB2B6" strokeWidth="2" strokeLinecap="round"/>
         </svg>
     )
 }
@@ -171,7 +179,7 @@ export const ShareIcon = () => {
 export const ArrowLeft = () => {
     return (
         <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M7.20711 11.7071C6.81658 12.0976 6.18342 12.0976 5.79289 11.7071L0.792892 6.70711C0.402369 6.31658 0.402369 5.68342 0.792892 5.29289L5.79289 0.292893C6.18342 -0.0976315 6.81658 -0.0976315 7.20711 0.292893C7.59763 0.683417 7.59763 1.31658 7.20711 1.70711L3.91421 5H18C18.5523 5 19 5.44772 19 6C19 6.55228 18.5523 7 18 7H3.91421L7.20711 10.2929C7.59763 10.6834 7.59763 11.3166 7.20711 11.7071Z"
                   fill="white"/>
         </svg>
@@ -181,14 +189,14 @@ export const ArrowLeft = () => {
 export const ArrowRigth = () => {
     return (
         <svg width="19" height="12" viewBox="0 0 19 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M11.7929 11.7071C12.1834 12.0976 12.8166 12.0976 13.2071 11.7071L18.2071 6.70711C18.5976 6.31658 18.5976 5.68342 18.2071 5.29289L13.2071 0.292893C12.8166 -0.0976315 12.1834 -0.0976315 11.7929 0.292893C11.4024 0.683417 11.4024 1.31658 11.7929 1.70711L15.0858 5H1C0.447715 5 0 5.44772 0 6C0 6.55228 0.447715 7 1 7H15.0858L11.7929 10.2929C11.4024 10.6834 11.4024 11.3166 11.7929 11.7071Z"
                   fill="white"/>
         </svg>
     )
 }
 
-interface BigCloseIconProps {
+export type BigCloseIconProps = {
     width?: string;
     height?: string;
     onClick?: React.MouseEventHandler<SVGSVGElement>;
@@ -197,12 +205,43 @@ interface BigCloseIconProps {
 export const BigCloseIcon: React.FC<BigCloseIconProps> = ({ width = '10', height = '10', onClick }) => {
     return (
         <svg width={width} height={height} onClick={onClick} viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
+            <path fillRule="evenodd" clipRule="evenodd"
                   d="M11.6569 10.2429L7.41421 6.00023L11.6569 1.75759C12.0472 1.36727 12.0472 0.733701 11.6569 0.343378C11.2665 -0.0469454 10.633 -0.0469453 10.2426 0.343378L6 4.58602L1.75736 0.343378C1.36704 -0.0469453 0.733469 -0.0469454 0.343146 0.343378C-0.0471771 0.733701 -0.0471771 1.36727 0.343146 1.75759L4.58579 6.00023L0.343146 10.2429C-0.0478838 10.6339 -0.0471771 11.2668 0.343146 11.6571C0.733469 12.0474 1.36633 12.0481 1.75736 11.6571L6 7.41445L10.2426 11.6571C10.6337 12.0481 11.2665 12.0474 11.6569 11.6571C12.0472 11.2668 12.0479 10.6339 11.6569 10.2429Z"
                   fill="#AFB2B6"/>
         </svg>
     );
 }
+
+export const CloseIcon: React.FC<BigCloseIconProps> = () => {
+    return (
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M11.6569 10.2426L7.41421 5.99999L11.6569 1.75735C12.0472 1.36702 12.0472 0.733456 11.6569 0.343133C11.2665 -0.0471895 10.633 -0.0471895 10.2426 0.343133L6 4.58577L1.75736 0.343133C1.36704 -0.0471895 0.733469 -0.0471895 0.343146 0.343133C-0.0471771 0.733456 -0.0471771 1.36702 0.343146 1.75735L4.58579 5.99999L0.343146 10.2426C-0.0478838 10.6337 -0.0471771 11.2665 0.343146 11.6568C0.733469 12.0472 1.36633 12.0479 1.75736 11.6568L6 7.4142L10.2426 11.6568C10.6337 12.0479 11.2665 12.0472 11.6569 11.6568C12.0472 11.2665 12.0479 10.6337 11.6569 10.2426Z"
+                fill="white"
+            />
+        </svg>
+    );
+};
+
+export type ArrowDownProps = {
+    className?: string;
+    onClick?: () => void;
+}
+
+export const ArrowDown: React.FC<ArrowDownProps> = ({ className, onClick }) => {
+    return (
+        <svg className={className} onClick={onClick} width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M11.7808 0.375342C12.1258 0.806604 12.0559 1.4359 11.6247 1.78091L5.99996 6.28066L0.375268 1.78091C-0.0559941 1.4359 -0.125916 0.806603 0.219094 0.375341C0.564103 -0.0559207 1.1934 -0.125842 1.62466 0.219168L5.99996 3.71941L10.3753 0.219168C10.8065 -0.125842 11.4358 -0.0559202 11.7808 0.375342Z"
+                fill="#AFB2B6"
+            />
+        </svg>
+    );
+};
 
 /*
 export const Home = ({ width = '18', height = '18', fill = '#7B61FF' }) => (

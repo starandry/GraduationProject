@@ -9,6 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 import {setDarkMode} from "../../../stores/slices/themeSlice.ts";
 import {Spacer} from "../../UI/Spacer";
+import { auth } from "../../../firebase.ts";
+import { reauthenticateWithCredential, EmailAuthProvider, updateEmail, updatePassword, updateProfile } from "firebase/auth";
 
 const UserSettings: React.FC = () => {
     const dispatch = useDispatch();
@@ -17,6 +19,7 @@ const UserSettings: React.FC = () => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState<string>('');
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     let compWrProfile, compTitleProfile, compWrapPassword, compWrapColor, compCancelButton,
     compLabelUseSet, compInputName, compInputPassword;
@@ -45,10 +48,48 @@ const UserSettings: React.FC = () => {
         compInputPassword = `${styles.inputPassword} ${styles.lightInputPassword}`;
     }
 
-    const handleSave = (event: React.FormEvent) => {
+    const handleSave = async (event: React.FormEvent) => {
         event.preventDefault();
-        //  логика для сохранения данных в Firebase и Redux
-        console.log('Сохранение данных профиля:', { name, email, password, newPassword, confirmPassword });
+
+        if (newPassword !== confirmPassword) {
+            setError("Пароли не совпадают!");
+            return;
+        } else {
+            setError('');
+        }
+
+        try {
+            const user = auth.currentUser;
+            if (!user) {console.log(user);
+                setError("Пользователь не аутентифицирован");
+                return;
+            } else {
+                setError('');
+            }
+
+            // Переаутентификация пользователя с использованием текущего пароля
+            const credential = EmailAuthProvider.credential(user.email!, password);
+            await reauthenticateWithCredential(user, credential);
+
+            // Обновление имени пользователя
+            await updateProfile(user, {
+                displayName: name
+            });
+
+            // Обновление email, если он изменился
+            await updateEmail(user, email);
+
+
+            // Обновление пароля, если он изменился
+            await updatePassword(user, newPassword);
+            console.log('Данные профиля успешно обновлены!');
+        } catch (error) {
+            if (error) {
+                setError(`Ошибка при обновлении профиля: ${error}`);
+            } else {
+                setError('');
+            }
+        }
     };
 
     return (
@@ -102,6 +143,7 @@ const UserSettings: React.FC = () => {
                                className={compInputPassword}
                                labelClassName={compLabelUseSet}
                                containerClassName={styles.inputConfirmPassword}/>
+                        {error && <div className={styles.errorMessage}>{error}</div>}
                     </Wrapper>
                 </Wrapper>
                 <Wrapper className={styles.sectionTheme}>

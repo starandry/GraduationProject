@@ -8,6 +8,10 @@
   margin-right: 8.85vw;
 }
 
+.logoMenuOpen {
+  display: none;
+}
+
 @include screenSize(md) {
   .logo {
     margin-right: 5vw;
@@ -30,6 +34,6 @@
 
 @include screenSize(sm) {
   .logo {
-    margin-right: 5vw;
+    margin-right: 0;
   }
 }

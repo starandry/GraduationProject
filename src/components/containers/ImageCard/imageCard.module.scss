@@ -1,0 +1,38 @@
+@use '../../../styles/mixins' as *;
+
+.cardContainer {
+  @include sizes(64vw);
+  @include rowing(center, center, column);
+}
+
+.cardCaption {
+  @include fonts(600, 20px, #80858B, 32px);
+  padding-top: 20px;
+}
+
+@include screenSize(lg) {
+  .cardContainer {
+    @include sizes(100%);
+  }
+}
+
+@include screenSize(md) {
+  .cardContainer {
+    @include sizes(null, 75vh);
+  }
+
+  .cardImage {
+    @include sizes(336px);
+  }
+}
+
+@include screenSize(md-sm) {
+  .cardImage {
+    @include sizes(202px);
+  }
+
+  .cardCaption {
+    @include fonts(null, 18px, null, 28px);
+    padding-top: 10px;
+  }
+}

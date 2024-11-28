@@ -29,6 +29,16 @@
   }
 }
 
+.activeSearch {
+  .text {
+    color: #80858B;
+  }
+
+  svg path {
+    fill: #80858B;
+  }
+}
+
 .sidebarWrapp {
   @include rowing();
   @include sizes(null, calc(100vh - 216px));

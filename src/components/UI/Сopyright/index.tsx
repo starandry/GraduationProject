@@ -2,8 +2,8 @@ import React from 'react';
 import styles from './copyright.module.scss';
 import {useLocation} from "react-router-dom";
 
-interface CopyrightProps {
-    className?: keyof typeof styles; // className — это ключ из объекта styles
+export type CopyrightProps = {
+    className?: keyof typeof styles;
 }
 
 const Copyright: React.FC<CopyrightProps> = ({ className }) => {
@@ -13,12 +13,14 @@ const Copyright: React.FC<CopyrightProps> = ({ className }) => {
 
     if (currentPath === '/settings') {
         compCopyright = styles.settCopyright;
+    } else if (currentPath.startsWith('/movie/')) {
+        compCopyright = styles.copyrightMovie;
     } else {
         compCopyright = styles.copyright;
     }
 
     return (
-        <p className={`${compCopyright} ${className ? styles[className] : ''}`}>
+        <p className={`${compCopyright} ${className || ''}`}>
             © All Rights Reserved
         </p>
     );
