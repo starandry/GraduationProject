@@ -21,7 +21,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
     const { activePath, handleLinkClick } = useActivePath();
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch<AppDispatch>();
-    const username = useSelector((state: RootState) => state.auth.username);
+    const username = useSelector((state: RootState) => state.auth.usernameInStore);
     const userInitials = username ? username.slice(0, 2).toUpperCase() : "";
     const [showLogout, setShowLogout] = useState(false); //  для отображения компонента logout
     let compName, compUserIfo, compMenuItems;

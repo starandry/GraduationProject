@@ -8,7 +8,6 @@ export * from './containers/RegistrationForm';
 export * from './containers/ResetPasswordForm';
 export * from './containers/ForgotPasswordForm';
 export * from './containers/NewPasswordForm';
-export * from './containers/LoginFormAfterPasswordChange';
 export * from './containers/MovieGallery';
 export * from './containers/UserSettings';
 export * from './containers/MovieDetails';

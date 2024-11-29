@@ -51,13 +51,7 @@ const Main: React.FC = () => {
     }
 
     const handleSearchChange = () => {
-        /*setSearchTerm(value);
-        debouncedSearch();
-        if (value.length > 0) {
-            dispatch(setSearchTrue());
-        } else {
-            dispatch(setSearchFalse());
-        }*/
+
     };
 
     const fetchMovies = useCallback(() => {

@@ -1,11 +1,16 @@
 import React, { FC, useState } from 'react';
 import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './registrationForm.module.scss';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from "../../../stores/store.ts";
-import { setUsername, setEmailInStore, setPasswordInStore } from '../../../stores/slices/authSlice.ts';
+import {
+    setUsername,
+    setEmailInStore,
+    setPasswordInStore,
+    setSuccessMessage,
+} from '../../../stores/slices/authSlice.ts';
 
 const RegistrationForm: FC = () => {
     const [localUsername, setLocalUsername] = useState<string>('');
@@ -13,10 +18,10 @@ const RegistrationForm: FC = () => {
     const [localPassword, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
-    const { usernameInStore, emailInStore, passwordInStore } = useSelector((state: RootState) => state.auth);
+    const { usernameInStore, emailInStore } = useSelector((state: RootState) => state.auth);
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch();
-    /*const navigate = useNavigate();*/
+    const navigate = useNavigate();
     let form, title;
 
     if (isDark) {
@@ -27,63 +32,59 @@ const RegistrationForm: FC = () => {
         title = `${styles.title} ${styles.titleLight}`;
     }
 
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
     const handleFieldValidation = (
-        field: 'username' | 'email' | 'password',
+        field: 'username' | 'email',
         localValue: string,
         storedValue: string | null,
-        setFieldAction: (value: string | null) => { type: string, payload: string | null }
-    ) => {
+    ): boolean => {
         if (localValue === storedValue) {
             setError(`Пользователь с таким ${field} уже существует.`);
-            return false;
-        } else {
-            dispatch(setFieldAction(localValue));
-            setError(null);
-            return true;
+            return false; // Не продолжаем, если уже есть такое значение
         }
+        setError(null);
+        return true; // Проверка прошла успешно
     };
-
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Проверка на совпадение паролей
         if (localPassword !== confirmPassword) {
-            setError('Введённые парлои не совпадают');
+            setError('Пароли не совпадают.');
             return;
         }
 
-        if (!handleFieldValidation('username', localUsername, usernameInStore, setUsername)) return;
-
-        if (!handleFieldValidation('email', localEmail, emailInStore, setEmailInStore)) return;
-
-        if (!handleFieldValidation('password', localPassword, passwordInStore, setPasswordInStore)) return;
-
-        setError(null);
-
-        /*if (localUsername === usernameInStore) {
-            setError('Пользователь с таким именем уже существует.');
+        // Проверка формата email
+        if (!emailRegex.test(localEmail)) {
+            setError('Неверный формат email.');
             return;
-        } else {
-            dispatch(setUsername(localUsername));
-            setError(null);
         }
 
-        if (localEmail === emailInStore) {
-            setError('Пользователь с таким email уже существует.');
+        // Проверка на сложность пароля
+        if (!passwordRegex.test(localPassword)) {
+            setError('Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.');
             return;
-        } else {
-            dispatch(setEmailInStore(localEmail));
-            setError(null);
         }
 
-        if (localPassword === passwordInStore) {
-            setError('Пользователь с таким паролем уже существует.');
-            return;
-        } else {
-            dispatch(setPasswordInStore(localPassword));
-            setError(null);
-        }*/
+        // Проверка уникальности username и email (но не пароля)
+        if (!handleFieldValidation('username', localUsername, usernameInStore)) return;
+        if (!handleFieldValidation('email', localEmail, emailInStore)) return;
+
+        // Если все проверки пройдены успешно, сохраняем в Redux
+        dispatch(setUsername(localUsername));
+        dispatch(setEmailInStore(localEmail));
+        dispatch(setPasswordInStore(localPassword));
+
+        // Отправляем сообщение об успехе
+        dispatch(setSuccessMessage('Вы успешно зарегистрированы в системе!'));
+
+        // Перенаправляем пользователя
+        navigate('/');
     };
+
 
     return (
         <form onSubmit={handleSubmit} className={form}>

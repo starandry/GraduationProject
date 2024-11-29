@@ -22,6 +22,7 @@
 
 .userName {
   @include fonts(600, 16px, #fff, 24px);
+  max-width: 145px;
   color: #fff;
   overflow: hidden;
 }

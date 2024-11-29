@@ -72,6 +72,10 @@
   margin-bottom: 40px;
 }
 
+.successMessageLight {
+  color: #000;
+}
+
 @include screenSize(md) {
   .loginForm {
     @include sizes(76vw);

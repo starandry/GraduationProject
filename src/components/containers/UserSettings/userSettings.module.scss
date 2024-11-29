@@ -142,7 +142,7 @@
 }
 
 .errorMessage {
-  @include fonts(600, 14px);
+  @include fonts(600, 20px, red);
   margin-top: 5px;
 }
 
