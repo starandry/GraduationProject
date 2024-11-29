@@ -1,23 +1,22 @@
 import React, { FC, useState } from 'react';
 import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
-import { Link, useNavigate } from 'react-router-dom';
-import { db } from '../../../firebase';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
 import styles from './registrationForm.module.scss';
 import {useDispatch, useSelector} from 'react-redux';
-import { setAuthenticated, setUsername as setReduxUsername } from '../../../stores/slices/authSlice.ts';
-import {RootState} from "../../../stores/store.ts"; // Переименовываем экшен
+import {RootState} from "../../../stores/store.ts";
+import { setUsername, setEmailInStore, setPasswordInStore } from '../../../stores/slices/authSlice.ts';
 
 const RegistrationForm: FC = () => {
     const [localUsername, setLocalUsername] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [localEmail, setEmail] = useState<string>('');
+    const [localPassword, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
+    const { usernameInStore, emailInStore, passwordInStore } = useSelector((state: RootState) => state.auth);
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    /*const navigate = useNavigate();*/
     let form, title;
 
     if (isDark) {
@@ -28,70 +27,62 @@ const RegistrationForm: FC = () => {
         title = `${styles.title} ${styles.titleLight}`;
     }
 
-    // Проверка существующего пользователя по email
-    const isEmailTaken = async (email: string): Promise<boolean> => {
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("email", "==", email));
-        const querySnapshot = await getDocs(q);
-        return !querySnapshot.empty; // true, если пользователь с таким email уже существует
-    };
-
-    // Проверка существующего пользователя по имени пользователя (username)
-    const isUsernameTaken = async (username: string): Promise<boolean> => {
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("username", "==", username));
-        const querySnapshot = await getDocs(q);
-        return !querySnapshot.empty; // true, если пользователь с таким username уже существует
-    };
-
-    // Функция для добавления пользователя в Firestore
-    const addUserToFirestore = async () => {
-        try {
-            const docRef = await addDoc(collection(db, "users"), {
-                username: localUsername,
-                email: email,
-                password: password // без хеширования
-            });
-            console.log("Document written with ID: ", docRef.id);
-            setError(null); // Сброс ошибки при успешной регистрации
-            return true; // Возвращаем true при успешной регистрации
-        } catch (e) {
-            console.error("Error adding document: ", e);
-            setError("Failed to register. Please try again.");
-            return false; // Возвращаем false при ошибке
+    const handleFieldValidation = (
+        field: 'username' | 'email' | 'password',
+        localValue: string,
+        storedValue: string | null,
+        setFieldAction: (value: string | null) => { type: string, payload: string | null }
+    ) => {
+        if (localValue === storedValue) {
+            setError(`Пользователь с таким ${field} уже существует.`);
+            return false;
+        } else {
+            dispatch(setFieldAction(localValue));
+            setError(null);
+            return true;
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Проверка совпадения пароля и подтверждения пароля
-        if (password !== confirmPassword) {
-            setError("Passwords do not match.");
+        if (localPassword !== confirmPassword) {
+            setError('Введённые парлои не совпадают');
             return;
         }
 
-        // Проверка email
-        if (await isEmailTaken(email)) {
-            setError("A user with this email already exists.");
+        if (!handleFieldValidation('username', localUsername, usernameInStore, setUsername)) return;
+
+        if (!handleFieldValidation('email', localEmail, emailInStore, setEmailInStore)) return;
+
+        if (!handleFieldValidation('password', localPassword, passwordInStore, setPasswordInStore)) return;
+
+        setError(null);
+
+        /*if (localUsername === usernameInStore) {
+            setError('Пользователь с таким именем уже существует.');
             return;
+        } else {
+            dispatch(setUsername(localUsername));
+            setError(null);
         }
 
-        // Проверка username
-        if (await isUsernameTaken(localUsername)) {
-            setError("A user with this username already exists.");
+        if (localEmail === emailInStore) {
+            setError('Пользователь с таким email уже существует.');
             return;
+        } else {
+            dispatch(setEmailInStore(localEmail));
+            setError(null);
         }
 
-        // Сохранение данных в Firebase
-        const success = await addUserToFirestore();
-
-        if (success) {
-            setError(null); // Убираем ошибки при успешной регистрации
-            dispatch(setAuthenticated(true));
-            dispatch(setReduxUsername(localUsername)); // Используем экшен setUsername для Redux
-            navigate("/");
-        }
+        if (localPassword === passwordInStore) {
+            setError('Пользователь с таким паролем уже существует.');
+            return;
+        } else {
+            dispatch(setPasswordInStore(localPassword));
+            setError(null);
+        }*/
     };
 
     return (
@@ -116,7 +107,7 @@ const RegistrationForm: FC = () => {
                 className={styles.inputEmail}
                 id="email"
                 label="Email"
-                value={email}
+                value={localEmail}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email"
                 required
@@ -127,7 +118,7 @@ const RegistrationForm: FC = () => {
                 className={styles.inputPassword}
                 id="password"
                 label="Password"
-                value={password}
+                value={localPassword}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Your password"
                 required

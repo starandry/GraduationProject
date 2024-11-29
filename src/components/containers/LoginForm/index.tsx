@@ -3,16 +3,14 @@ import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
 import { Link } from 'react-router-dom';
 import styles from './loginForm.module.scss';
-import { setAuthenticated, setSuccessMessage, setUsername } from '../../../stores/slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { checkUserCredentials } from '../../../services/authService.ts'
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../stores/store.ts';
 
 const LoginForm: FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<string | null>(null); //  для ошибки
-    const dispatch = useDispatch();
+   /* const [error, setError] = useState<string | null>(null);
+    const dispatch = useDispatch();*/
     const successMessage = useSelector((state: RootState) => state.auth.successMessage);
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     let title, form;
@@ -27,24 +25,13 @@ const LoginForm: FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const result = await checkUserCredentials(email, password);
-        dispatch(setUsername(result.username));
-
-        if (result.success) {
-            dispatch(setAuthenticated(true));
-            setError(null); // удаление сообщения об ошибке, если логин успешен
-        } else {
-            setError(result.error || 'Unknown error'); //  сообщение об ошибке
-        }
-
-        dispatch(setSuccessMessage(''));
     };
 
     return (
         <form onSubmit={handleSubmit} className={form}>
             <h2 className={title}>Sign In</h2>
 
-            {error && <p className={styles.error}>{error}</p>}
+           {/* {error && <p className={styles.error}>{error}</p>}*/}
             {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
 
             <Input

@@ -3,13 +3,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type AuthState = {
     isAuthenticated: boolean; // Переменная для хранения статуса аутентификации
     successMessage: string;
-    username: string | null; // Поле для хранения имени пользователя
+    usernameInStore: string | null;
+    emailInStore: string | null;
+    passwordInStore: string | null;
 };
 
 const initialState: AuthState = {
     isAuthenticated: false, // Изначальное состояние: пользователь не аутентифицирован
     successMessage: '',
-    username: null, // Изначально имя пользователя не установлено
+    usernameInStore: null,
+    emailInStore: null,
+    passwordInStore: null,
 };
 
 const authSlice = createSlice({
@@ -23,7 +27,6 @@ const authSlice = createSlice({
         // Экшен для установки isAuthenticated = false (выход из системы)
         logout: (state) => {
             state.isAuthenticated = false;
-            state.username = null; // При выходе из системы очищаем имя пользователя
         },
         // Экшен для произвольного изменения состояния
         setAuthenticated: (state, action: { payload: boolean }) => {
@@ -39,7 +42,13 @@ const authSlice = createSlice({
         },
         // Экшен для установки имени пользователя
         setUsername: (state, action: PayloadAction<string | null>) => {
-            state.username = action.payload;
+            state.usernameInStore = action.payload;
+        },
+        setEmailInStore: (state, action: PayloadAction<string | null>) => {
+            state.emailInStore = action.payload;
+        },
+        setPasswordInStore: (state, action: PayloadAction<string | null>) => {
+            state.passwordInStore = action.payload;
         },
     },
 });
@@ -50,7 +59,9 @@ export const {
     setAuthenticated,
     setSuccessMessage,
     clearSuccessMessage,
-    setUsername
+    setUsername,
+    setEmailInStore,
+    setPasswordInStore,
 } = authSlice.actions;
 
 export default authSlice.reducer;
