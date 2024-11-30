@@ -9,11 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 import {setDarkMode} from "../../../stores/slices/themeSlice.ts";
 import {Spacer} from "../../UI/Spacer";
-import {
-    setUsername,
-    setEmailInStore,
-    setPasswordInStore,
-} from '../../../stores/slices/authSlice.ts';
+import { setEmailInStore } from '../../../stores/slices/authSlice.ts';
 import { useNavigate } from 'react-router-dom';
 
 const UserSettings: React.FC = () => {
@@ -25,7 +21,7 @@ const UserSettings: React.FC = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string>('');
     const isDark = useSelector((state: RootState) => state.theme.isDark);
-    const passwordInStore = useSelector((state: RootState) => state.auth.passwordInStore);
+    const emailInStore = useSelector((state: RootState) => state.auth.emailInStore);
     const navigate = useNavigate();
     let compWrProfile, compTitleProfile, compWrapPassword, compWrapColor, compCancelButton,
     compLabelUseSet, compInputName, compInputPassword;
@@ -59,6 +55,17 @@ const UserSettings: React.FC = () => {
         compInputPassword = `${styles.inputPassword} ${styles.lightInputPassword}`;
     }
 
+    const checkPasswordByEmail = (email: string, password: string): boolean => {
+        // Извлекаем пользователей из localStorage
+        const users = JSON.parse(localStorage.getItem('users'));
+
+        // Ищем пользователя по email
+        const user = users.find((user: { email: string }) => user.email === email);
+
+        // Если пользователь найден и пароли совпадают
+        return user && user.password === password;
+    };
+
     const handleSave = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -68,8 +75,8 @@ const UserSettings: React.FC = () => {
             return;
         }
 
-        // Проверка на совпадение текущего пароля с паролем в хранилище
-        if (password !== passwordInStore) {
+        // Проверка на совпадение текущего пароля с паролем в local st
+        if (!checkPasswordByEmail(emailInStore, password)) {
             setError('Неверный текущий пароль.');
             return;
         }
@@ -87,9 +94,7 @@ const UserSettings: React.FC = () => {
         }
 
         // Если все проверки пройдены успешно, сохраняем данные в Redux
-        dispatch(setUsername(name));
         dispatch(setEmailInStore(email));
-        dispatch(setPasswordInStore(newPassword));
 
         navigate('/');
     };

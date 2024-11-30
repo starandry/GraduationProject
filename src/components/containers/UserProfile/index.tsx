@@ -21,10 +21,24 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
     const { activePath, handleLinkClick } = useActivePath();
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch<AppDispatch>();
-    const username = useSelector((state: RootState) => state.auth.usernameInStore);
-    const userInitials = username ? username.slice(0, 2).toUpperCase() : "";
+    const emailInStore = useSelector((state: RootState) => state.auth.emailInStore);
     const [showLogout, setShowLogout] = useState(false); //  для отображения компонента logout
     let compName, compUserIfo, compMenuItems;
+
+    const getUsernameByEmail = (email: string): string | null => {
+        // Получаем данные пользователей из localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+        // Ищем пользователя по email
+        const user = users.find((user: { email: string }) => user.email === email);
+
+        // Если пользователь найден, возвращаем его username, иначе null
+        return user ? user.username : null;
+    };
+
+    getUsernameByEmail(emailInStore);
+    const userInitials = getUsernameByEmail(emailInStore).slice(0, 2).toUpperCase();
+
 
     if (isDark) {
         compName = styles.userName;
@@ -59,7 +73,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
                     <span className={styles.userInitials}>{userInitials}</span>
                     <Hamburger className={styles.hamburger} />
                 </div>
-                <span className={compName}>{username}</span>
+                <span className={compName}>{emailInStore}</span>
                 <ArrowDown className={styles.arrowDown} onClick={handleClick}/>
                 {showLogout && <Logout/>}
             </div>

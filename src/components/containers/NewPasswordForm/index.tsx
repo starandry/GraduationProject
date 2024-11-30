@@ -2,20 +2,20 @@ import React, { FC, useState } from 'react';
 import { Input } from '../../UI/Input';
 import styles from './newPasswordForm.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { setPasswordInStore, setSuccessMessage } from '../../../stores/slices/authSlice';
+import { setSuccessMessage } from '../../../stores/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../stores/store.ts';
+import { PASSWORDREGEX } from '../../../constants/AuthConstants.ts'
 
 const NewPasswordForm: FC = () => {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const isDark = useSelector((state: RootState) => state.theme.isDark);
+    const emailInStore = useSelector((state: RootState) => state.auth.emailInStore);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let title, form;
-
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
     if (isDark) {
         title = styles.title;
@@ -33,15 +33,18 @@ const NewPasswordForm: FC = () => {
             return;
         }
 
-        if (!passwordRegex.test(password)) {
+        if (!PASSWORDREGEX.test(password)) {
             setError('Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.');
             return;
         }
 
-        //  пароль в хранилище Redux
-        dispatch(setPasswordInStore(password));
+        const users = JSON.parse(localStorage.getItem('users'));
 
-        // сообщение об успешном изменении пароля
+        const userIndex = users.findIndex((user: { email: string }) => user.email === emailInStore);
+        users[userIndex].password = password;
+        // Сохраняем обновленный массив пользователей обратно в localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+
         dispatch(setSuccessMessage('Ваш пароль успешно изменён'));
 
         // Очистка локальных состояний

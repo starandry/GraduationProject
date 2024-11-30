@@ -63,7 +63,7 @@ const MovieGallery: React.FC = () => {
       } else if (location.pathname === '/trends') {
          dispatch(fetchHighRatedMoviesAsync({ page, minRating: MIN_RATING }))
       }
-   }, [dispatch, filters, location.pathname, page, showButtons]);
+   }, [dispatch, filters, location.pathname, movies.length, page, search, showButtons]);
 
    useEffect(() =>  {
       if (selectedButtons === '') {

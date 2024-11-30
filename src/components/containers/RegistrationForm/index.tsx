@@ -3,14 +3,10 @@ import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './registrationForm.module.scss';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from "../../../stores/store.ts";
-import {
-    setUsername,
-    setEmailInStore,
-    setPasswordInStore,
-    setSuccessMessage,
-} from '../../../stores/slices/authSlice.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../stores/store.ts';
+import { setSuccessMessage } from '../../../stores/slices/authSlice.ts';
+import { EMAILREGEX, PASSWORDREGEX } from '../../../constants/AuthConstants.ts'
 
 const RegistrationForm: FC = () => {
     const [localUsername, setLocalUsername] = useState<string>('');
@@ -18,7 +14,6 @@ const RegistrationForm: FC = () => {
     const [localPassword, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
-    const { usernameInStore, emailInStore } = useSelector((state: RootState) => state.auth);
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,22 +27,6 @@ const RegistrationForm: FC = () => {
         title = `${styles.title} ${styles.titleLight}`;
     }
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
-    const handleFieldValidation = (
-        field: 'username' | 'email',
-        localValue: string,
-        storedValue: string | null,
-    ): boolean => {
-        if (localValue === storedValue) {
-            setError(`Пользователь с таким ${field} уже существует.`);
-            return false; // Не продолжаем, если уже есть такое значение
-        }
-        setError(null);
-        return true; // Проверка прошла успешно
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -58,33 +37,60 @@ const RegistrationForm: FC = () => {
         }
 
         // Проверка формата email
-        if (!emailRegex.test(localEmail)) {
+        if (!EMAILREGEX.test(localEmail)) {
             setError('Неверный формат email.');
             return;
         }
 
         // Проверка на сложность пароля
-        if (!passwordRegex.test(localPassword)) {
-            setError('Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.');
+        if (!PASSWORDREGEX.test(localPassword)) {
+            setError(
+                'Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.'
+            );
             return;
         }
 
-        // Проверка уникальности username и email (но не пароля)
-        if (!handleFieldValidation('username', localUsername, usernameInStore)) return;
-        if (!handleFieldValidation('email', localEmail, emailInStore)) return;
+        const users = JSON.parse(localStorage.getItem('users'));
 
-        // Если все проверки пройдены успешно, сохраняем в Redux
-        dispatch(setUsername(localUsername));
-        dispatch(setEmailInStore(localEmail));
-        dispatch(setPasswordInStore(localPassword));
+        function getUsernameOrEmailIfExists(localUsername: string, localEmail: string): string | null {
+            const user = users.find(
+                (user: { username: string; email: string }) =>
+                    user.username === localUsername || user.email === localEmail
+            );
 
+            if (user) {
+                if (user.username === localUsername) {
+                    return 'username';
+                } else {
+                    return 'email';
+                }
+            }
+
+            return null;
+        }
+
+        const field = getUsernameOrEmailIfExists(localUsername, localEmail);
+
+        if (field) {
+            setError(`Пользователь с таким ${field} уже существует.`);
+            return;
+        }
+
+        // Если все проверки прошли успешно, сохраняем данные в localStorage
+        const userObject = {
+            username: localUsername,
+            email: localEmail,
+            password: localPassword,
+        };
+
+        users.push(userObject);
+        localStorage.setItem('users', JSON.stringify(users));
         // Отправляем сообщение об успехе
         dispatch(setSuccessMessage('Вы успешно зарегистрированы в системе!'));
 
         // Перенаправляем пользователя
         navigate('/');
     };
-
 
     return (
         <form onSubmit={handleSubmit} className={form}>
@@ -136,11 +142,15 @@ const RegistrationForm: FC = () => {
                 required
             />
 
-            <Button type="submit" className={styles.btnRegister}>Sign Up</Button>
+            <Button type="submit" className={styles.btnRegister}>
+                Sign Up
+            </Button>
 
             <p className={styles.basement}>
                 Already have an account?
-                <Link to="/" className={styles.signLink}>Sign In</Link>
+                <Link to="/" className={styles.signLink}>
+                    Sign In
+                </Link>
             </p>
         </form>
     );

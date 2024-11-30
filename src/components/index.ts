@@ -6,7 +6,6 @@ export * from './UI/CLink';
 export * from './containers/LoginForm';
 export * from './containers/RegistrationForm';
 export * from './containers/ResetPasswordForm';
-export * from './containers/ForgotPasswordForm';
 export * from './containers/NewPasswordForm';
 export * from './containers/MovieGallery';
 export * from './containers/UserSettings';

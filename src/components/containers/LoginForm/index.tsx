@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 import styles from './loginForm.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../stores/store.ts';
-import { clearSuccessMessage, setAuthenticated } from '../../../stores/slices/authSlice.ts';
+import { clearSuccessMessage, setAuthenticated, setEmailInStore } from '../../../stores/slices/authSlice.ts';
 
 const LoginForm: FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
-    const { successMessage, emailInStore, passwordInStore } = useSelector((state: RootState) => state.auth);
+    const { successMessage } = useSelector((state: RootState) => state.auth);
     const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch();
     let title, form, mess;
@@ -30,24 +30,36 @@ const LoginForm: FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Сначала очистим ошибки
+        // ошибки
         setError(null);
 
-        // Проверка email
-        if (email !== emailInStore) {
-            setError('Email is incorrect');
-            return;
-        }
+        const checkCredentialsInLocalStorage = (email: string, password: string): string | null => {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-        // Проверка пароля
-        if (password !== passwordInStore) {
-            setError('Password is incorrect');
-            return;
-        }
+            const user = users.find(
+                (user: { email: string; password: string }) => user.email === email
+            );
 
-        // Если и email, и пароль верны, авторизуем пользователя
-        dispatch(setAuthenticated(true));
-        dispatch(clearSuccessMessage());
+            if (!user) {
+                return 'email';
+            }
+
+            if (user.password !== password) {
+                return 'password';
+            }
+
+            return null;  // Если оба поля верны
+        };
+        
+        const res = checkCredentialsInLocalStorage(email, password);
+
+        if (res) {
+            setError(`Пользователя с таким ${res} не существует`);
+        } else {
+            dispatch(setAuthenticated(true));
+            dispatch(clearSuccessMessage());
+            dispatch(setEmailInStore(email));
+        }
     };
 
     return (
