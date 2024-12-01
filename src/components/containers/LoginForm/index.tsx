@@ -34,7 +34,7 @@ const LoginForm: FC = () => {
         setError(null);
 
         const checkCredentialsInLocalStorage = (email: string, password: string): string | null => {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const users = JSON.parse(localStorage.getItem('users'));
 
             const user = users.find(
                 (user: { email: string; password: string }) => user.email === email
