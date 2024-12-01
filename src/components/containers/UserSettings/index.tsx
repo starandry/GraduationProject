@@ -11,6 +11,7 @@ import {setDarkMode} from "../../../stores/slices/themeSlice.ts";
 import {Spacer} from "../../UI/Spacer";
 import { setEmailInStore } from '../../../stores/slices/authSlice.ts';
 import { useNavigate } from 'react-router-dom';
+import {EMAILREGEX, PASSWORDREGEX} from "../../../constants/AuthConstants.ts";
 
 const UserSettings: React.FC = () => {
     const dispatch = useDispatch();
@@ -25,10 +26,6 @@ const UserSettings: React.FC = () => {
     const navigate = useNavigate();
     let compWrProfile, compTitleProfile, compWrapPassword, compWrapColor, compCancelButton,
     compLabelUseSet, compInputName, compInputPassword;
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
 
 
     const handleChange = (checked: boolean) => {
@@ -55,10 +52,9 @@ const UserSettings: React.FC = () => {
         compInputPassword = `${styles.inputPassword} ${styles.lightInputPassword}`;
     }
 
-    const checkPasswordByEmail = (email: string, password: string): boolean => {
-        // Извлекаем пользователей из localStorage
-        const users = JSON.parse(localStorage.getItem('users'));
+    const users = JSON.parse(localStorage.getItem('users'));
 
+    const checkPasswordByEmail = (email: string, password: string): boolean => {
         // Ищем пользователя по email
         const user = users.find((user: { email: string }) => user.email === email);
 
@@ -66,11 +62,15 @@ const UserSettings: React.FC = () => {
         return user && user.password === password;
     };
 
+    const handleCancel = () => {
+        navigate('/');
+    };
+
     const handleSave = async (event: React.FormEvent) => {
         event.preventDefault();
 
         // Проверка на корректность email
-        if (!emailRegex.test(email)) {
+        if (!EMAILREGEX.test(email)) {
             setError('Неверный формат email.');
             return;
         }
@@ -88,12 +88,26 @@ const UserSettings: React.FC = () => {
         }
 
         // Проверка сложности нового пароля
-        if (!passwordRegex.test(newPassword)) {
+        if (!PASSWORDREGEX.test(newPassword)) {
             setError('Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.');
             return;
         }
 
-        // Если все проверки пройдены успешно, сохраняем данные в Redux
+        // индекс текущего пользователя по email
+        const userIndex = users.findIndex((user: { email: string }) => user.email === emailInStore);
+
+        if (userIndex !== -1) {
+            users[userIndex] = {
+                ...users[userIndex], // остальные данные
+                email: email,         // обновляем email
+                password: newPassword, // обновляем пароль
+                username: name,        // обновляем username
+            };
+
+            // Сохраняем обновленный список пользователей в localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
         dispatch(setEmailInStore(email));
 
         navigate('/');
@@ -171,7 +185,7 @@ const UserSettings: React.FC = () => {
                     </Wrapper>
                     <Wrapper className={styles.buttonGroup}>
                         <Button type={'button'}
-                                onClick={() => navigate('/')}
+                                onClick={handleCancel}
                                 className={compCancelButton}>Cancel</Button>
                         <Button type={'submit'} className={styles.saveButton}>Save</Button>
                     </Wrapper>
