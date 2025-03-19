@@ -71,7 +71,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
                 <FireIcon className={fireIconClass}/>
                 <span>{movie.imdbRating}</span>
             </span>
-            <span className={styles.favouriteIcondiv} onClick={handleFavouriteClick}>
+            <span className={styles.favouriteIconWrapper} onClick={handleFavouriteClick}>
                 <div className={`${divClassName ? divClassName : ''}`}>
                     <FavouriteIcon  isActive={isFavourite}/>
                 </div>
