@@ -4,7 +4,6 @@ import styles from './filterModal.module.scss';
 import {Input} from '../../UI/Input';
 import {SubTitle} from '../../UI/SubTitle';
 import {Button} from '../../UI/Button';
-import {Wrapper} from "../Wrapper";
 import {BigCloseIcon} from "../../UI/Icon/icon.component.tsx";
 import {fetchMoviesByFilterAsync} from "../../../stores/slices/moviesSlice.ts";
 import {useAppDispatch} from "../../../hooks/useAppDispatch.ts";
@@ -71,14 +70,14 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContainer}>
-                <Wrapper className={styles.wrappClose}>
+                <div className={styles.wrappClose}>
                     <SubTitle text="Filters" className={styles.modalTitle}/>
                     <Button className={styles.btnClose} onClick={onClose}>
                         <BigCloseIcon width={'16'} height={'16'}/>
                     </Button>
-                </Wrapper>
+                </div>
 
-                <Wrapper className={styles.filterSection}>
+                <div className={styles.filterSection}>
                     <span className={styles.label}>Sort by</span>
                     <div className={styles.sortOptions}>
                         <Button
@@ -94,9 +93,9 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
                             Year
                         </Button>
                     </div>
-                </Wrapper>
+                </div>
 
-                <Wrapper className={styles.filterSection}>
+                <div className={styles.filterSection}>
                     <span className={styles.label}>Full or short movie name</span>
                     <Input
                         type="text"
@@ -105,9 +104,9 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
                         onChange={(e) => setMovieName(e.target.value)}
                         className={styles.inputFilterSection}
                     />
-                </Wrapper>
+                </div>
 
-                <Wrapper className={styles.filterSection}>
+                <div className={styles.filterSection}>
                     <span className={styles.label}>Genre</span>
                     <div className={styles.genreOptions}>
                         {genres.map((genre) => (
@@ -117,11 +116,11 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
                             </Button>
                         ))}
                     </div>
-                </Wrapper>
+                </div>
 
-                <Wrapper className={styles.filterSection}>
+                <div className={styles.filterSection}>
                     <span className={styles.label}>Years</span>
-                    <Wrapper className={styles.filterYears}>
+                    <div className={styles.filterYears}>
                         <Input
                             className={styles.inputYears}
                             type="text"
@@ -136,12 +135,12 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
                             value={yearTo}
                             onChange={(e) => setYearTo(e.target.value)}
                         />
-                    </Wrapper>
-                </Wrapper>
+                    </div>
+                </div>
 
-                <Wrapper className={styles.filterSection}>
+                <div className={styles.filterSection}>
                     <span className={styles.label}>Rating</span>
-                    <Wrapper className={styles.filterYears}>
+                    <div className={styles.filterYears}>
                         <Input
                             className={styles.inputYears}
                             type="text"
@@ -156,10 +155,10 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
                             value={ratingTo}
                             onChange={(e) => setRatingTo(e.target.value)}
                         />
-                    </Wrapper>
-                </Wrapper>
+                    </div>
+                </div>
 
-                <Wrapper className={styles.filterSection}>
+                <div className={styles.filterSection}>
                     <span className={styles.label}>Country</span>
                     <select
                         className={styles.select}
@@ -172,12 +171,12 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
                         <option value="France">France</option>
                         <option value="Germany">Germany</option>
                     </select>
-                </Wrapper>
+                </div>
 
-                <Wrapper className={styles.actionButtons}>
+                <div className={styles.actionButtons}>
                     <Button className={styles.clearButton} onClick={handleClearFilter}>Clear filter</Button>
                     <Button className={styles.showButton} onClick={handleShowResults}>Show results</Button>
-                </Wrapper>
+                </div>
             </div>
         </div>
     );

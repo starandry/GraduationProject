@@ -4,7 +4,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MovieCard } from "../../UI/MovieCard";
 import { Movie } from '../../../types';
-import { Wrapper } from "../Wrapper";
 import styles from './cardSlider.module.scss';
 import './cardSlider.scss';
 import { ArrowLeft, ArrowRigth } from "../../UI/Icon/icon.component.tsx";
@@ -95,9 +94,9 @@ const CardSlider: React.FC<SliderProps> = ({cards}) => {
     return (
         <Slider {...settings}>
             {cards.map((card) => (
-                <Wrapper className={styles.wrapSlider} key={card.imdbID}>
-                    <MovieCard movie={card} wrapperClassName={'favouriteNone'}/>
-                </Wrapper>
+                <div className={styles.wrapSlider} key={card.imdbID}>
+                    <MovieCard movie={card}/>
+                </div>
             ))}
         </Slider>
     );

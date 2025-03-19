@@ -6,7 +6,6 @@ import { RootState, AppDispatch  } from '../../../stores/store.ts';
 import styles from './movieDetails.module.scss';
 import { MovieDetails as MovieDetailsType } from '../../../types';
 import { Movie } from "../../../types";
-import {Wrapper} from "../Wrapper";
 import {Spacer} from "../../UI/Spacer";
 import {FavouriteIcon, IMDbBadge, ShareIcon} from "../../UI/Icon/icon.component.tsx";
 import {toggleFavourite} from "../../../stores/slices/favouritesSlice.ts";
@@ -82,14 +81,14 @@ const MovieDetails: React.FC = () => {
     if (!movieDetails) return null;
 
     return (
-        <Wrapper className={styles.wrappMovieDetails}>
-            <Wrapper className={styles.movieDetails}>
-                <Wrapper className={styles.container}>
-                    <Wrapper className={styles.wrappPoster}>
+        <div className={styles.wrappMovieDetails}>
+            <div className={styles.movieDetails}>
+                <div className={styles.container}>
+                    <div className={styles.wrappPoster}>
                         <img src={movieDetails.Poster !== 'N/A' ? movieDetails.Poster : 'https://via.placeholder.com/300x450'}
                              alt={movieDetails.Title}
                              className={styles.poster}/>
-                        <Wrapper className={panel}>
+                        <div className={panel}>
                             <span className={styles.wrapFavourite} onClick={handleFavouriteClick}>
                                 <FavouriteIcon isActive={isFavourite}/>
                             </span>
@@ -97,27 +96,27 @@ const MovieDetails: React.FC = () => {
                                 <span className={styles.wrapShare} onClick={handleShareClick}>
                                 <ShareIcon/>
                             </span>
-                        </Wrapper>
-                    </Wrapper>
-                    <Wrapper className={styles.movieHeader}>
+                        </div>
+                    </div>
+                    <div className={styles.movieHeader}>
                         <p className={styles.genre}>{movieDetails.Genre.split(',').map(genre => genre.trim()).join(' • ')}</p>
                         <h2 className={titleMovie}>{movieDetails.Title}</h2>
-                        <Wrapper className={styles.infoBadges}>
+                        <div className={styles.infoBadges}>
                 <span className={styles.rating}>
                     <span>{movieDetails.imdbRating}</span>
                 </span>
-                            <Wrapper className={styles.IMDWrap}>
+                            <div className={styles.IMDWrap}>
                                 <IMDbBadge/>
                                 <span>{movieDetails.imdbRating}</span>
-                            </Wrapper>
-                            <Wrapper className={styles.runtimeWrap}>
+                            </div>
+                            <div className={styles.runtimeWrap}>
                                 <span>{movieDetails.Runtime}</span>
-                            </Wrapper>
-                        </Wrapper>
-                    </Wrapper>
-                    <Wrapper className={styles.movieInfo}>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.movieInfo}>
                         <p className={plotMovie}>{movieDetails.Plot}</p>
-                        <Wrapper className={styles.detailsWrap}>
+                        <div className={styles.detailsWrap}>
                             <span>Year:</span><p className={descMpvie}>{movieDetails.Year}</p>
                             <span>Released:</span><p className={descMpvie}>{movieDetails.Released}</p>
                             <span>BoxOffice:</span><p className={descMpvie}>{movieDetails.BoxOffice}</p>
@@ -126,18 +125,18 @@ const MovieDetails: React.FC = () => {
                             <span>Actors:</span><p className={descMpvie}>{movieDetails.Actors}</p>
                             <span>Director:</span><p className={descMpvie}>{movieDetails.Director}</p>
                             <span>Writers:</span><p className={descMpvie}>{movieDetails.Writer}</p>
-                        </Wrapper>
-                    </Wrapper>
-                </Wrapper>
-            </Wrapper>
-            <Wrapper className={styles.wrappRecommended}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.wrappRecommended}>
                 <Spacer className={styles.recommendedSpacer}/>
-                <Wrapper className={styles.wrapCardSlider}>
+                <div className={styles.wrapCardSlider}>
                     <SubTitle className={recMovie} text={'Recommendations'}/>
                     <CardSlider cards={recommendedMovies}/>
-                </Wrapper>
-            </Wrapper>
-        </Wrapper>
+                </div>
+            </div>
+        </div>
     );
 };
 

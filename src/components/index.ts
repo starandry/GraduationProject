@@ -1,5 +1,4 @@
 export * from './containers/Background';
-export * from './containers/Wrapper';
 export * from './containers/Footer';
 export * from './UI/Button';
 export * from './UI/CLink';

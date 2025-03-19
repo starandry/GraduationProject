@@ -9,7 +9,6 @@ import {RootState} from "../../../stores/store.ts";
 import { toggleMenu, closeMenu } from '../../../stores/slices/hamburgerSlice.ts';
 import { useDispatch } from "react-redux";
 import { AppDispatch } from '../../../stores/store.ts';
-import {Wrapper} from "../Wrapper";
 import { Logout } from '../Logout';
 
 export type UserProfileProps = {
@@ -82,7 +81,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
                 <div className={styles.closeIcon} onClick={closeHamburger}>
                     <CloseIcon />
                 </div>
-                <Wrapper className={styles.wrappHamb}>
+                <div className={styles.wrappHamb}>
                     {menuItems.map((item) => (
                         <Link
                             key={item.path}
@@ -94,7 +93,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
                             <span className={styles.text}>{item.label}</span>
                         </Link>
                     ))}
-                </Wrapper>
+                </div>
             </div>
         </div>
     );

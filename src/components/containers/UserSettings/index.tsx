@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './userSettings.module.scss';
 import {SubTitle} from "../../UI/SubTitle";
 import {Input} from "../../UI/Input";
-import {Wrapper} from "../Wrapper";
 import {Button} from "../../UI/Button";
 import Switch from 'react-switch';
 import {useDispatch, useSelector} from "react-redux";
@@ -116,9 +115,9 @@ const UserSettings: React.FC = () => {
     return (
         <>
             <form className={styles.profileSettings} onSubmit={handleSave}>
-                <Wrapper className={styles.section}>
+                <div className={styles.section}>
                     <SubTitle text={'Profile'} className={compTitleProfile}/>
-                    <Wrapper className={compWrProfile}>
+                    <div className={compWrProfile}>
                         <Input type={'text'}
                                label={'Name'}
                                value={name}
@@ -135,11 +134,11 @@ const UserSettings: React.FC = () => {
                                className={compInputName}
                                labelClassName={compLabelUseSet}
                                containerClassName={styles.inputGroup}/>
-                    </Wrapper>
-                </Wrapper>
-                <Wrapper className={styles.section}>
+                    </div>
+                </div>
+                <div className={styles.section}>
                     <SubTitle text={'Password'} className={compTitleProfile}/>
-                    <Wrapper className={compWrapPassword}>
+                    <div className={compWrapPassword}>
                         <Input type={'password'}
                                label={'Password'}
                                value={password}
@@ -165,15 +164,15 @@ const UserSettings: React.FC = () => {
                                labelClassName={compLabelUseSet}
                                containerClassName={styles.inputConfirmPassword}/>
                         {error && <div className={styles.errorMessage}>{error}</div>}
-                    </Wrapper>
-                </Wrapper>
-                <Wrapper className={styles.sectionTheme}>
+                    </div>
+                </div>
+                <div className={styles.sectionTheme}>
                     <SubTitle text={'Color mode'} className={compTitleProfile}/>
-                    <Wrapper className={compWrapColor}>
-                        <Wrapper className={styles.wrapTheme}>
+                    <div className={compWrapColor}>
+                        <div className={styles.wrapTheme}>
                             <label className={compLabelUseSet}>Dark</label>
                             <span>Use dark theme</span>
-                        </Wrapper>
+                        </div>
                         <Switch
                             onChange={handleChange}      // Функция для обработки изменений
                             checked={isDark}             // Указывает текущее состояние (вкл/выкл)
@@ -182,14 +181,14 @@ const UserSettings: React.FC = () => {
                             checkedIcon={false}          // Отключает иконку при включенном состоянии
                             uncheckedIcon={false}        // Отключает иконку при выключенном состоянии
                         />
-                    </Wrapper>
-                    <Wrapper className={styles.buttonGroup}>
+                    </div>
+                    <div className={styles.buttonGroup}>
                         <Button type={'button'}
                                 onClick={handleCancel}
                                 className={compCancelButton}>Cancel</Button>
                         <Button type={'submit'} className={styles.saveButton}>Save</Button>
-                    </Wrapper>
-                </Wrapper>
+                    </div>
+                </div>
             </form>
             <Spacer className={styles.spacer}/>
         </>
