@@ -28,7 +28,7 @@ export default [
             '@typescript-eslint': tsEslintPlugin,
         },
         rules: {
-            ...tsEslintPlugin.configs.recommended.rules, //задаются базовые настройки, кот  можно изменить или расширить
+            '@typescript-eslint/no-unused-vars': 'warn',
         },
     },
     // Конфигурация для React Hooks и React Refresh

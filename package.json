@@ -9,7 +9,7 @@
         "lint": "eslint .",
         "format": "prettier --write .",
         "check": "npm run lint && npm run format",
-        "prepare": "husky install",
+        "prepare": "husky",
         "preview": "vite preview"
     },
     "dependencies": {
