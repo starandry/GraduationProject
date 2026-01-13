@@ -2,27 +2,17 @@ import React, { FC, useState } from 'react';
 import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
 import styles from './resetPasswordForm.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import {RootState} from "../../../stores/store.ts";
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setEmailInStore } from '../../../stores/slices/authSlice.ts'; // FirebaseError для обработки ошибок
+import { setEmailInStore } from '../../../stores/slices/authSlice.ts';
+import { useThemeStyles } from '../../../hooks/useThemeStyles';
 
 const ResetPasswordForm: FC = () => {
     const [email, setEmail] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
-    const isDark = useSelector((state: RootState) => state.theme.isDark);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    let title, form;
-
-    if (isDark) {
-        title = styles.title;
-        form = styles.resetPasswordForm;
-    } else {
-        title = `${styles.title} ${styles.titleLight}`;
-        form = `${styles.resetPasswordForm} ${styles.resetPasswordFormLight}`;
-    }
+    const getThemeClass = useThemeStyles(styles);
 
     function checkEmailInLocalStorage(email: string): boolean {
         const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -45,8 +35,8 @@ const ResetPasswordForm: FC = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className={form}>
-            <h2 className={title}>Reset Password</h2>
+        <form onSubmit={handleSubmit} className={getThemeClass('resetPasswordForm')}>
+            <h2 className={getThemeClass('title')}>Reset Password</h2>
 
             {error && <p className={styles.error}>{error}</p>}
 

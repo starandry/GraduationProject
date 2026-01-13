@@ -15,5 +15,6 @@
         "noEmit": true, //Отключает генерацию файлов JavaScript это  для vite
         "jsx": "react-jsx" //Указывает поддержку нового JSX-трансформера React, который не требует явного импорта React в каждом файле.
     },
-    "include": ["src"] //TypeScript будет обрабатывать только файлы внутри папки src
+    "include": ["src"], //TypeScript будет обрабатывать только файлы внутри папки src
+    "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/test/**/*"]
 }

@@ -1,0 +1,46 @@
+@use '../../../../styles/mixins' as *;
+
+.movieGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-gap: 40px;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+// 1440px: 3 columns, 2 rows
+@media (max-width: 1919px) {
+    .movieGrid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+    }
+}
+
+// 1280px and 1024px: 4 columns, 3 rows
+@media (max-width: 1439px) {
+    .movieGrid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        grid-gap: 30px;
+    }
+}
+
+// 768px (tablet): 3 columns
+@media (max-width: 1023px) {
+    .movieGrid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        grid-gap: 25px;
+    }
+}
+
+// 320px (mobile): 1 column
+@media (max-width: 767px) {
+    .movieGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        grid-gap: 20px;
+    }
+}

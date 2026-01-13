@@ -1,18 +1,45 @@
 import axios from 'axios';
 import { API_URL } from '../constants/APIconstats.ts';
 import { FilterOptions, Movie } from '../types';
+import { movieCache } from '../utils/apiCache';
+
+/**
+ * Fetch movie details with caching to reduce API calls
+ */
+const fetchMovieDetailsWithCache = async (imdbID: string): Promise<Movie> => {
+    const cacheKey = `movie_${imdbID}`;
+    const cached = movieCache.get<Movie>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const response = await axios.get(`${API_URL}&i=${imdbID}`);
+    if (response.data.Response === 'True') {
+        movieCache.set(cacheKey, response.data);
+        return response.data;
+    }
+    throw new Error(response.data.Error);
+};
 
 export const fetchMovies = async (page: number = 1): Promise<Movie[]> => {
+    const cacheKey = `movies_page_${page}`;
+    const cached = movieCache.get<Movie[]>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
     const response = await axios.get(`${API_URL}&s=all&type=movie&y=2020&page=${page}`);
 
     if (response.data.Response === 'True') {
-        const movieDetailsPromises = response.data.Search.map(async (movie: { imdbID: string }) => {
-            const detailsResponse = await axios.get(`${API_URL}&i=${movie.imdbID}`);
-            /*console.log(detailsResponse.data);*/
-            return detailsResponse.data;
-        });
+        const movieDetailsPromises = response.data.Search.map((movie: { imdbID: string }) =>
+            fetchMovieDetailsWithCache(movie.imdbID)
+        );
 
-        return await Promise.all(movieDetailsPromises);
+        const movies = await Promise.all(movieDetailsPromises);
+        movieCache.set(cacheKey, movies);
+        return movies;
     } else {
         throw new Error(response.data.Error);
     }
@@ -21,16 +48,24 @@ export const fetchMovies = async (page: number = 1): Promise<Movie[]> => {
 export const fetchMoviesByFilter = async (filters: FilterOptions): Promise<Movie[]> => {
     const year = filters.yearFrom || filters.yearTo || '';
     const title = filters.movieName || 'all';
-    const movies: Movie[] = [];
+
+    // Create cache key from filters
+    const cacheKey = `filter_${title}_${year}_${filters.genres.join(',')}_${filters.ratingFrom}_${filters.ratingTo}_${filters.country}_${filters.sortBy}`;
+    const cached = movieCache.get<Movie[]>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
+    const movies: { imdbID: string }[] = [];
 
     try {
-        for (let i = 1; i <= 5; i++) {
-            // Цикл для трёх страниц
+        // Reduce from 5 to 3 pages to minimize API calls
+        for (let i = 1; i <= 3; i++) {
             const response = await axios.get(`${API_URL}&s=${title}&type=movie&y=${year}&page=${i}`);
             if (response.data.Search) {
-                movies.push(...response.data.Search); // Добавляем фильмы в массив
+                movies.push(...response.data.Search);
             } else {
-                console.warn(`Нет данных на странице ${i}`);
                 break;
             }
         }
@@ -38,10 +73,10 @@ export const fetchMoviesByFilter = async (filters: FilterOptions): Promise<Movie
         console.error('Ошибка при выполнении запроса:', error);
     }
 
-    const detailedMoviesPromises = movies.map(async (movie: { imdbID: string }) => {
-        const detailsResponse = await axios.get(`${API_URL}&i=${movie.imdbID}`);
-        return detailsResponse.data;
-    });
+    // Use cached movie details
+    const detailedMoviesPromises = movies.map((movie) =>
+        fetchMovieDetailsWithCache(movie.imdbID)
+    );
 
     const detailedMovies = await Promise.all(detailedMoviesPromises);
 
@@ -84,7 +119,7 @@ export const fetchMoviesByFilter = async (filters: FilterOptions): Promise<Movie
             : moviesByRating; // Если страна не указана, вернуть все фильмы из moviesByRating
 
     // Сортировка по рейтингу или году
-    return moviesByCountry.sort((a, b) => {
+    const sortedMovies = moviesByCountry.sort((a, b) => {
         if (filters.sortBy === 'Rating') {
             const ratingA = parseFloat(a.imdbRating) || 0;
             const ratingB = parseFloat(b.imdbRating) || 0;
@@ -94,10 +129,12 @@ export const fetchMoviesByFilter = async (filters: FilterOptions): Promise<Movie
             const yearB = parseInt(b.Year, 10) || 0;
             return yearA - yearB;
         }
-        return 0; // , если `sortBy` не указан
+        return 0;
     });
 
-
+    // Cache the filtered and sorted results
+    movieCache.set(cacheKey, sortedMovies);
+    return sortedMovies;
 };
 
 export const fetchHighRatedMovies = async (page: number, minRating: number): Promise<Movie[]> => {
@@ -109,20 +146,21 @@ export const fetchHighRatedMovies = async (page: number, minRating: number): Pro
 };
 
 export const fetchMovieDetails = async (imdbID: string): Promise<Movie> => {
-    const response = await axios.get(`${API_URL}&i=${imdbID}`);
-
-    if (response.data.Response === 'True') {
-        return response.data;
-    } else {
-        throw new Error(response.data.Error);
-    }
+    return fetchMovieDetailsWithCache(imdbID);
 };
 
 export const fetchRecommendedMovies = async (genres: string[]): Promise<Movie[]> => {
+    const cacheKey = `recommended_${genres.join('_')}`;
+    const cached = movieCache.get<Movie[]>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
     const genre = genres[0]; // первый жанр для запроса
     const movies: { imdbID: string }[] = [];
 
-    // до 20 фильмов (2 страницs по 10 фильмов)
+    // до 20 фильмов (2 страницы по 10 фильмов)
     for (let page = 1; page <= 2; page++) {
         const response = await axios.get(`${API_URL}&s=${genre}&type=movie&page=${page}`);
         if (response.data.Response === 'True') {
@@ -132,22 +170,22 @@ export const fetchRecommendedMovies = async (genres: string[]): Promise<Movie[]>
         }
     }
 
-    // детали для каждого фильма, чтобы узнать жанры
-    const detailedMoviesPromises = movies.map(async (movie: { imdbID: string }) => {
-        const detailsResponse = await axios.get(`${API_URL}&i=${movie.imdbID}`);
-        return detailsResponse.data;
-    });
+    // Use cached movie details
+    const detailedMoviesPromises = movies.map((movie) =>
+        fetchMovieDetailsWithCache(movie.imdbID)
+    );
 
     const detailedMovies = await Promise.all(detailedMoviesPromises);
 
-    //фильмы, у которых хотя бы два жанра совпадают
-    return detailedMovies.filter((movie: Movie) => {
-        // жанры кот  есть  у найденного фильма
+    // фильмы, у которых хотя бы два жанра совпадают
+    const recommended = detailedMovies.filter((movie: Movie) => {
         const movieGenres = movie.Genre.split(',').map((genre) => genre.trim());
-        //жанры кот  совпадают  с исходным фильмом
         const matchingGenres = genres.filter((genre) => movieGenres.includes(genre));
         return matchingGenres.length >= 2;
     });
+
+    movieCache.set(cacheKey, recommended);
+    return recommended;
 };
 
 export const fetchMoviesBySearch = async (query: string, page: number = 1): Promise<Movie[]> => {
@@ -155,15 +193,23 @@ export const fetchMoviesBySearch = async (query: string, page: number = 1): Prom
         throw new Error('Search query cannot be empty');
     }
 
+    const cacheKey = `search_${query}_${page}`;
+    const cached = movieCache.get<Movie[]>(cacheKey);
+
+    if (cached) {
+        return cached;
+    }
+
     const response = await axios.get(`${API_URL}&s=${encodeURIComponent(query)}&type=movie&page=${page}`);
 
     if (response.data.Response === 'True') {
-        const movieDetailsPromises = response.data.Search.map(async (movie: { imdbID: string }) => {
-            const detailsResponse = await axios.get(`${API_URL}&i=${movie.imdbID}`);
-            return detailsResponse.data;
-        });
+        const movieDetailsPromises = response.data.Search.map((movie: { imdbID: string }) =>
+            fetchMovieDetailsWithCache(movie.imdbID)
+        );
 
-        return await Promise.all(movieDetailsPromises);
+        const movies = await Promise.all(movieDetailsPromises);
+        movieCache.set(cacheKey, movies);
+        return movies;
     } else {
         throw new Error(response.data.Error || 'No movies found');
     }

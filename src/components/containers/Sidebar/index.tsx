@@ -2,12 +2,10 @@ import React from "react";
 import {Routes, Route, Link, useLocation} from 'react-router-dom';
 import styles from './sidebar.module.scss';
 import { menuItems, routes } from '../../../routes/menuRoutes.tsx';
-import {useActivePath} from "../../../hooks/useActivePath.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 
 const Sidebar: React.FC = () => {
-    const { activePath, handleLinkClick } = useActivePath();
     const location = useLocation();
     const { search } = useSelector((state: RootState) => state.movies);
     const currentPath = location.pathname;
@@ -37,8 +35,7 @@ const Sidebar: React.FC = () => {
                         <li key={index} className={styles.navItem}>
                             <Link
                                 to={item.path}
-                                className={`${styles.menuLink} ${activePath === item.path ? itemSearch : ''}`}
-                                onClick={() => handleLinkClick(item.path)}
+                                className={`${styles.menuLink} ${currentPath === item.path ? itemSearch : ''}`}
                             >
                                 {item.icon}
                                 <span className={styles.text}>{item.label}</span>

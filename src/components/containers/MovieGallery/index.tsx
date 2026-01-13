@@ -1,18 +1,16 @@
-import React, { useEffect } from 'react';
-import {MovieCard} from '../../UI/MovieCard';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import styles from './movieGallery.module.scss';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
    fetchHighRatedMoviesAsync,
    fetchMoviesAsync,
    fetchMoviesByFilterAsync,
 } from '../../../stores/slices/moviesSlice.ts';
 import { selectFavourites } from '../../../stores/slices/favouritesSlice';
-import {AppDispatch, RootState} from '../../../stores/store.ts';
-import {useLocation} from 'react-router-dom';
-import {MIN_RATING} from "../../../constants/APIconstats.ts";
-import {SectionTitle} from "../../UI/SectionTitle";
-import ImageCard from "../ImageCard";
+import { AppDispatch, RootState } from '../../../stores/store.ts';
+import { useLocation } from 'react-router-dom';
+import { MIN_RATING } from '../../../constants/APIconstats.ts';
+import { SectionTitle } from '../../UI/SectionTitle';
 import { FiltersState } from '../../../types';
 import {
    selectButtons,
@@ -20,8 +18,11 @@ import {
    clearFilters,
    clearFilterAndFetchMovies
 } from '../../../stores/slices/filtersSlice.ts';
-import { BigCloseIcon } from '../../UI/Icon/icon.component.tsx';
-import { Button } from '../../UI/Button';
+import { GallerySkeleton } from '../../UI/Skeleton';
+import { FilterButtons } from './FilterButtons';
+import { EmptyState } from './EmptyState';
+import { ErrorMessage } from '../../UI/ErrorMessage';
+import { MovieGrid } from './MovieGrid';
 
 const MovieGallery: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>();
@@ -32,21 +33,22 @@ const MovieGallery: React.FC = () => {
    const currentPath = location.pathname;
    const selectedButtons = useSelector(selectButtons);
    const filters = useSelector(selectFilters);
-   let galleryClass, titleHome, sectionTitleText;
 
-   if (currentPath === '/trends' || currentPath === '/favorites') {
-      galleryClass = `${styles.movieGallery} ${styles.movieGalleryTrends}`;
-      titleHome = `${styles.titleHome} ${styles.titleTrends}`;
-   } else {
-      galleryClass = styles.movieGallery;
-      titleHome = styles.titleHome;
-   }
+   // Memoize computed values to prevent unnecessary recalculations
+   const { galleryClass, titleHome, sectionTitleText } = useMemo(() => {
+      const isTrendsOrFavorites = currentPath === '/trends' || currentPath === '/favorites';
 
-   if (currentPath === '/trends') {
-      sectionTitleText = 'Trends';
-   } else if (currentPath === '/favorites') {
-      sectionTitleText = 'Favorites';
-   }
+      return {
+         galleryClass: isTrendsOrFavorites
+            ? `${styles.movieGallery} ${styles.movieGalleryTrends}`
+            : styles.movieGallery,
+         titleHome: isTrendsOrFavorites
+            ? `${styles.titleHome} ${styles.titleTrends}`
+            : styles.titleHome,
+         sectionTitleText: currentPath === '/trends' ? 'Trends' :
+                          currentPath === '/favorites' ? 'Favorites' : undefined
+      };
+   }, [currentPath]);
 
    useEffect(() => {
       if (showButtons) return;
@@ -65,47 +67,44 @@ const MovieGallery: React.FC = () => {
       }
    }, [dispatch, filters, location.pathname, movies.length, page, search, showButtons]);
 
+   // FIX: Added dependency array to prevent infinite loop
    useEffect(() =>  {
       if (selectedButtons === '') {
          dispatch(clearFilters());
       }
-   });
+   }, [selectedButtons, dispatch]);
 
-   if (loading && movies.length === 0) {
-      return <p>Загрузка...</p>;
-   }
-
-   if (currentPath === '/favorites' && favourites.length === 0) {
-      return <>
-         <ImageCard
-             imageSrc={'images/empty-state.png'}
-             altText={'Empty state'} caption={'Empty state text'}/>
-      </>
-   }
-
-   const handleBtnRemove = async (btn: string) => {
+   // Memoize callback to prevent unnecessary re-renders
+   const handleBtnRemove = useCallback(async (btn: string) => {
       await dispatch(clearFilterAndFetchMovies(btn)).unwrap();
-   };
+   }, [dispatch]);
 
-   if (error) return <p>{error}</p>;
+   // Show skeleton loading state
+   if (loading && movies.length === 0) {
+      return <GallerySkeleton count={20} />;
+   }
+
+   // Show empty state for favorites
+   if (currentPath === '/favorites' && favourites.length === 0) {
+      return <EmptyState />;
+   }
+
+   // Show error message
+   if (error) {
+      return <ErrorMessage message={error} />;
+   }
 
    return (
        <>
           <SectionTitle text={sectionTitleText} className={titleHome} />
           <div className={galleryClass}>
              {showButtons && (
-                 <div className={styles.btnContainer}>
-                    {selectedButtons.split(', ').map((btn) => (
-                        <Button key={btn} className={styles.button}>
-                           <span className={styles.signGenre}>{btn}</span>
-                           <BigCloseIcon onClick={() => handleBtnRemove(btn)}/>
-                        </Button>
-                    ))}
-                 </div>
+                 <FilterButtons
+                    filters={selectedButtons}
+                    onRemoveFilter={handleBtnRemove}
+                 />
              )}
-             {movies.map((movie) => (
-                 <MovieCard key={movie.imdbID} movie={movie} />
-             ))}
+             <MovieGrid movies={movies} />
           </div>
        </>
    );

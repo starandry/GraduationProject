@@ -6,6 +6,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 import {toggleFavourite} from "../../../stores/slices/favouritesSlice.ts";
 import { Movie } from '../../../types';
+import { useThemeStyles } from '../../../hooks/useThemeStyles';
+import { LazyImage } from '../LazyImage';
 import '../../../styles/_globals.scss'
 
 type MovieCardProps = {
@@ -17,15 +19,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const rating = parseFloat(movie.imdbRating);
-    const isDark = useSelector((state: RootState) => state.theme.isDark);
     const currentPath = location.pathname;
-    let ratingClass, posterClass, fireIconClass, compTitle, seriesCard;
-
-    if (isDark) {
-        compTitle = styles.title;
-    } else {
-        compTitle = `${styles.title} ${styles.lightTitle}`;
-    }
+    const getThemeClass = useThemeStyles(styles);
+    let ratingClass, posterClass, fireIconClass, seriesCard;
 
     //лежит ли  фильм в хранилище избранных
     const isFavourite = useSelector((state: RootState) =>
@@ -77,18 +73,21 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
                 </div>
             </span>
             <Link to={`/movie/${movie.imdbID}`}>
-                <img
+                <LazyImage
                     src={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450'}
                     alt={movie.Title}
                     className={posterClass}
                 />
             </Link>
             <div className={styles.info}>
-                <h3 className={compTitle}>{movie.Title}</h3>
+                <h3 className={getThemeClass('title', 'lightTitle')}>{movie.Title}</h3>
                 <p className={styles.genre}>{movie.Genre.split(',').map(genre => genre.trim()).join(' • ')}</p>
             </div>
         </div>
     );
 };
 
-export { MovieCard };
+// Memoize component to prevent unnecessary re-renders
+const MemoizedMovieCard = React.memo(MovieCard);
+
+export { MemoizedMovieCard as MovieCard };

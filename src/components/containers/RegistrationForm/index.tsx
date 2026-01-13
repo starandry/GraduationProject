@@ -3,48 +3,41 @@ import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './registrationForm.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../stores/store.ts';
+import { useDispatch } from 'react-redux';
 import { setSuccessMessage } from '../../../stores/slices/authSlice.ts';
-import { EMAILREGEX, PASSWORDREGEX } from '../../../constants/AuthConstants.ts'
+import { EMAILREGEX, PASSWORDREGEX } from '../../../constants/AuthConstants.ts';
+import { useThemeStyles } from '../../../hooks/useThemeStyles';
+import { hashPassword } from '../../../utils/crypto';
+import { useToast } from '../../../hooks/useToast';
 
 const RegistrationForm: FC = () => {
     const [localUsername, setLocalUsername] = useState<string>('');
     const [localEmail, setEmail] = useState<string>('');
     const [localPassword, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [error, setError] = useState<string | null>(null);
-    const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    let form, title;
+    const getThemeClass = useThemeStyles(styles);
+    const toast = useToast();
 
-    if (isDark) {
-        form = styles.registrationForm;
-        title = styles.title;
-    } else {
-        form = `${styles.registrationForm} ${styles.registrationFormLight}`;
-        title = `${styles.title} ${styles.titleLight}`;
-    }
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Проверка на совпадение паролей
         if (localPassword !== confirmPassword) {
-            setError('Пароли не совпадают.');
+            toast.error('Пароли не совпадают.');
             return;
         }
 
         // Проверка формата email
         if (!EMAILREGEX.test(localEmail)) {
-            setError('Неверный формат email.');
+            toast.error('Неверный формат email.');
             return;
         }
 
         // Проверка на сложность пароля
         if (!PASSWORDREGEX.test(localPassword)) {
-            setError(
+            toast.error(
                 'Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.'
             );
             return;
@@ -72,15 +65,18 @@ const RegistrationForm: FC = () => {
         const field = getUsernameOrEmailIfExists(localUsername, localEmail);
 
         if (field) {
-            setError(`Пользователь с таким ${field} уже существует.`);
+            toast.error(`Пользователь с таким ${field} уже существует.`);
             return;
         }
 
         // Если все проверки прошли успешно, сохраняем данные в localStorage
+        // Хешируем пароль для безопасности
+        const hashedPassword = await hashPassword(localPassword);
+
         const userObject = {
             username: localUsername,
             email: localEmail,
-            password: localPassword,
+            password: hashedPassword, // Сохраняем хеш, а не plain text
         };
 
         users.push(userObject);
@@ -90,13 +86,12 @@ const RegistrationForm: FC = () => {
 
         // Перенаправляем пользователя
         navigate('/');
+        toast.success('Регистрация успешна! Теперь вы можете войти.');
     };
 
     return (
-        <form onSubmit={handleSubmit} className={form}>
-            <h2 className={title}>Sign Up</h2>
-
-            {error && <p className={styles.error}>{error}</p>}
+        <form onSubmit={handleSubmit} className={getThemeClass('registrationForm')}>
+            <h2 className={getThemeClass('title')}>Sign Up</h2>
 
             <Input
                 type="text"

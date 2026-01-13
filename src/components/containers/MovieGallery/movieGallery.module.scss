@@ -26,36 +26,19 @@
 }
 
 .movieGallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-auto-rows: min-content;
-  grid-gap: 40px;
-  max-width: 100%;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   flex-grow: 1;
+  max-width: 100%;
 }
 
 .movieGalleryTrends {
   @include sizes(null, 81vh);
 }
 
-@include screenSize(lg) {
-  .movieGallery {
-    @include sizes(null, auto);
-    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
-    grid-gap: 30px;
-    max-width: 100%;
-  }
-}
-
 @include screenSize(md) {
   .titleTrends {
     display: block;
-  }
-}
-
-@include screenSize(sm) {
-  .movieGallery {
-    grid-template-columns: 1fr;
   }
 }

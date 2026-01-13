@@ -2,6 +2,7 @@ import {Main, Auth} from './layouts';
 import './app.scss';
 import { useSelector } from 'react-redux';
 import { RootState } from './stores/store.ts';
+import { ToastContainer } from './components/UI/Toast';
 
 function App() {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -12,6 +13,7 @@ function App() {
 
     return <>
         {isAuthenticated ? <Main /> : <Auth />}
+        <ToastContainer />
     </>
 }
 

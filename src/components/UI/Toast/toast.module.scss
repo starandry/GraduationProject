@@ -1,0 +1,135 @@
+@keyframes slideIn {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+.toastContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+    width: 100%;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease-out;
+    pointer-events: all;
+    min-height: 60px;
+    backdrop-filter: blur(10px);
+}
+
+.toastExiting {
+    animation: slideOut 0.3s ease-in forwards;
+}
+
+.toastSuccess {
+    background: rgba(34, 197, 94, 0.95);
+    border-left: 4px solid #16a34a;
+    color: white;
+}
+
+.toastError {
+    background: rgba(239, 68, 68, 0.95);
+    border-left: 4px solid #dc2626;
+    color: white;
+}
+
+.toastWarning {
+    background: rgba(251, 146, 60, 0.95);
+    border-left: 4px solid #ea580c;
+    color: white;
+}
+
+.toastInfo {
+    background: rgba(59, 130, 246, 0.95);
+    border-left: 4px solid #2563eb;
+    color: white;
+}
+
+.toastIcon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.toastContent {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.toastClose {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.5);
+    animation: progress linear forwards;
+}
+
+@keyframes progress {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+@media (max-width: 768px) {
+    .toastContainer {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .toast {
+        padding: 12px;
+        font-size: 13px;
+    }
+}

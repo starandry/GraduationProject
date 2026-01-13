@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
 import { Link } from 'react-router-dom';
@@ -6,35 +6,31 @@ import styles from './loginForm.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../stores/store.ts';
 import { clearSuccessMessage, setAuthenticated, setEmailInStore } from '../../../stores/slices/authSlice.ts';
+import { useThemeStyles } from '../../../hooks/useThemeStyles';
+import { verifyPassword, hashPassword, isHashed } from '../../../utils/crypto';
+import { useToast } from '../../../hooks/useToast';
 
 const LoginForm: FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<string | null>(null);
     const { successMessage } = useSelector((state: RootState) => state.auth);
-    const isDark = useSelector((state: RootState) => state.theme.isDark);
     const dispatch = useDispatch();
-    let title, form, mess;
+    const getThemeClass = useThemeStyles(styles);
+    const toast = useToast();
 
-
-
-    if (isDark) {
-        title = styles.title;
-        form = styles.loginForm;
-        mess = styles.successMessage;
-    } else {
-        title = `${styles.title} ${styles.titleLight}`;
-        form = `${styles.loginForm} ${styles.loginFormLight}`;
-        mess =` ${styles.successMessage} ${styles.successMessageLight}`;
-    }
+    // Show success message from registration as toast
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(clearSuccessMessage());
+        }
+    }, [successMessage, toast, dispatch]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // ошибки
-        setError(null);
 
-        const checkCredentialsInLocalStorage = (email: string, password: string): string | null => {
-            const users = JSON.parse(localStorage.getItem('users'));
+        const checkCredentialsInLocalStorage = async (email: string, password: string): Promise<string | null> => {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
 
             const user = users.find(
                 (user: { email: string; password: string }) => user.email === email
@@ -44,30 +40,40 @@ const LoginForm: FC = () => {
                 return 'email';
             }
 
-            if (user.password !== password) {
-                return 'password';
+            // Проверяем, хеширован ли пароль
+            if (isHashed(user.password)) {
+                // Сравниваем хеши
+                const isValid = await verifyPassword(password, user.password);
+                if (!isValid) {
+                    return 'password';
+                }
+            } else {
+                // Старый plain text пароль - мигрируем
+                if (user.password !== password) {
+                    return 'password';
+                }
+                // Хешируем и обновляем
+                user.password = await hashPassword(password);
+                localStorage.setItem('users', JSON.stringify(users));
             }
 
             return null;  // Если оба поля верны
         };
-        
-        const res = checkCredentialsInLocalStorage(email, password);
+
+        const res = await checkCredentialsInLocalStorage(email, password);
 
         if (res) {
-            setError(`Пользователя с таким ${res} не существует`);
+            toast.error(`Пользователя с таким ${res} не существует`);
         } else {
+            toast.success('Успешный вход в систему!');
             dispatch(setAuthenticated(true));
-            dispatch(clearSuccessMessage());
             dispatch(setEmailInStore(email));
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className={form}>
-            <h2 className={title}>Sign In</h2>
-
-            {error && <p className={styles.error}>{error}</p>}
-            {successMessage && <p className={mess}>{successMessage}</p>}
+        <form onSubmit={handleSubmit} className={getThemeClass('loginForm')}>
+            <h2 className={getThemeClass('title')}>Sign In</h2>
 
             <Input
                 type="email"

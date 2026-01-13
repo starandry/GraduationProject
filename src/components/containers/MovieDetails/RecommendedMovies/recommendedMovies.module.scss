@@ -1,0 +1,22 @@
+.wrappRecommended {
+    width: 100%;
+    background: var(--background-secondary, #1a1a1a);
+}
+
+.recommendedSpacer {
+    margin: 20px 0;
+}
+
+.wrapCardSlider {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.movieRecommend {
+    margin-bottom: 20px;
+}
+
+.movieRecommendLight {
+    color: var(--text-primary-light, #333);
+}
