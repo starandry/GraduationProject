@@ -41,7 +41,8 @@
 
 .sidebarWrapp {
   @include rowing();
-  @include sizes(null, calc(100vh - 216px));
+  min-height: calc(100vh - 216px);
+  height: auto;
   padding: 49px 0;
 
   nav {
@@ -68,38 +69,52 @@
 
   .sidebarWrapp {
     @include rowing();
-    @include sizes(100%, calc(100vh - 216px));
+    width: 100%;
+    min-height: calc(100vh - 216px);
+    height: auto;
   }
 }
 
 // Tablet styles (768px and below)
 @include screenSize(md) {
   .sidebarWrapp {
-    @include sizes(100%, calc(100vh - 232px));
+    width: 100%;
+    min-height: calc(100vh - 232px);
+    height: auto;
   }
 
   .trendsSidebar {
    @include rowing(null, null, column);
-   @include sizes(100%, calc(100vh - 90px));
+   width: 100%;
+   min-height: calc(100vh - 90px);
+   height: auto;
   }
 
   .settingsSidebar {
-    @include sizes(100%, calc(100vh - 110px));
+    width: 100%;
+    min-height: calc(100vh - 110px);
+    height: auto;
   }
 
   .movieSidebar {
-    @include sizes(100%, calc(100vh - 180px));
+    width: 100%;
+    min-height: calc(100vh - 180px);
+    height: auto;
   }
 }
 
 // Small tablet styles (630px and below)
 @include screenSize(md-sm) {
   .sidebarWrapp {
-    @include sizes(100%, calc(100vh - 276px));
+    width: 100%;
+    min-height: calc(100vh - 276px);
+    height: auto;
   }
 
   .settingsSidebar {
-    @include sizes(100%, calc(100vh - 210px));
+    width: 100%;
+    min-height: calc(100vh - 210px);
+    height: auto;
     padding: 35px 0 0;
   }
 }
@@ -107,10 +122,14 @@
 // Mobile styles (320px and below)
 @include screenSize(xs) {
   .sidebarWrapp {
-    @include sizes(100%, calc(100vh - 232px));
+    width: 100%;
+    min-height: calc(100vh - 232px);
+    height: auto;
   }
 
   .settingsSidebar {
-    @include sizes(100%, calc(100vh - 210px));
+    width: 100%;
+    min-height: calc(100vh - 210px);
+    height: auto;
   }
 }

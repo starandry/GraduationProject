@@ -4,11 +4,13 @@
     min-height: 100vh;
     padding: 3.26vh 3.65vw 0;
     background-color: #000;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .backgroundMovie {
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 // Tablet styles (1280px and below)
