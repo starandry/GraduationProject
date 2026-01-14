@@ -37,7 +37,7 @@
   overflow: hidden;
   flex-grow: 1;
   max-width: 100%;
-  padding: 0 20px;
+  padding: 0 var(--content-padding);
 }
 
 .movieGalleryTrends {
@@ -47,7 +47,7 @@
 // Tablet styles (1280px and below)
 @include screenSize(lg) {
   .movieGallery {
-    padding: 0 15px;
+    padding: 0 var(--content-padding);
   }
 }
 
@@ -58,7 +58,7 @@
   }
 
   .movieGallery {
-    padding: 0 10px;
+    padding: 0 var(--content-padding);
   }
 
   .button {
@@ -71,7 +71,7 @@
 // Small tablet styles (630px and below)
 @include screenSize(md-sm) {
   .movieGallery {
-    padding: 0 10px;
+    padding: 0 var(--content-padding);
   }
 
   .button {
@@ -84,7 +84,7 @@
 // Mobile styles (450px and below)
 @include screenSize(sm) {
   .movieGallery {
-    padding: 0 5px;
+    padding: 0 var(--content-padding);
   }
 
   .button {
@@ -97,7 +97,7 @@
 // Extra small mobile (320px and below)
 @include screenSize(xs) {
   .movieGallery {
-    padding: 0;
+    padding: 0 var(--content-padding);
   }
 
   .button {

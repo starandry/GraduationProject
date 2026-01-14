@@ -1,20 +1,45 @@
 @use '../../../styles/mixins' as *;
 
 .header {
-  @include rowing(end, center);
+  display: grid;
+  grid-template-columns: calc(var(--sidebar-nav-width) + var(--sidebar-nav-padding)) 1fr;
+  column-gap: var(--sidebar-nav-gap);
+  align-items: center;
   padding-bottom: 10px;
-  gap: 20px;
 }
 
 .headerHumb {
   justify-content: unset;
 }
 
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.headerRight {
+  @include rowing(flex-start, center);
+  gap: 20px;
+  min-width: 0;
+  width: 100%;
+  padding: 0 var(--content-padding);
+}
+
+.headerRight > :last-child {
+  margin-left: auto;
+}
+
 // Tablet styles (1280px and below)
 @include screenSize(lg) {
   .header {
     @include rowing(space-between, center);
-    padding: 15px 20px 10px;
+    padding: 15px var(--content-padding) 10px;
+  }
+
+  .headerRight {
+    flex: 1;
+    justify-content: flex-start;
+    padding: 0;
   }
 }
 
@@ -23,7 +48,14 @@
   .header {
     flex-wrap: wrap;
     gap: 15px;
-    padding: 15px 15px 10px;
+    padding: 15px var(--content-padding) 10px;
+  }
+
+  .headerRight {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 0;
   }
 }
 
@@ -31,13 +63,18 @@
 @include screenSize(md-sm) {
   .header {
     gap: 10px;
-    padding: 10px;
+    padding: 10px var(--content-padding);
+  }
+
+  .headerRight {
+    gap: 10px;
+    padding: 0;
   }
 }
 
 // Mobile styles (450px and below)
 @include screenSize(sm) {
   .header {
-    padding: 10px 5px;
+    padding: 10px var(--content-padding);
   }
 }

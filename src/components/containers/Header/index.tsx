@@ -14,8 +14,13 @@ const Header: React.FC<ComponentWithChildren> = ({ children }) => {
         compHeader = `${styles.header} ${styles.headerHumb}`; // Добавляем класс, если гамбургер открыт
     }
 
+    const childrenArray = React.Children.toArray(children);
+    const logo = childrenArray[0];
+    const rest = childrenArray.slice(1);
+
     return  <div className={compHeader}>
-        {children}
+        <div className={styles.headerLeft}>{logo}</div>
+        <div className={styles.headerRight}>{rest}</div>
     </div>
 }
 

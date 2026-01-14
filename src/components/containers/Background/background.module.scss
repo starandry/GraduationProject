@@ -6,11 +6,13 @@
     background-color: #000;
     overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 .backgroundMovie {
     overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 // Tablet styles (1280px and below)

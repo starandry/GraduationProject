@@ -40,21 +40,24 @@
 }
 
 .sidebarWrapp {
-  @include rowing();
+  display: grid;
+  grid-template-columns: calc(var(--sidebar-nav-width) + var(--sidebar-nav-padding)) 1fr;
+  column-gap: var(--sidebar-nav-gap);
+  align-items: start;
   min-height: calc(100vh - 216px);
   height: auto;
   padding: 49px 0;
 
   nav {
-    padding-right: 30px;
-    margin-right: 11vw;
+    width: var(--sidebar-nav-width);
+    flex-shrink: 0;
+    padding-right: var(--sidebar-nav-padding);
   }
 }
 
-.trendsSidebar {
-  nav {
-    margin-right: 9vw;
-  }
+.sidebarWrapp > :not(nav) {
+  grid-column: 2;
+  min-width: 0;
 }
 
 .movieSidebar {
@@ -68,10 +71,16 @@
   }
 
   .sidebarWrapp {
-    @include rowing();
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 0;
     width: 100%;
     min-height: calc(100vh - 216px);
     height: auto;
+  }
+
+  .sidebarWrapp > :not(nav) {
+    grid-column: 1;
   }
 }
 
@@ -84,10 +93,9 @@
   }
 
   .trendsSidebar {
-   @include rowing(null, null, column);
-   width: 100%;
-   min-height: calc(100vh - 90px);
-   height: auto;
+    width: 100%;
+    min-height: calc(100vh - 90px);
+    height: auto;
   }
 
   .settingsSidebar {
