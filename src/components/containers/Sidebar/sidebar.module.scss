@@ -60,48 +60,57 @@
   padding: 50px 0 0;
 }
 
+// Hide sidebar navigation on tablets and mobile (1280px and below)
 @include screenSize(lg) {
   .sidebarWrapp nav {
     display: none;
   }
+
+  .sidebarWrapp {
+    @include rowing();
+    @include sizes(100%, calc(100vh - 216px));
+  }
 }
 
+// Tablet styles (768px and below)
 @include screenSize(md) {
   .sidebarWrapp {
-    @include sizes(null, calc(100vh - 232px));
+    @include sizes(100%, calc(100vh - 232px));
   }
 
   .trendsSidebar {
    @include rowing(null, null, column);
-   @include sizes(null, calc(100vh - 90px));
+   @include sizes(100%, calc(100vh - 90px));
   }
 
   .settingsSidebar {
-    @include sizes(null, calc(100vh - 110px));
+    @include sizes(100%, calc(100vh - 110px));
   }
 
   .movieSidebar {
-    @include sizes(null, calc(100vh - 180px));
+    @include sizes(100%, calc(100vh - 180px));
   }
 }
 
+// Small tablet styles (630px and below)
 @include screenSize(md-sm) {
   .sidebarWrapp {
-    @include sizes(null, calc(100vh - 276px));
+    @include sizes(100%, calc(100vh - 276px));
   }
 
   .settingsSidebar {
-    @include sizes(null, calc(100vh - 210px));
+    @include sizes(100%, calc(100vh - 210px));
     padding: 35px 0 0;
   }
 }
 
+// Mobile styles (320px and below)
 @include screenSize(xs) {
   .sidebarWrapp {
-    @include sizes(null, calc(100vh - 232px));
+    @include sizes(100%, calc(100vh - 232px));
   }
 
   .settingsSidebar {
-    @include sizes(null, calc(100vh - 210px));
+    @include sizes(100%, calc(100vh - 210px));
   }
 }

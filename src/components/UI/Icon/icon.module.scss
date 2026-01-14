@@ -2,6 +2,7 @@
 
 .logo {
   margin-right: 10.9vw;
+  flex-shrink: 0;
 }
 
 .logoTrends {
@@ -12,16 +13,34 @@
   display: none;
 }
 
-@include screenSize(md) {
+.wrapLogo {
+  display: flex;
+  align-items: center;
+}
+
+// Tablet styles (1280px and below)
+@include screenSize(lg) {
   .logo {
-    margin-right: 5vw;
+    margin-right: 0;
   }
 
-  .logoMovie {
-    margin-right: 13vw;
+  .wrapLogo {
+    flex-shrink: 0;
   }
 }
 
+// Medium tablet styles (768px and below)
+@include screenSize(md) {
+  .logo {
+    margin-right: 0;
+  }
+
+  .logoMovie {
+    margin-right: 0;
+  }
+}
+
+// Small tablet styles (630px and below)
 @include screenSize(md-sm) {
   .wrapLogo {
     flex-grow: 1;
@@ -32,8 +51,25 @@
   }
 }
 
+// Mobile styles (450px and below)
 @include screenSize(sm) {
   .logo {
     margin-right: 0;
+  }
+
+  .wrapLogo {
+    width: 120px;
+  }
+}
+
+// Extra small mobile (320px and below)
+@include screenSize(xs) {
+  .wrapLogo {
+    width: 100px;
+  }
+
+  .logo {
+    width: 100px;
+    height: 30px;
   }
 }

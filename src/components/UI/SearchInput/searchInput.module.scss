@@ -6,6 +6,7 @@
   padding: 10px;
   border-radius: 8px;
   background-color: #323537;
+  max-width: 100%;
 }
 
 .lightSearchInputContainer {
@@ -19,6 +20,7 @@
   border: none;
   outline: none;
   background: transparent;
+  width: 100%;
 }
 
 .searchButton {
@@ -28,6 +30,7 @@
   border: none;
   cursor: pointer;
   background: none;
+  flex-shrink: 0;
 }
 
 .sortPoint {
@@ -49,25 +52,63 @@
   margin-top: 100px;
 }
 
-@include screenSize(md) {
-  .searchInput {
-    @include sizes(155px);
+// Tablet styles (1280px and below)
+@include screenSize(lg) {
+  .searchInputContainer {
+    max-width: 400px;
+    flex-grow: 1;
   }
 }
 
+// Medium tablet styles (768px and below)
+@include screenSize(md) {
+  .searchInputContainer {
+    max-width: 300px;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+}
+
+// Small tablet styles (630px and below)
 @include screenSize(md-sm) {
   .searchInputContainer {
     order: 2;
     margin-top: 30px;
+    max-width: 100%;
+    flex-grow: 1;
   }
 
   .searchInput {
-    @include sizes(unset);
+    width: 100%;
   }
 
   .serachHumb {
     @include sizes(calc(100vw - 280px));
     margin: 100px 0 0 -40px;
     order: 2;
+  }
+}
+
+// Mobile styles (450px and below)
+@include screenSize(sm) {
+  .searchInputContainer {
+    padding: 8px;
+  }
+
+  .searchInput {
+    font-size: 14px;
+  }
+}
+
+// Extra small mobile (320px and below)
+@include screenSize(xs) {
+  .searchInputContainer {
+    padding: 6px;
+  }
+
+  .searchInput {
+    font-size: 12px;
   }
 }

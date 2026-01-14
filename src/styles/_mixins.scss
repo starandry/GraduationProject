@@ -24,7 +24,7 @@
 
 @mixin screenSize($breakpoint) {
     @if $breakpoint == lg {
-        @media (max-width: 1200px) {
+        @media (max-width: 1280px) {
             @content;
         }
     } @else if $breakpoint == md {

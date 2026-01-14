@@ -10,16 +10,19 @@
     overflow: hidden;
 }
 
+// 1920px: 5 columns (default above)
+
 // 1440px: 3 columns, 2 rows
-@media (max-width: 1919px) {
+@media (max-width: 1919px) and (min-width: 1281px) {
     .movieGrid {
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(2, 1fr);
+        grid-gap: 35px;
     }
 }
 
 // 1280px and 1024px: 4 columns, 3 rows
-@media (max-width: 1439px) {
+@media (max-width: 1280px) and (min-width: 769px) {
     .movieGrid {
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(3, 1fr);
@@ -28,7 +31,7 @@
 }
 
 // 768px (tablet): 3 columns
-@media (max-width: 1023px) {
+@media (max-width: 768px) and (min-width: 321px) {
     .movieGrid {
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
@@ -37,7 +40,7 @@
 }
 
 // 320px (mobile): 1 column
-@media (max-width: 767px) {
+@media (max-width: 320px) {
     .movieGrid {
         grid-template-columns: 1fr;
         grid-template-rows: auto;

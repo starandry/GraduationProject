@@ -113,20 +113,7 @@
   border-radius: 10px;
 }
 
-@include screenSize(md-sm) {
-  .userProfile {
-    order: 1;
-  }
-
-  .menuItems {
-    @include sizes(230px);
-  }
-
-  .wrappHamb {
-    margin-left: -30px;
-  }
-}
-
+// Hamburger menu appears on tablets and mobile (1280px and below)
 @include screenSize(lg) {
   .circle {
     margin: 0;
@@ -142,5 +129,44 @@
 
   .userInfo {
     @include sizes(unset);
+  }
+
+  .arrowDown {
+    display: none;
+  }
+}
+
+// Small tablet adjustments (630px and below)
+@include screenSize(md-sm) {
+  .userProfile {
+    order: 1;
+    margin-left: 20px;
+  }
+
+  .menuItems {
+    @include sizes(230px);
+  }
+
+  .wrappHamb {
+    margin-left: -30px;
+  }
+
+  .circle {
+    @include sizes(50px, 50px);
+  }
+}
+
+// Mobile adjustments (450px and below)
+@include screenSize(sm) {
+  .userProfile {
+    margin-left: 15px;
+  }
+
+  .circle {
+    @include sizes(45px, 45px);
+  }
+
+  .menuItems {
+    @include sizes(100%, 100%);
   }
 }

@@ -4,6 +4,7 @@
   @include rowing(null,  null, column);
   position: relative;
   transition: transform 0.3s;
+  width: 100%;
 
   &:hover {
     transform: scale(1.05);
@@ -29,6 +30,9 @@
 
     .title {
       @include fonts(700, 16px, #fff, 24px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .lightTitle {
@@ -37,6 +41,9 @@
 
     .genre {
       @include fonts(600, 16px, #AFB2B6, 24px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }

@@ -11,6 +11,7 @@
   cursor: pointer;
   border-radius: 25px;
   background-color: #323537;
+  transition: all 0.3s ease;
 
   > span {
     padding-right: 10px;
@@ -33,9 +34,21 @@
   padding-bottom: 0;
 }
 
+// Tablet styles (1280px and below)
+@include screenSize(lg) {
+  .showMoreButton {
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+
+// Medium tablet styles (768px and below)
 @include screenSize(md) {
   .showMoreButton {
-    right: unset;
+    right: 50%;
+    transform: translateX(50%);
+    padding: 8px 20px;
+    font-size: 14px;
   }
 
   .customFooter {
@@ -43,8 +56,27 @@
   }
 }
 
+// Small tablet styles (630px and below)
+@include screenSize(md-sm) {
+  .showMoreButton {
+    padding: 8px 18px;
+    font-size: 14px;
+  }
+}
+
+// Mobile styles (450px and below)
+@include screenSize(sm) {
+  .showMoreButton {
+    padding: 6px 15px;
+    font-size: 12px;
+  }
+}
+
+// Extra small mobile (320px and below)
 @include screenSize(xs) {
   .showMoreButton {
     top: -30px;
+    padding: 6px 12px;
+    font-size: 12px;
   }
 }

@@ -3,12 +3,41 @@
 .header {
   @include rowing(end, center);
   padding-bottom: 10px;
-
-  @media (max-width: 730px) {
-    flex-wrap: wrap;
-  }
+  gap: 20px;
 }
 
 .headerHumb {
   justify-content: unset;
+}
+
+// Tablet styles (1280px and below)
+@include screenSize(lg) {
+  .header {
+    @include rowing(space-between, center);
+    padding: 15px 20px 10px;
+  }
+}
+
+// Medium tablet styles (768px and below)
+@include screenSize(md) {
+  .header {
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px 15px 10px;
+  }
+}
+
+// Small devices (630px and below)
+@include screenSize(md-sm) {
+  .header {
+    gap: 10px;
+    padding: 10px;
+  }
+}
+
+// Mobile styles (450px and below)
+@include screenSize(sm) {
+  .header {
+    padding: 10px 5px;
+  }
 }
