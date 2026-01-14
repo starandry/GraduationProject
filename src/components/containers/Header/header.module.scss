@@ -32,29 +32,36 @@
 // Tablet styles (1280px and below)
 @include screenSize(lg) {
   .header {
-    @include rowing(space-between, center);
+    @include rowing(flex-start, center);
+    gap: 60px;
     padding: 15px var(--content-padding) 10px;
   }
 
   .headerRight {
     flex: 1;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    gap: 12px;
+    min-width: 0;
     padding: 0;
+  }
+
+  .headerRight > :last-child {
+    margin-left: 0;
   }
 }
 
 // Medium tablet styles (768px and below)
 @include screenSize(md) {
   .header {
-    flex-wrap: wrap;
-    gap: 15px;
+    flex-wrap: nowrap;
+    gap: 24px;
     padding: 15px var(--content-padding) 10px;
   }
 
   .headerRight {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 15px;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 12px;
     padding: 0;
   }
 }
@@ -62,13 +69,22 @@
 // Small devices (630px and below)
 @include screenSize(md-sm) {
   .header {
-    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
     padding: 10px var(--content-padding);
   }
 
+  .headerLeft {
+    align-self: flex-start;
+  }
+
   .headerRight {
-    gap: 10px;
-    padding: 0;
+    display: contents;
+  }
+
+  .headerRight > :last-child {
+    margin-left: auto;
   }
 }
 

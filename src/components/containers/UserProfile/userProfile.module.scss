@@ -140,7 +140,7 @@
 @include screenSize(md-sm) {
   .userProfile {
     order: 1;
-    margin-left: 20px;
+    margin-left: auto;
   }
 
   .menuItems {

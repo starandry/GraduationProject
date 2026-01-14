@@ -55,15 +55,17 @@
 // Tablet styles (1280px and below)
 @include screenSize(lg) {
   .searchInputContainer {
-    max-width: 400px;
+    max-width: none;
     flex-grow: 1;
+    width: 100%;
   }
 }
 
 // Medium tablet styles (768px and below)
 @include screenSize(md) {
   .searchInputContainer {
-    max-width: 300px;
+    max-width: none;
+    width: 100%;
   }
 
   .searchInput {
@@ -75,9 +77,11 @@
 @include screenSize(md-sm) {
   .searchInputContainer {
     order: 2;
-    margin-top: 30px;
+    margin-top: 8px;
     max-width: 100%;
     flex-grow: 1;
+    flex-basis: 100%;
+    width: 100%;
   }
 
   .searchInput {
