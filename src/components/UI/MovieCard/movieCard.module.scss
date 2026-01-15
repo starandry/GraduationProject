@@ -17,6 +17,23 @@
     object-fit: cover;
   }
 
+  .posterPlaceholder {
+    @include rowing(center, center, column);
+    @include sizes(100%, 344px);
+    gap: 8px;
+    padding: 16px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #2c2f33, #1c1f22);
+    text-align: center;
+  }
+
+  .placeholderIcon {
+    color: #AFB2B6;
+    width: 64px;
+    height: 64px;
+    opacity: 0.85;
+  }
+
   .trendsPoster {
     max-height: 390px;
   }
@@ -46,6 +63,11 @@
       white-space: nowrap;
     }
   }
+}
+
+.movieCardPlaceholder {
+  height: 100%;
+  justify-content: space-between;
 }
 
 .seriesCard {

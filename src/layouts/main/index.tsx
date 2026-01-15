@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {Background, Button, Copyright, Footer} from "../../components";
 import {Logo, SpinnerIcon} from "../../components/UI/Icon/icon.component.tsx";
 import {SearchInput} from "../../components/UI/SearchInput";
@@ -7,13 +7,13 @@ import {Header} from "../../components/containers/Header";
 import {Sidebar} from "../../components/containers/Sidebar";
 import styles from './main.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { incrementPage, loadMoreMoviesAsync, fetchMoviesBySearchAsync, setSearchTrue, setSearchFalse } from '../../stores/slices/moviesSlice.ts';
+import { incrementPage, setSearchTrue, setSearchFalse, setSearchQuery } from '../../stores/slices/moviesSlice.ts';
 import {AppDispatch, RootState} from '../../stores/store';
 import {useLocation} from "react-router-dom";
 
-const debounce = (func: (...args: never[]) => void, delay: number) => {
+const debounce = (func: (...args: string[]) => void, delay: number) => {
     let timer: NodeJS.Timeout;
-    return (...args: never[]) => {
+    return (...args: string[]) => {
         clearTimeout(timer);
         timer = setTimeout(() => {
             func(...args);
@@ -27,12 +27,9 @@ const Main: React.FC = () => {
     const { page, search } = useSelector((state: RootState) => state.movies);
     const currentPath = location.pathname;
     const isDark = useSelector((state: RootState) => state.theme.isDark);
-    const [searchTerm, setSearchTerm] = useState("");
     let btnClas, customFooter;
 
     const handleShowMore = () => {
-        const nextPage = page + 1;
-        dispatch(loadMoreMoviesAsync(nextPage));
         dispatch(incrementPage());
     };
 
@@ -55,22 +52,20 @@ const Main: React.FC = () => {
 
     };
 
-    const fetchMovies = useCallback(() => {
-        dispatch(fetchMoviesBySearchAsync({ query: searchTerm, page: 1 })); // Фильтруем фильмы
-    }, [dispatch, searchTerm]);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedSearch = useCallback(debounce(() => {
-        fetchMovies();
-    }, 700), [fetchMovies]);
+    const debouncedSearch = useCallback(
+        debounce((value: string) => {
+            dispatch(setSearchQuery(value));
+        }, 700),
+        [dispatch]
+    );
 
     const handleSearchInput = (value: string) => {
-        setSearchTerm(value);
-        debouncedSearch();
+        debouncedSearch(value);
         if (value.length > 0) {
             dispatch(setSearchTrue());
         } else {
             dispatch(setSearchFalse());
+            dispatch(setSearchQuery(''));
         }
     };
 

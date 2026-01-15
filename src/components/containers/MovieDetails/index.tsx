@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovieDetailsAsync, clearMovieDetails, fetchRecommendedMoviesAsync } from '../../../stores/slices/moviesSlice.ts';
-import { RootState, AppDispatch } from '../../../stores/store.ts';
 import styles from './movieDetails.module.scss';
-import { MovieDetails as MovieDetailsType, Movie } from '../../../types';
+import { MovieDetails as MovieDetailsType } from '../../../types';
 import { MoviePoster } from './MoviePoster';
 import { MovieHeader } from './MovieHeader';
 import { MovieInfo } from './MovieInfo';
@@ -12,37 +9,42 @@ import { RecommendedMovies } from './RecommendedMovies';
 import { MovieDetailsSkeleton } from '../../UI/Skeleton';
 import { ErrorMessage } from '../../UI/ErrorMessage';
 import { useMovieActions } from '../../../hooks/useMovieActions';
+import {
+    useFetchMovieDetailsQuery,
+    useFetchRecommendedMoviesQuery,
+} from '../../../services/moviesApi';
+import { skipToken } from '@reduxjs/toolkit/query';
 
 const MovieDetails: React.FC = () => {
     const { imdbID } = useParams<{ imdbID: string }>();
-    const dispatch = useDispatch<AppDispatch>();
-    const movieDetails = useSelector((state: RootState) => state.movies.movieDetails as MovieDetailsType);
-    const recommendedMovies = useSelector((state: RootState) => state.movies.recommendedMovies as Movie[]);
-    const loading = useSelector((state: RootState) => state.movies.loading);
-    const error = useSelector((state: RootState) => state.movies.error);
+
+    const {
+        data: movieDetails,
+        isLoading,
+        error,
+    } = useFetchMovieDetailsQuery(imdbID ?? skipToken);
+
+    const genres = useMemo(() => {
+        if (!movieDetails?.Genre) return [];
+        return movieDetails.Genre.split(',').map((genre) => genre.trim());
+    }, [movieDetails]);
+
+    const { data: recommendedMovies = [] } = useFetchRecommendedMoviesQuery(genres, {
+        skip: genres.length === 0,
+    });
 
     // Use custom hook for movie actions
-    const { isFavourite, handleFavouriteClick, handleShareClick } = useMovieActions(movieDetails);
+    const { isFavourite, handleFavouriteClick, handleShareClick } = useMovieActions(
+        movieDetails as MovieDetailsType | null
+    );
 
-    useEffect(() => {
-        if (imdbID) {
-            dispatch(fetchMovieDetailsAsync(imdbID));
-        }
-
-        return () => {
-            dispatch(clearMovieDetails());
-        };
-    }, [dispatch, imdbID]);
-
-    useEffect(() => {
-        if (movieDetails) {
-            const genres = movieDetails.Genre.split(',').map(genre => genre.trim());
-            dispatch(fetchRecommendedMoviesAsync(genres));
-        }
-    }, [dispatch, movieDetails]);
-
-    if (loading) return <MovieDetailsSkeleton />;
-    if (error) return <ErrorMessage message={error} />;
+    if (isLoading) return <MovieDetailsSkeleton />;
+    if (error) {
+        const message = typeof error === 'object' && error !== null && 'error' in error
+            ? String(error.error)
+            : 'Не удалось загрузить детали фильма';
+        return <ErrorMessage message={message} />;
+    }
     if (!movieDetails) return null;
 
     return (
@@ -64,4 +66,4 @@ const MovieDetails: React.FC = () => {
     );
 };
 
-export {MovieDetails};
+export { MovieDetails };

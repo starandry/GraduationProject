@@ -5,7 +5,6 @@ import {Input} from '../../UI/Input';
 import {SubTitle} from '../../UI/SubTitle';
 import {Button} from '../../UI/Button';
 import {BigCloseIcon} from "../../UI/Icon/icon.component.tsx";
-import {fetchMoviesByFilterAsync} from "../../../stores/slices/moviesSlice.ts";
 import {useAppDispatch} from "../../../hooks/useAppDispatch.ts";
 
 export type FilterModalProps = {
@@ -62,9 +61,6 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
         dispatch(setFilters(filters));
 
         onClose(); // Закрытие модального окна
-
-        dispatch(fetchMoviesByFilterAsync({filters}))
-
     };
 
     return (

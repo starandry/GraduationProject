@@ -6,6 +6,7 @@ import filtersReducer from './slices/filtersSlice.ts';
 import hamburgerReducer from './slices/hamburgerSlice';
 import authReducer from './slices/authSlice';
 import toastReducer from './slices/toastSlice';
+import { moviesApi } from '../services/moviesApi';
 
 export const store = configureStore({
     reducer: {
@@ -16,7 +17,10 @@ export const store = configureStore({
         hamburger: hamburgerReducer,
         auth: authReducer,
         toast: toastReducer,
+        [moviesApi.reducerPath]: moviesApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(moviesApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

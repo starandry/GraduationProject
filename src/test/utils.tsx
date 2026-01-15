@@ -10,6 +10,7 @@ import themeReducer from '../stores/slices/themeSlice';
 import filtersReducer from '../stores/slices/filtersSlice';
 import authReducer from '../stores/slices/authSlice';
 import toastReducer from '../stores/slices/toastSlice';
+import { moviesApi } from '../services/moviesApi';
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedState?: PreloadedState<RootState>;
@@ -25,7 +26,10 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
       filters: filtersReducer,
       auth: authReducer,
       toast: toastReducer,
+      [moviesApi.reducerPath]: moviesApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(moviesApi.middleware),
     preloadedState,
   });
 }

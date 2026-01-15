@@ -1,25 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FiltersState } from '../../types';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import {fetchMoviesByFilterAsync} from "./moviesSlice.ts";
-import {RootState} from "../store.ts";
-
-// Кастомный асинхронный экшен для того, чтобы жанры успевали в хранилище попадать
-export const clearFilterAndFetchMovies = createAsyncThunk(
-    'filters/clearFilterAndFetchMovies',
-    async (btn: string, { dispatch, getState, rejectWithValue }) => {
-        try {
-            dispatch(clearFilterByValue(btn));
-
-            const filters = (getState() as RootState).filters;
-
-            await dispatch(fetchMoviesByFilterAsync({ filters })).unwrap();
-
-        } catch (error) {
-            return rejectWithValue(error.message);
-        }
-    }
-);
 
 const initialState: FiltersState = {
     movieName: '',

@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { API_URL } from '../constants/APIconstats.ts';
-import { FilterOptions, Movie } from '../types';
+import { FilterOptions, Movie, MovieDetails } from '../types';
 import { movieCache } from '../utils/apiCache';
 
 /**
  * Fetch movie details with caching to reduce API calls
  */
-const fetchMovieDetailsWithCache = async (imdbID: string): Promise<Movie> => {
+const fetchMovieDetailsWithCache = async (imdbID: string): Promise<MovieDetails> => {
     const cacheKey = `movie_${imdbID}`;
-    const cached = movieCache.get<Movie>(cacheKey);
+    const cached = movieCache.get<MovieDetails>(cacheKey);
 
     if (cached) {
         return cached;
@@ -17,7 +17,7 @@ const fetchMovieDetailsWithCache = async (imdbID: string): Promise<Movie> => {
     const response = await axios.get(`${API_URL}&i=${imdbID}`);
     if (response.data.Response === 'True') {
         movieCache.set(cacheKey, response.data);
-        return response.data;
+        return response.data as MovieDetails;
     }
     throw new Error(response.data.Error);
 };
@@ -145,7 +145,7 @@ export const fetchHighRatedMovies = async (page: number, minRating: number): Pro
     });
 };
 
-export const fetchMovieDetails = async (imdbID: string): Promise<Movie> => {
+export const fetchMovieDetails = async (imdbID: string): Promise<MovieDetails> => {
     return fetchMovieDetailsWithCache(imdbID);
 };
 

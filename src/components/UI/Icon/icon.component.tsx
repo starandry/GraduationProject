@@ -111,6 +111,28 @@ export const SortIcon = () => {
     );
 }
 
+export const PosterPlaceholderIcon = ({ className }: { className?: string }) => {
+    return (
+        <svg
+            className={className}
+            width="64"
+            height="64"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <rect x="10" y="14" width="44" height="36" rx="6" stroke="currentColor" strokeWidth="3" />
+            <path
+                d="M18 42L28 32L36 40L44 32L50 38"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinejoin="round"
+            />
+            <circle cx="24" cy="26" r="3" fill="currentColor" />
+        </svg>
+    );
+}
+
 export const SpinnerIcon = () => {
     return (
         <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">

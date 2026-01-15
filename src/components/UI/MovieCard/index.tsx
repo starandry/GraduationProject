@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './movieCard.module.scss';
 import {useLocation, Link} from "react-router-dom";
-import {FavouriteIcon, FireIcon} from "../Icon/icon.component.tsx";
+import {FavouriteIcon, FireIcon, PosterPlaceholderIcon} from "../Icon/icon.component.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 import {toggleFavourite} from "../../../stores/slices/favouritesSlice.ts";
@@ -22,11 +22,18 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
     const currentPath = location.pathname;
     const getThemeClass = useThemeStyles(styles);
     let ratingClass, posterClass, fireIconClass, seriesCard;
+    const [posterLoadError, setPosterLoadError] = useState(false);
+    const hasPosterUrl = movie.Poster !== 'N/A' && movie.Poster.trim() !== '';
+    const usePosterPlaceholder = !hasPosterUrl || posterLoadError;
 
     //лежит ли  фильм в хранилище избранных
     const isFavourite = useSelector((state: RootState) =>
         state.favourites.some(favMovie => favMovie.imdbID === movie.imdbID)
     );
+
+    useEffect(() => {
+        setPosterLoadError(false);
+    }, [movie.Poster, movie.imdbID]);
 
     const handleFavouriteClick = () => {
         dispatch(toggleFavourite(movie));
@@ -60,9 +67,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
         seriesCard = styles.movieCard;
     }
 
-
     return (
-        <div className={seriesCard}>
+        <div className={`${seriesCard} ${usePosterPlaceholder ? styles.movieCardPlaceholder : ''}`}>
             <span className={ratingClass}>
                 <FireIcon className={fireIconClass}/>
                 <span>{movie.imdbRating}</span>
@@ -73,11 +79,18 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
                 </div>
             </span>
             <Link to={`/movie/${movie.imdbID}`}>
-                <LazyImage
-                    src={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450'}
-                    alt={movie.Title}
-                    className={posterClass}
-                />
+                {usePosterPlaceholder ? (
+                    <div className={styles.posterPlaceholder}>
+                        <PosterPlaceholderIcon className={styles.placeholderIcon} />
+                    </div>
+                ) : (
+                    <LazyImage
+                        src={movie.Poster}
+                        alt={movie.Title}
+                        className={posterClass}
+                        onError={() => setPosterLoadError(true)}
+                    />
+                )}
             </Link>
             <div className={styles.info}>
                 <h3 className={getThemeClass('title', 'lightTitle')}>{movie.Title}</h3>
