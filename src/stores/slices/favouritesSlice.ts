@@ -18,7 +18,11 @@ const favouritesSlice = createSlice({
 
             if (existingIndex >= 0) {
                 // Если фильм есть, удалить его
-                state.splice(existingIndex, 1);
+                for (let i = state.length - 1; i >= 0; i -= 1) {
+                    if (state[i].imdbID === movie.imdbID) {
+                        state.splice(i, 1);
+                    }
+                }
             } else {
                 // Если фильма нет, добавить его
                 state.push(movie);

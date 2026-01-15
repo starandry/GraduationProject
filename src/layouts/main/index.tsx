@@ -31,8 +31,9 @@ const Main: React.FC = () => {
     let btnClas, customFooter;
 
     const handleShowMore = () => {
+        const nextPage = page + 1;
+        dispatch(loadMoreMoviesAsync(nextPage));
         dispatch(incrementPage());
-        dispatch(loadMoreMoviesAsync(page));
     };
 
     if (currentPath === '/trends' || currentPath === '/favorites' || currentPath === '/settings' || currentPath.startsWith('/movie/')) {

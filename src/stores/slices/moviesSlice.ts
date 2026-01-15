@@ -108,7 +108,12 @@ const moviesSlice = createSlice({
             })
             .addCase(loadMoreMoviesAsync.fulfilled, (state, action) => {
                 state.loading = false;
-                state.movies = [...state.movies, ...action.payload];
+                const merged = [...state.movies, ...action.payload];
+                const uniqueById = merged.filter(
+                    (movie, index, array) =>
+                        array.findIndex((item) => item.imdbID === movie.imdbID) === index
+                );
+                state.movies = uniqueById;
             })
             .addCase(loadMoreMoviesAsync.rejected, (state, action) => {
                 state.loading = false;
