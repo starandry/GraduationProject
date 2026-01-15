@@ -76,6 +76,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
                             key={item.path}
                             to={item.path}
                             className={`${styles.menuLink} ${currentPath === item.path ? styles.active : ''}`}
+                            onClick={closeHamburger}
                         >
                             {item.icon}
                             <span className={styles.text}>{item.label}</span>

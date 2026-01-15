@@ -6,6 +6,9 @@
   --sidebar-nav-padding: 30px;
   --sidebar-nav-gap: clamp(16px, 3vw, 48px);
   --content-padding: 20px;
+  --hamburger-menu-width: 300px;
+  --hamburger-close-gap: 24px;
+  --hamburger-header-offset: calc(var(--hamburger-menu-width) + var(--hamburger-close-gap));
 }
 
 body {
@@ -24,9 +27,24 @@ body {
   }
 }
 
+@media (max-width: 630px) {
+  :root {
+    --hamburger-menu-width: 230px;
+  }
+}
+
+@media (max-width: 500px) {
+  :root {
+    --hamburger-menu-width: 100vw;
+    --hamburger-header-offset: 0px;
+  }
+}
+
 @media (max-width: 450px) {
   :root {
     --content-padding: 14px;
+    --hamburger-menu-width: 100vw;
+    --hamburger-header-offset: 0px;
   }
 }
 

@@ -59,6 +59,11 @@
     flex-grow: 1;
     width: 100%;
   }
+
+  .serachHumb {
+    width: 100%;
+    margin-top: 0;
+  }
 }
 
 // Medium tablet styles (768px and below)
@@ -89,8 +94,8 @@
   }
 
   .serachHumb {
-    @include sizes(calc(100vw - 280px));
-    margin: 100px 0 0 -40px;
+    width: 100%;
+    margin-top: 48px;
     order: 2;
   }
 }

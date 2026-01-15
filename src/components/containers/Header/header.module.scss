@@ -45,6 +45,14 @@
     padding: 0;
   }
 
+  .headerHumb .headerLeft {
+    display: none;
+  }
+
+  .headerHumb .headerRight {
+    padding-right: var(--hamburger-header-offset);
+  }
+
   .headerRight > :last-child {
     margin-left: 0;
   }
@@ -75,8 +83,18 @@
     padding: 10px var(--content-padding);
   }
 
+  .headerHumb {
+    padding-right: calc(var(--content-padding) + var(--hamburger-header-offset));
+  }
+
   .headerLeft {
     align-self: flex-start;
+  }
+
+  .headerHumb .headerLeft {
+    display: flex;
+    order: 0;
+    margin-top: 20px;
   }
 
   .headerRight {
