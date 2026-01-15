@@ -46,7 +46,7 @@ const NewPasswordForm: FC = () => {
         setConfirmPassword('');
         setError(null);
 
-        navigate('/');
+        navigate('/auth');
     };
 
 
@@ -80,7 +80,6 @@ const NewPasswordForm: FC = () => {
 
             <button
                 type="submit"
-                onClick={handleSubmit}
                 className={styles.btnNewPassw}
             >
                 Set password

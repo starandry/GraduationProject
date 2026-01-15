@@ -85,8 +85,7 @@ const RegistrationForm: FC = () => {
         dispatch(setSuccessMessage('Вы успешно зарегистрированы в системе!'));
 
         // Перенаправляем пользователя
-        navigate('/');
-        toast.success('Регистрация успешна! Теперь вы можете войти.');
+        navigate('/auth');
     };
 
     return (
@@ -143,7 +142,7 @@ const RegistrationForm: FC = () => {
 
             <p className={styles.basement}>
                 Already have an account?
-                <Link to="/" className={styles.signLink}>
+                <Link to="/auth" className={styles.signLink}>
                     Sign In
                 </Link>
             </p>

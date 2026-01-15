@@ -31,7 +31,7 @@ const ResetPasswordForm: FC = () => {
         }
         setError(null);
         dispatch(setEmailInStore(email));
-        navigate('/password');
+        navigate('/auth/password');
     };
 
     return (

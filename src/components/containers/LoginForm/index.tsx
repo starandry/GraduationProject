@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button } from '../../UI/Button';
 import { Input } from '../../UI/Input';
 import { Link } from 'react-router-dom';
@@ -17,13 +17,23 @@ const LoginForm: FC = () => {
     const dispatch = useDispatch();
     const getThemeClass = useThemeStyles(styles);
     const toast = useToast();
+    const lastShownSuccessMessageRef = useRef<string | null>(null);
 
     // Show success message from registration as toast
     useEffect(() => {
-        if (successMessage) {
-            toast.success(successMessage);
-            dispatch(clearSuccessMessage());
+        if (!successMessage) {
+            lastShownSuccessMessageRef.current = null;
+            return;
         }
+
+        if (lastShownSuccessMessageRef.current === successMessage) {
+            dispatch(clearSuccessMessage());
+            return;
+        }
+
+        lastShownSuccessMessageRef.current = successMessage;
+        toast.success(successMessage);
+        dispatch(clearSuccessMessage());
     }, [successMessage, toast, dispatch]);
 
     const handleSubmit = async (e: React.FormEvent) => {

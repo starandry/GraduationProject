@@ -57,8 +57,8 @@ const Main: React.FC = () => {
         // debounce((value: string) => {
         //     dispatch(setSearchQuery(value));
         // }, 700),
-        () => {},
-        [dispatch]
+        (_value: string) => {},
+        []
     );
 
     const handleSearchInput = (value: string) => {
