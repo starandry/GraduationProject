@@ -53,9 +53,11 @@ const Main: React.FC = () => {
     };
 
     const debouncedSearch = useCallback(
-        debounce((value: string) => {
-            dispatch(setSearchQuery(value));
-        }, 700),
+        // временно выключаем debounce-запросы, чтобы не тратить лимиты API
+        // debounce((value: string) => {
+        //     dispatch(setSearchQuery(value));
+        // }, 700),
+        () => {},
         [dispatch]
     );
 
