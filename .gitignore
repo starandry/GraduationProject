@@ -26,4 +26,5 @@ dist-ssr
 *.sln
 *.sw?
 /AGENTS.md
+/AGENTS.md
 /.claude/settings.local.json

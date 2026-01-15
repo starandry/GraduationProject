@@ -53,7 +53,7 @@
 .lightWrapProfile,
 .lightWrapPassword,
 .lightWrapColor {
-  border: 1px solid #AFB2B6;
+  box-shadow: 0 0 0 1px #AFB2B6 inset;
   background-color: #fff;
 }
 .wrapColor {
@@ -94,13 +94,11 @@
 
 .lightInputPassword {
   color: #000;
-  border: 1px solid #AFB2B6;
   background-color: #fff;
 }
 
 .lightInputName {
   color: #000;
-  border: 1px solid #AFB2B6;
   background-color: #fff;
 }
 
