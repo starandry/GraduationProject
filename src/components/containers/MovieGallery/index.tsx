@@ -79,8 +79,10 @@ const MovieGallery: React.FC = () => {
       await dispatch(clearFilterAndFetchMovies(btn)).unwrap();
    }, [dispatch]);
 
+   const galleryMovies = currentPath === '/favorites' ? favourites : movies;
+
    // Show skeleton loading state
-   if (loading && movies.length === 0) {
+   if (currentPath !== '/favorites' && loading && movies.length === 0) {
       return <GallerySkeleton count={20} />;
    }
 
@@ -90,7 +92,7 @@ const MovieGallery: React.FC = () => {
    }
 
    // Show error message
-   if (error) {
+   if (currentPath !== '/favorites' && error) {
       return <ErrorMessage message={error} />;
    }
 
@@ -104,11 +106,10 @@ const MovieGallery: React.FC = () => {
                     onRemoveFilter={handleBtnRemove}
                  />
              )}
-             <MovieGrid movies={movies} />
+             <MovieGrid movies={galleryMovies} />
           </div>
        </>
    );
 };
 
 export { MovieGallery };
-
