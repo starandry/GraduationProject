@@ -9,12 +9,11 @@ import {FilterModal} from "../../containers/FilterModal";
 import { FiltersState } from '../../../types';
 
 export type SearchInputProps = {
-    placeholder?: string;
     onChange: (value: string) => void;
     onInput: (value: string) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ placeholder = "Search", onChange, onInput }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ onChange, onInput }) => {
     const [isModalOpen, setModalOpen] = useState(false); // Состояние для модального окна
     const compSearchInput = styles.searchInput;
     const isDark = useSelector((state: RootState) => state.theme.isDark);
@@ -45,9 +44,6 @@ const SearchInput: React.FC<SearchInputProps> = ({ placeholder = "Search", onCha
     // Логика на основе состояния гамбургера
     if (isHamburgerOpen) {
         compWrapp = `${compWrapp} ${styles.serachHumb}`; // класс, если гамбургер открыт
-        if (window.innerWidth < 450) {
-            placeholder = '';
-        }
     }
 
     return (
@@ -55,7 +51,6 @@ const SearchInput: React.FC<SearchInputProps> = ({ placeholder = "Search", onCha
             <Input
                 type="text"
                 className={compSearchInput}
-                placeholder={placeholder}
                 onChange={(e) => onChange(e.target.value)}
                 onInput={(e) => onInput(e.target.value)}
             />

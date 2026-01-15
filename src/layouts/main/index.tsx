@@ -75,7 +75,7 @@ const Main: React.FC = () => {
         <Background>
             <Header>
                 <Logo/>
-                <SearchInput placeholder="Search" onChange={handleSearchChange} onInput={handleSearchInput}/>
+                <SearchInput onChange={handleSearchChange} onInput={handleSearchInput}/>
                 <UserProfile circleColor='#7B61FF'/>
             </Header>
             <Sidebar/>

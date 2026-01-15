@@ -1,1 +1,28 @@
-npm run lint
+#!/bin/sh
+
+if command -v npm >/dev/null 2>&1; then
+  npm run lint
+  exit $?
+fi
+
+NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+npm_path=""
+for p in "$NVM_DIR"/versions/node/*/bin/npm; do
+  if [ -x "$p" ]; then
+    npm_path="$p"
+  fi
+done
+
+if [ -n "$npm_path" ]; then
+  export PATH="$(dirname "$npm_path"):$PATH"
+  npm run lint
+  exit $?
+fi
+
+if command -v bash >/dev/null 2>&1; then
+  bash -lc 'source "$HOME/.nvm/nvm.sh" >/dev/null 2>&1 && nvm use --silent >/dev/null 2>&1 && npm run lint'
+  exit $?
+fi
+
+echo "npm not found; please install Node.js or ensure npm is in PATH."
+exit 127
