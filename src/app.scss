@@ -6,6 +6,8 @@
   --sidebar-nav-padding: 30px;
   --sidebar-nav-gap: clamp(16px, 3vw, 48px);
   --content-padding: 20px;
+  --page-padding-x: clamp(56px, 4vw, 96px);
+  --page-padding-top: clamp(20px, 3vh, 40px);
   --hamburger-menu-width: 300px;
   --hamburger-close-gap: 24px;
   --hamburger-header-offset: calc(var(--hamburger-menu-width) + var(--hamburger-close-gap));
@@ -24,6 +26,8 @@ body {
 @media (max-width: 768px) {
   :root {
     --content-padding: 10px;
+    --page-padding-x: clamp(32px, 4vw, 48px);
+    --page-padding-top: clamp(16px, 3vh, 32px);
   }
 }
 
@@ -37,6 +41,8 @@ body {
   :root {
     --hamburger-menu-width: 100vw;
     --hamburger-header-offset: 0px;
+    --page-padding-x: 20px;
+    --page-padding-top: 14px;
   }
 }
 
@@ -45,11 +51,15 @@ body {
     --content-padding: 14px;
     --hamburger-menu-width: 100vw;
     --hamburger-header-offset: 0px;
+    --page-padding-x: 16px;
+    --page-padding-top: 12px;
   }
 }
 
 @media (max-width: 320px) {
   :root {
     --content-padding: 10px;
+    --page-padding-x: 12px;
+    --page-padding-top: 10px;
   }
 }

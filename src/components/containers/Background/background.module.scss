@@ -2,7 +2,7 @@
 
 .background {
     min-height: 100vh;
-    padding: 3.26vh 3.65vw 0;
+    padding: var(--page-padding-top) var(--page-padding-x) 0;
     background-color: #000;
     overflow-x: hidden;
     overflow-y: auto;
@@ -15,46 +15,9 @@
     scrollbar-gutter: stable;
 }
 
-// Tablet styles (1280px and below)
-@include screenSize(lg) {
-    .background {
-        padding: 3vh 3vw 0;
-    }
-}
-
 // Medium tablet styles (768px and below)
 @include screenSize(md) {
     .background {
         @include rowing(null, null, column);
-        padding: 3vh 4vw 0;
-    }
-}
-
-// Small tablet styles (630px and below)
-@include screenSize(md-sm) {
-    .background {
-        padding: 2.5vh 3vw 0;
-    }
-
-    .backgroundSettings {
-        padding: 2vh 4vw 0;
-    }
-}
-
-// Mobile styles (450px and below)
-@include screenSize(sm) {
-    .background {
-        padding: 2vh 2vw 0;
-    }
-}
-
-// Extra small mobile (320px and below)
-@include screenSize(xs) {
-    .background {
-        padding: 1.5vh 1.5vw 0;
-    }
-
-    .backgroundSettings {
-        padding: 1.5vh 2vw 0;
     }
 }
