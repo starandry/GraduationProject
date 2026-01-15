@@ -89,8 +89,18 @@ export const moviesApi = createApi({
         fetchMoviesBySearch: builder.query<Movie[], { query: string; page?: number }>({
             queryFn: async ({ query, page = 1 }) => {
                 try {
-                    const data = await fetchMoviesBySearch(query, page);
-                    return { data };
+                    const primaryPage = page;
+                    const secondaryPage = page + 1;
+                    const [primary, secondary] = await Promise.all([
+                        fetchMoviesBySearch(query, primaryPage),
+                        fetchMoviesBySearch(query, secondaryPage),
+                    ]);
+                    const merged = [...primary, ...secondary];
+                    const uniqueById = merged.filter(
+                        (movie, index, array) =>
+                            array.findIndex((item) => item.imdbID === movie.imdbID) === index
+                    );
+                    return { data: uniqueById.slice(0, 32) };
                 } catch (error) {
                     return { error: toQueryError(error) };
                 }
