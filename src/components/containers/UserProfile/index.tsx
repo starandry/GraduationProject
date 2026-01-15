@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './userProfile.module.scss';
 import { ArrowDown, CloseIcon, Hamburger } from '../../UI/Icon/icon.component.tsx';
 import { menuItems } from '../../../routes/menuRoutes.tsx';
@@ -22,6 +22,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
     const dispatch = useDispatch<AppDispatch>();
     const emailInStore = useSelector((state: RootState) => state.auth.emailInStore);
     const [showLogout, setShowLogout] = useState(false);
+    const userInfoRef = useRef<HTMLDivElement | null>(null);
     const getThemeClass = useThemeStyles(styles);
 
     const getUsernameByEmail = (email: string): string | null => {
@@ -51,12 +52,31 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
     };
 
     const handleClick = () => {
-        setShowLogout(!showLogout);
+        setShowLogout((prev) => !prev);
     };
+
+    useEffect(() => {
+        if (!showLogout) return;
+
+        const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
+            const target = event.target;
+            if (!target || !(target instanceof Node)) return;
+            if (!userInfoRef.current) return;
+            if (userInfoRef.current.contains(target)) return;
+            setShowLogout(false);
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('touchstart', handleOutsideClick);
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+            document.removeEventListener('touchstart', handleOutsideClick);
+        };
+    }, [showLogout]);
 
     return (
         <div className={styles.userProfile}>
-            <div className={compUserIfo}>
+            <div className={compUserIfo} ref={userInfoRef}>
                 <div className={styles.circle} style={{ backgroundColor: circleColor }} onClick={toggleHamburger}>
                     <span className={styles.userInitials}>{userInitials}</span>
                     <Hamburger className={styles.hamburger} />

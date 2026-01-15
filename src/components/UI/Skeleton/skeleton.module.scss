@@ -62,6 +62,7 @@
     grid-gap: 40px;
     max-width: 100%;
     width: 100%;
+    padding: 0 var(--content-padding);
     overflow: hidden;
     flex-grow: 1;
 }
@@ -104,7 +105,7 @@
 // Movie Details Skeleton Styles
 .movieDetailsSkeleton {
     width: 100%;
-    padding: 20px;
+    padding: var(--content-padding);
 }
 
 .detailsContainer {

@@ -51,6 +51,8 @@ const SearchInput: React.FC<SearchInputProps> = ({ onChange, onInput }) => {
             <Input
                 type="text"
                 className={compSearchInput}
+                containerClassName={styles.searchField}
+                placeholder="Search"
                 onChange={(e) => onChange(e.target.value)}
                 onInput={(e) => onInput(e.target.value)}
             />

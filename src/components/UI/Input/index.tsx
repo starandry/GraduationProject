@@ -5,20 +5,25 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../stores/store.ts";
 
 const Input: FC<InputProps> = ({ type, id, label, value, onChange, onInput, placeholder, required = false, className,
-                                   containerClassName, labelClassName }) => {
-    let inputClassName = `${styles.input} ${className || ''}`;
-    const containerClass = `${styles.inputContainer} ${containerClassName || ''}`;
-    let labelClass = `${styles.label} ${labelClassName || ''}`;
+                                   containerClassName = '', labelClassName = '' }) => {
+    const safeClassName = className || '';
+    let inputClassName = `${styles.input} ${safeClassName}`;
+    const containerClass = `${styles.inputContainer} ${containerClassName}`;
+    let labelClass = `${styles.label} ${labelClassName}`;
     const isDark = useSelector((state: RootState) => state.theme.isDark);
 
     if (!isDark) {
         labelClass = `${styles.label} ${labelClassName} ${styles.labelLight}`;
-        inputClassName = `${styles.input} ${className} ${styles.inputLight}`;
+        inputClassName = `${styles.input} ${safeClassName} ${styles.inputLight}`;
     }
 
     return (
         <div className={containerClass}>
-            <label htmlFor={id} className={labelClass}>{label}</label>
+            {label ? (
+                <label htmlFor={id} className={labelClass}>
+                    {label}
+                </label>
+            ) : null}
             <input
                 type={type}
                 id={id}
@@ -34,4 +39,3 @@ const Input: FC<InputProps> = ({ type, id, label, value, onChange, onInput, plac
 };
 
 export { Input };
-

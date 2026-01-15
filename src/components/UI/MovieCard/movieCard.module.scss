@@ -71,7 +71,16 @@
 }
 
 .seriesCard {
+  --series-poster-height: clamp(260px, 28vh, 520px);
 
+  .poster {
+    height: var(--series-poster-height);
+    max-height: none;
+  }
+
+  .posterPlaceholder {
+    height: var(--series-poster-height);
+  }
 }
 
 .raiting, .lowRaiting, .middleRating {

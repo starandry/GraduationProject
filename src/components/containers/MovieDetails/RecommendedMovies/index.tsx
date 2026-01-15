@@ -1,6 +1,5 @@
 import React from 'react';
 import { Movie } from '../../../../types';
-import { Spacer } from '../../../UI/Spacer';
 import { SubTitle } from '../../../UI/SubTitle';
 import { CardSlider } from '../../CardSlider';
 import { useThemeStyles } from '../../../../hooks/useThemeStyles';
@@ -20,7 +19,6 @@ export const RecommendedMovies: React.FC<RecommendedMoviesProps> = React.memo(({
 
     return (
         <div className={styles.wrappRecommended}>
-            <Spacer className={styles.recommendedSpacer} />
             <div className={styles.wrapCardSlider}>
                 <SubTitle className={getThemeClass('movieRecommend')} text="Recommendations" />
                 <CardSlider cards={movies} />

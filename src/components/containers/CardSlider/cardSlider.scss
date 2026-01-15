@@ -1,17 +1,34 @@
 @use '../../../styles/mixins' as *;
 
 .slick-track {
-  @include rowing();
-  gap: 20px;
   margin-left: 0;
+  margin-right: 0;
+}
+
+.slick-list {
+  margin: 0 -20px;
 }
 
 .slick-slide {
- @include rowing(center);
+  padding: 0 20px;
+}
+
+@include screenSize(md) {
+  .slick-list {
+    margin: 0 -16px;
+  }
+
+  .slick-slide {
+    padding: 0 16px;
+  }
 }
 
 @include screenSize(md-sm) {
-  .slick-track {
-    gap: unset;
+  .slick-list {
+    margin: 0 -10px;
+  }
+
+  .slick-slide {
+    padding: 0 10px;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -49,22 +49,69 @@ const CustomNextArrow = ({onClick, disabled}: { onClick?: () => void, disabled?:
 }
 
 const CardSlider: React.FC<SliderProps> = ({cards}) => {
-    const [isPrevDisabled, setIsPrevDisabled] = useState(true);
-    const [isNextDisabled, setIsNextDisabled] = useState(cards.length <= 4);
+    const getSlidesToShowByWidth = (width: number) => {
+        if (width <= 630) return 1;
+        if (width <= 768) return 2.2;
+        if (width <= 1024) return 3;
+        if (width <= 1919) return 4;
+        return 5;
+    };
 
-    const settings = {
+    const initialSlidesToShow = typeof window === 'undefined' ? 4 : getSlidesToShowByWidth(window.innerWidth);
+    const [slidesToShow, setSlidesToShow] = useState<number>(initialSlidesToShow);
+    const [isPrevDisabled, setIsPrevDisabled] = useState(true);
+    const [isNextDisabled, setIsNextDisabled] = useState(cards.length <= initialSlidesToShow);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setSlidesToShow(getSlidesToShowByWidth(window.innerWidth));
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (slidesToShow === 3) {
+            const shouldDisable = cards.length <= slidesToShow;
+            setIsPrevDisabled(shouldDisable);
+            setIsNextDisabled(shouldDisable);
+            return;
+        }
+
+        setIsPrevDisabled(true);
+        setIsNextDisabled(cards.length <= slidesToShow);
+    }, [cards.length, slidesToShow]);
+
+    const settings = useMemo(() => ({
         dots: false,
         infinite: false,
         speed: 500,
-        slidesToShow: 4,
+        slidesToShow: 5,
         slidesToScroll: 1,
         beforeChange: (oldIndex: number, newIndex: number) => {
+            // Infinite is enabled only on the 1024px breakpoint (slidesToShow === 3)
+            if (slidesToShow === 3) {
+                setIsPrevDisabled(false);
+                setIsNextDisabled(cards.length <= slidesToShow);
+                return;
+            }
+
             setIsPrevDisabled(newIndex === 0);
-            setIsNextDisabled(newIndex >= cards.length - 4);
+            setIsNextDisabled(newIndex >= cards.length - slidesToShow);
         },
         nextArrow: <CustomNextArrow disabled={isNextDisabled} />,
         prevArrow: <CustomPrevArrow disabled={isPrevDisabled} />,
         responsive: [
+            {
+                breakpoint: 1919,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                }
+            },
             {
                 breakpoint: 1024,
                 settings: {
@@ -89,7 +136,7 @@ const CardSlider: React.FC<SliderProps> = ({cards}) => {
                 }
             }
         ]
-    };
+    }), [cards.length, isNextDisabled, isPrevDisabled, slidesToShow]);
 
     return (
         <Slider {...settings}>

@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
 
 # TypeScript incremental build
 *.tsbuildinfo
@@ -25,6 +26,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-/AGENTS.md
 /AGENTS.md
 /.claude/settings.local.json

@@ -19,14 +19,21 @@ export const useThemeStyles = (styles: Record<string, string>) => {
     /**
      * Get theme-aware class name
      * @param baseClass - Base class name
-     * @param lightSuffix - Optional light mode suffix (defaults to 'Light')
+     * @param lightClassOrSuffix - Optional light-mode class key OR suffix (defaults to 'Light')
      */
-    return (baseClass: string, lightSuffix: string = 'Light'): string => {
+    return (baseClass: string, lightClassOrSuffix: string = 'Light'): string => {
         const base = styles[baseClass] || '';
         if (isDark) {
             return base;
         }
-        const lightClass = styles[`${baseClass}${lightSuffix}`] || '';
+        // Backward-compatible: allow passing the exact light class key (e.g. 'lightTitle'),
+        // or a suffix (e.g. 'Light' => 'titleLight').
+        const explicitLightClass = styles[lightClassOrSuffix] || '';
+        if (explicitLightClass) {
+            return base ? `${base} ${explicitLightClass}` : explicitLightClass;
+        }
+
+        const lightClass = styles[`${baseClass}${lightClassOrSuffix}`] || '';
         return lightClass ? `${base} ${lightClass}` : base;
     };
 };
