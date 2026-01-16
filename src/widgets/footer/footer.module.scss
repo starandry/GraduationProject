@@ -1,0 +1,19 @@
+@use '../../shared/styles/mixins' as *;
+
+.footer {
+  position: relative;
+  padding-bottom: 60px;
+}
+
+@include screenSize(md) {
+  .footer {
+    @include rowing(center, center);
+    flex-grow: 1;
+  }
+}
+
+@include screenSize(md-sm) {
+  .footer {
+    padding-bottom: 46px;
+  }
+}

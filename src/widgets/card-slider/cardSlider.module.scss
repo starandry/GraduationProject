@@ -1,0 +1,71 @@
+@use '../../shared/styles/mixins' as *;
+
+.customPrev {
+  right: 44px;
+}
+
+.customNext {
+  right: 0;
+}
+
+.btnLight {
+  background-color: #fff;
+}
+
+.customPrev, .customNext {
+  position: absolute;
+  top: -52px;
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 8px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: rgba(50, 53, 55, 0.6);
+  }
+}
+
+.disabled svg path {
+  fill: #AFB2B6;
+  cursor: not-allowed;
+}
+
+.customPrevLight, .customNextLight {
+  svg path {
+    fill: #000;
+  }
+
+  &:hover {
+    background-color: rgba(36, 36, 38, 0.08);
+  }
+}
+
+.disabledPrevLight, .disabledNextLight {
+  svg path {
+    fill: #AFB2B6;
+  }
+}
+
+@include screenSize(md) {
+  .customPrev {
+    right: 64px;
+  }
+
+  .customNext {
+    right: 20px;
+  }
+}
+
+@include screenSize(md-sm) {
+  .customPrev {
+    right: 44px;
+  }
+
+  .customNext {
+    right: 0;
+  }
+}

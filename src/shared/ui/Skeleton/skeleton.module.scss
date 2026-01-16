@@ -1,0 +1,210 @@
+@use '../../styles/mixins' as *;
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #f0f0f0 25%,
+        #e0e0e0 50%,
+        #f0f0f0 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: 4px;
+}
+
+.skeletonDark {
+    background: linear-gradient(
+        90deg,
+        #2a2a2a 25%,
+        #333333 50%,
+        #2a2a2a 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.movieCardSkeleton {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.posterSkeleton {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 8px;
+}
+
+.textSkeleton {
+    height: 20px;
+    border-radius: 4px;
+}
+
+.textShort {
+    height: 16px;
+    width: 70%;
+}
+
+.gallerySkeletonGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-gap: 40px;
+    max-width: 100%;
+    width: 100%;
+    padding: 0 var(--content-padding);
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+// 1440px: 3 columns, 2 rows
+@media (max-width: 1919px) {
+    .gallerySkeletonGrid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+    }
+}
+
+// 1280px and 1024px: 4 columns, 3 rows
+@media (max-width: 1439px) {
+    .gallerySkeletonGrid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        grid-gap: 30px;
+    }
+}
+
+// 768px (tablet): 3 columns
+@media (max-width: 1023px) {
+    .gallerySkeletonGrid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        grid-gap: 25px;
+    }
+}
+
+// 320px (mobile): 1 column
+@media (max-width: 767px) {
+    .gallerySkeletonGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        grid-gap: 20px;
+    }
+}
+
+// Movie Details Skeleton Styles
+.movieDetailsSkeleton {
+    width: 100%;
+    padding: var(--content-padding);
+}
+
+.detailsContainer {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-areas:
+        "poster header"
+        "poster info";
+    gap: 30px;
+    margin-bottom: 40px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "poster"
+            "header"
+            "info";
+        gap: 20px;
+    }
+}
+
+.posterSection {
+    grid-area: poster;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.detailsPoster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 12px;
+}
+
+.iconPanel {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.headerSection {
+    grid-area: header;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.genreLine {
+    height: 18px;
+    width: 250px;
+}
+
+.titleLine {
+    height: 36px;
+    width: 70%;
+}
+
+.badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.infoSection {
+    grid-area: info;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.plotLine {
+    height: 18px;
+    margin-bottom: 8px;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px 20px;
+    margin-top: 20px;
+}
+
+.recommendationsSection {
+    margin-top: 40px;
+}
+
+.recommendTitle {
+    margin-bottom: 20px;
+}
+
+.recommendCards {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.recommendCard {
+    min-width: 150px;
+    aspect-ratio: 2/3;
+    border-radius: 8px;
+}

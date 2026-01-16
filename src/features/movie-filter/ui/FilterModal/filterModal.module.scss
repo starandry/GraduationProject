@@ -1,0 +1,177 @@
+@use '../../../../shared/styles/mixins' as *;
+
+.modalOverlay {
+  @include rowing(end);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  background-color: #00000080;
+}
+
+.modalContainer {
+  @include sizes(520px, 100vh);
+  padding: 50px 40px;
+  background-color: #242426;
+  overflow: auto;
+}
+
+
+.wrappClose {
+  @include rowing(space-between,  center);
+  padding-bottom: 50px;
+}
+
+.modalTitle {
+  @include fonts(600, 24px, #fff, 36px);
+}
+
+.btnClose {
+  border: none;
+  background-color: #242426;
+}
+
+.filterSection {
+  padding-bottom: 25px;
+}
+
+.label {
+  @include fonts(600, 16px, #fff, 24px);
+  padding-bottom: 10px;
+}
+
+.sortButton, .activeSortButton {
+  flex-grow: 1;
+}
+
+.sortOptions {
+  @include rowing();
+  margin-bottom: 60px;
+  border: 1px solid #323537;
+  border-radius: 8px;
+}
+
+.genreOptions {
+  @include rowing();
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #323537;
+  border-radius: 8px;
+}
+
+.sortButton {
+  @include fonts(500, 16px, #fff, 24px);
+  background-color: #333333;
+  color: #ffffff;
+  padding: 15px 0;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.activeSortButton {
+  color: #80858B;
+  background-color: #242426;
+}
+
+.inputFilterSection {
+  @include sizes(100%);
+  color: white;
+
+  &::placeholder {
+    color: #80858B;
+  }
+}
+
+.genreButton {
+  @include fonts(500, 16px, #fff, 24px);
+  border: none;
+  border-radius: 8px;
+  background-color: #242426;
+}
+
+.signGenre {
+  padding-right: 10px;
+}
+
+.filterYears {
+  @include rowing(space-between);
+  gap: 40px;
+}
+
+.inputYears {
+  max-width: 200px;
+
+  &::placeholder {
+    color: #80858B;
+  }
+}
+
+.select {
+  @include fonts(500, 16px, #80858B, 24px);
+  @include sizes(100%);
+  padding: 16px 20px;
+  background-color: #323537;
+  border-radius: 5px;
+  border: none;
+}
+
+.actionButtons {
+ @include rowing(space-between, end);
+  @include sizes(null, 130px);
+}
+
+.clearButton {
+  background-color: #323537;
+}
+
+.showButton {
+  background-color: #7B61FF;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.clearButton, .showButton {
+  @include fonts(500, 16px, #fff, 24px);
+  @include sizes(200px);
+  padding: 15px 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+@include screenSize(md-sm) {
+  .modalContainer {
+    @include sizes(320px, 100vh);
+    padding: 30px 25px 50px;
+  }
+
+  .modalTitle {
+    @include fonts(600, 20px, #fff, 32px);
+  }
+
+  .sortOptions {
+    margin-bottom: 45px;
+  }
+
+  .inputYears {
+    max-width: 125px;
+  }
+
+  .filterYears {
+    gap: unset;
+  }
+
+  .actionButtons {
+    @include rowing(center, unset, column);
+    gap: 15px;
+  }
+
+  .clearButton, .showButton {
+    @include sizes(100%);
+  }
+}

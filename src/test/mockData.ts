@@ -1,4 +1,4 @@
-import { Movie, MovieDetails } from '../types';
+import { Movie, MovieDetails } from '../entities/movie/model/types';
 
 export const mockMovie: Movie = {
   Title: 'The Matrix',

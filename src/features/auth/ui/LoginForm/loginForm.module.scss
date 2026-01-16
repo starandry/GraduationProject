@@ -1,0 +1,97 @@
+@use '../../../../shared/styles/mixins' as *;
+
+.loginForm {
+  @include rowing(null,  null, column);
+  @include sizes(575px);
+  padding: 40px;
+  margin: 0 auto;
+  border-radius: 12px;
+  color: #ffffff;
+  background-color: #242426;
+}
+
+.loginFormLight {
+  background-color: #fff;
+}
+
+.title {
+  @include fonts(600, 24px, white, 36px);
+  padding-bottom: 40px;
+}
+
+.titleLight {
+  color: #242426;
+}
+
+.forgotPassword {
+  padding-bottom: 40px;
+
+  > a {
+    @include fonts(500, 14px, #80858B, 24px);
+  }
+}
+
+.basement {
+  @include fonts(500, 16px, #80858B, 24px);
+  text-align: center;
+  padding-top: 30px;
+}
+
+.inputEmail {
+  margin-bottom: 25px;
+}
+
+.inputPassword {
+  margin-bottom: 8px;
+}
+
+.inputPassword, .inputEmail {
+  @include sizes(100%);
+}
+
+.btnLogin {
+  @include fonts(600, 16px, #fff, 24px);
+  padding: 16px 0;
+  border: none;
+  border-radius: 10px;
+  background-color: #7B61FF;
+}
+
+.signupLink {
+  @include fonts(500, 16px, #7B61FF, 24px);
+  padding-left: 5px;
+}
+
+.error {
+  color: red;
+  margin-bottom: 40px;
+}
+
+.successMessage {
+  @include fonts(500, 16px, #fff, 24px);
+  margin-bottom: 40px;
+}
+
+.successMessageLight {
+  color: #000;
+}
+
+@include screenSize(md) {
+  .loginForm {
+    @include sizes(76vw);
+  }
+}
+
+@include screenSize(sm) {
+  .title {
+    @include fonts(null, 20px, null, 32px);
+  }
+
+  .basement {
+    @include fonts(null, 14px, null, 20px);
+  }
+
+  .loginForm {
+    @include sizes(91vw);
+  }
+}

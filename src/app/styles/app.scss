@@ -1,0 +1,70 @@
+@use '../../shared/styles/reset' as *;
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --sidebar-nav-width: 200px;
+  --sidebar-nav-padding: 30px;
+  --sidebar-nav-gap: clamp(16px, 3vw, 48px);
+  --content-padding: 20px;
+  --page-padding-x: clamp(56px, 4vw, 96px);
+  --page-padding-top: clamp(20px, 3vh, 40px);
+  --hamburger-menu-width: 300px;
+  --hamburger-close-gap: 24px;
+  --hamburger-header-offset: calc(var(--hamburger-menu-width) + var(--hamburger-close-gap));
+}
+
+body {
+  font-family: 'Exo 2', serif;
+}
+
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --content-padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --content-padding: 10px;
+    --page-padding-x: clamp(32px, 4vw, 48px);
+    --page-padding-top: clamp(16px, 3vh, 32px);
+  }
+}
+
+@media (max-width: 630px) {
+  :root {
+    --hamburger-menu-width: 230px;
+  }
+}
+
+@media (max-width: 500px) {
+  :root {
+    --hamburger-menu-width: 100vw;
+    --hamburger-header-offset: 0px;
+    --page-padding-x: 20px;
+    --page-padding-top: 14px;
+  }
+}
+
+@media (max-width: 450px) {
+  :root {
+    --content-padding: 14px;
+    --hamburger-menu-width: 100vw;
+    --hamburger-header-offset: 0px;
+    --page-padding-x: 16px;
+    --page-padding-top: 12px;
+  }
+}
+
+@media (max-width: 320px) {
+  :root {
+    --content-padding: 10px;
+    --page-padding-x: 12px;
+    --page-padding-top: 10px;
+  }
+}

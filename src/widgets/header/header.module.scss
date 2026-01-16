@@ -1,0 +1,114 @@
+@use '../../shared/styles/mixins' as *;
+
+.header {
+  display: grid;
+  grid-template-columns: calc(var(--sidebar-nav-width) + var(--sidebar-nav-padding)) 1fr;
+  column-gap: var(--sidebar-nav-gap);
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.headerHumb {
+  justify-content: unset;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.headerRight {
+  @include rowing(flex-start, center);
+  gap: 20px;
+  min-width: 0;
+  width: 100%;
+  padding: 0 var(--content-padding);
+}
+
+.headerRight > :last-child {
+  margin-left: auto;
+}
+
+// Tablet styles (1280px and below)
+@include screenSize(lg) {
+  .header {
+    @include rowing(flex-start, center);
+    gap: 60px;
+    padding: 15px var(--content-padding) 10px;
+  }
+
+  .headerRight {
+    flex: 1;
+    justify-content: flex-end;
+    gap: 12px;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .headerHumb .headerLeft {
+    display: none;
+  }
+
+  .headerHumb .headerRight {
+    padding-right: var(--hamburger-header-offset);
+  }
+
+  .headerRight > :last-child {
+    margin-left: 0;
+  }
+}
+
+// Medium tablet styles (768px and below)
+@include screenSize(md) {
+  .header {
+    flex-wrap: nowrap;
+    gap: 24px;
+    padding: 15px var(--content-padding) 10px;
+  }
+
+  .headerRight {
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0;
+  }
+}
+
+// Small devices (630px and below)
+@include screenSize(md-sm) {
+  .header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px var(--content-padding);
+  }
+
+  .headerHumb {
+    padding-right: calc(var(--content-padding) + var(--hamburger-header-offset));
+  }
+
+  .headerLeft {
+    align-self: flex-start;
+  }
+
+  .headerHumb .headerLeft {
+    display: flex;
+    order: 0;
+    margin-top: 20px;
+  }
+
+  .headerRight {
+    display: contents;
+  }
+
+  .headerRight > :last-child {
+    margin-left: auto;
+  }
+}
+
+// Mobile styles (450px and below)
+@include screenSize(sm) {
+  .header {
+    padding: 10px var(--content-padding);
+  }
+}

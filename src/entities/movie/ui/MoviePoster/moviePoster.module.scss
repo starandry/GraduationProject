@@ -1,0 +1,104 @@
+@use '../../../../shared/styles/mixins' as *;
+
+.wrappPoster {
+  grid-area: area1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+}
+
+.posterPlaceholder {
+  @include rowing(center, center, column);
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #2c2f33, #1c1f22);
+  color: #AFB2B6;
+  text-align: center;
+}
+
+.posterPlaceholderLight {
+  background: linear-gradient(135deg, #f2f3f5, #e7e9ee);
+  box-shadow: 0 0 0 1px #AFB2B6 inset;
+  color: #80858B;
+}
+
+.placeholderIcon {
+  width: 72px;
+  height: 72px;
+  opacity: 0.9;
+}
+
+.placeholderLabel {
+  @include fonts(600, 14px, currentColor, 20px);
+  letter-spacing: 0.2px;
+}
+
+.iconPanel {
+  @include rowing(center);
+  @include sizes(100%, 60px);
+  border-radius: 10px;
+  background-color: #323537;
+}
+
+.iconPanelLight {
+  background-color: #80858B;
+
+  svg path:hover {
+    fill: #fff;
+  }
+
+  svg:hover circle,
+  svg:hover path {
+    stroke: #fff;
+  }
+
+  .divider {
+    background-color: #fff;
+  }
+}
+
+.divider {
+  @include sizes(2px);
+  background-color: #000;
+}
+
+.wrapFavourite, .wrapShare {
+  @include rowing(center, center);
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+@include screenSize(lg) {
+  .placeholderIcon {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+@include screenSize(md) {
+  .placeholderIcon {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@include screenSize(md-sm) {
+  .poster {
+    @include sizes(100%);
+  }
+
+  .posterPlaceholder {
+    width: 100%;
+  }
+}

@@ -1,0 +1,143 @@
+@use '../../shared/styles/mixins' as *;
+
+.navItem {
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #8c61ff; // Цвет при наведении
+  }
+}
+
+.menuLink {
+  @include rowing(null, center);
+  padding-bottom: 40px;
+}
+
+.text {
+  @include fonts(600, 18px, #80858B, 24px);
+  padding-left: 25px;
+}
+
+.active {
+  .text {
+    color: #8c61ff;
+  }
+
+  svg path {
+    fill: #8c61ff;
+  }
+}
+
+.activeSearch {
+  .text {
+    color: #80858B;
+  }
+
+  svg path {
+    fill: #80858B;
+  }
+}
+
+.sidebarWrapp {
+  display: grid;
+  grid-template-columns: calc(var(--sidebar-nav-width) + var(--sidebar-nav-padding)) 1fr;
+  column-gap: var(--sidebar-nav-gap);
+  align-items: start;
+  min-height: calc(100vh - 216px);
+  height: auto;
+  padding: 49px 0;
+
+  nav {
+    width: var(--sidebar-nav-width);
+    flex-shrink: 0;
+    padding-right: var(--sidebar-nav-padding);
+  }
+}
+
+.sidebarWrapp > :not(nav) {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.movieSidebar {
+  padding: 50px 0 0;
+}
+
+// Hide sidebar navigation on tablets and mobile (1280px and below)
+@include screenSize(lg) {
+  .sidebarWrapp nav {
+    display: none;
+  }
+
+  .sidebarWrapp {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    width: 100%;
+    min-height: calc(100vh - 216px);
+    height: auto;
+  }
+
+  .sidebarWrapp > :not(nav) {
+    grid-column: 1;
+  }
+}
+
+// Tablet styles (768px and below)
+@include screenSize(md) {
+  .sidebarWrapp {
+    width: 100%;
+    min-height: calc(100vh - 232px);
+    height: auto;
+  }
+
+  .trendsSidebar {
+    width: 100%;
+    min-height: calc(100vh - 90px);
+    height: auto;
+  }
+
+  .settingsSidebar {
+    width: 100%;
+    min-height: calc(100vh - 110px);
+    height: auto;
+  }
+
+  .movieSidebar {
+    width: 100%;
+    min-height: calc(100vh - 180px);
+    height: auto;
+  }
+}
+
+// Small tablet styles (630px and below)
+@include screenSize(md-sm) {
+  .sidebarWrapp {
+    width: 100%;
+    min-height: calc(100vh - 276px);
+    height: auto;
+  }
+
+  .settingsSidebar {
+    width: 100%;
+    min-height: calc(100vh - 210px);
+    height: auto;
+    padding: 35px 0 0;
+  }
+}
+
+// Mobile styles (320px and below)
+@include screenSize(xs) {
+  .sidebarWrapp {
+    width: 100%;
+    min-height: calc(100vh - 232px);
+    height: auto;
+  }
+
+  .settingsSidebar {
+    width: 100%;
+    min-height: calc(100vh - 210px);
+    height: auto;
+  }
+}
