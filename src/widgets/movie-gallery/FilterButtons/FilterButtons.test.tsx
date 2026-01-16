@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { renderWithProviders, screen, userEvent } from '../../../../test/utils';
+import { renderWithProviders, screen, userEvent } from '../../../test/utils';
 import { FilterButtons } from './index';
 
 describe('FilterButtons Component', () => {
