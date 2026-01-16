@@ -40,7 +40,7 @@ const MovieDetailsPage: React.FC = () => {
 
     if (isLoading) return <MovieDetailsSkeleton />;
     if (error) {
-        const message = typeof error === 'object' && error !== null && 'error' in error
+        const message = 'error' in error
             ? String(error.error)
             : 'Не удалось загрузить детали фильма';
         return <ErrorMessage message={message} />;

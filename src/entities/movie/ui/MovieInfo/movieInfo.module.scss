@@ -25,6 +25,10 @@
   > p {
     @include fonts(500, 16px, #fff, 24px);
   }
+
+  > p.descLight {
+    color: #000;
+  }
 }
 
 .desc {

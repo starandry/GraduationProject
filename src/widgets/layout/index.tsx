@@ -13,20 +13,10 @@ import styles from './main.module.scss';
 import { incrementPage, setSearchTrue, setSearchFalse, setSearchQuery } from '../../features/movie-search/model/moviesSlice';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 
-const debounce = (func: (...args: string[]) => void, delay: number) => {
-    let timer: NodeJS.Timeout;
-    return (...args: string[]) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            func(...args);
-        }, delay);
-    };
-};
-
 const MainLayout: React.FC = () => {
     const dispatch = useAppDispatch();
     const location = useLocation();
-    const { page, search } = useAppSelector((state) => state.movies);
+    const { search } = useAppSelector((state) => state.movies);
     const currentPath = location.pathname;
     const isDark = useAppSelector((state) => state.theme.isDark);
     let btnClas, customFooter;
@@ -59,7 +49,9 @@ const MainLayout: React.FC = () => {
         // debounce((value: string) => {
         //     dispatch(setSearchQuery(value));
         // }, 700),
-        (_value: string) => {},
+        (value: string) => {
+            void value;
+        },
         []
     );
 

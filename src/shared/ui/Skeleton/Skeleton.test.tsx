@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderWithProviders, screen } from '../../../test/utils';
+import { renderWithProviders } from '../../../test/utils';
 import { Skeleton, MovieCardSkeleton, GallerySkeleton } from './index';
 
 describe('Skeleton Components', () => {

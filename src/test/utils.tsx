@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { render, RenderOptions, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore, PreloadedState } from '@reduxjs/toolkit';
@@ -54,5 +54,5 @@ export function renderWithProviders(
 }
 
 // Re-export everything from testing library
-export * from '@testing-library/react';
+export { render, screen };
 export { default as userEvent } from '@testing-library/user-event';

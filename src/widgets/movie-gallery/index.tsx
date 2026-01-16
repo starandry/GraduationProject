@@ -156,7 +156,7 @@ const MovieGallery: React.FC = () => {
 
     // Show error message
     if (error) {
-        const message = typeof error === 'object' && error !== null && 'error' in error
+        const message = 'error' in error
             ? String(error.error)
             : 'Не удалось загрузить фильмы';
         return <ErrorMessage message={message} />;
