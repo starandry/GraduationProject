@@ -5,8 +5,10 @@ import { Logo } from "../../../shared/ui/Icon/icon.component";
 import { Copyright } from '../../../widgets/copyright';
 
 const AuthLayout: React.FC = () => {
+    const collageSrc = `${import.meta.env.BASE_URL}images/collage-of-movie-posters.jpg`;
+
     return <>
-        <img src={'/images/collage-of-movie-posters.jpg'}
+        <img src={collageSrc}
              alt={'collage-of-movie'}
              className={styles.img}/>
         <div className={styles.wrapAuth}>

@@ -11,7 +11,7 @@ interface EmptyStateProps {
  * EmptyState - displays empty state with image and caption
  */
 export const EmptyState: React.FC<EmptyStateProps> = ({
-    imageSrc = 'images/empty-state.png',
+    imageSrc = `${import.meta.env.BASE_URL}images/empty-state.png`,
     altText = 'Empty state',
     caption = 'Empty state text'
 }) => {

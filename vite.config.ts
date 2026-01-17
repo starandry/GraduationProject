@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
 
+const baseUrl = process.env.VITE_BASE_URL || '/';
+
 export default defineConfig({
-    base: './', // Базовый путь для проекта при его развертывании
+    base: baseUrl, // Для чистых URL base должен совпадать с публичным путём раздачи
     css: {
         preprocessorOptions: {
             scss: {
