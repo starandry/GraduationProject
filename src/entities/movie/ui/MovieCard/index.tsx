@@ -7,7 +7,6 @@ import {toggleFavourite} from "../../model/favouritesSlice";
 import { Movie } from '../../model/types';
 import { useThemeStyles } from '../../../theme/lib/useThemeStyles';
 import { LazyImage } from '../../../../shared/ui/LazyImage';
-import '../../../../shared/styles/_globals.scss'
 
 type FavouritesState = {
     favourites: Movie[];

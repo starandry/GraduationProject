@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import { Outlet, useLocation } from "react-router-dom";
 import { Background } from "../background";
 import { Button } from "../../shared/ui/Button";
@@ -40,28 +40,12 @@ const MainLayout: React.FC = () => {
         btnClas += ` ${styles.btnLigth}`;
     }
 
-    const handleSearchChange = () => {
-
-    };
-
-    const debouncedSearch = useCallback(
-        // временно выключаем debounce-запросы, чтобы не тратить лимиты API
-        // debounce((value: string) => {
-        //     dispatch(setSearchQuery(value));
-        // }, 700),
-        (value: string) => {
-            void value;
-        },
-        []
-    );
-
-    const handleSearchInput = (value: string) => {
-        debouncedSearch(value);
-        if (value.length > 0) {
+    const handleSearchChange = (value: string) => {
+        dispatch(setSearchQuery(value));
+        if (value.trim().length > 0) {
             dispatch(setSearchTrue());
         } else {
             dispatch(setSearchFalse());
-            dispatch(setSearchQuery(''));
         }
     };
 
@@ -69,7 +53,7 @@ const MainLayout: React.FC = () => {
         <Background>
             <Header>
                 <Logo/>
-                <SearchInput onChange={handleSearchChange} onInput={handleSearchInput}/>
+                <SearchInput onChange={handleSearchChange} />
                 <UserProfile circleColor='#7B61FF'/>
             </Header>
             <Sidebar>

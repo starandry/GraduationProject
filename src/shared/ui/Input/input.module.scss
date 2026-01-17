@@ -4,9 +4,6 @@
   min-width: 0;
 }
 
-.passwordInput {
-  padding-bottom: 7px;
-}
 
 .label {
   @include fonts(600, 16px, white, 24px);
@@ -37,8 +34,4 @@
 
 .input::placeholder {
   color: #7a7a7a; // Более тёмный оттенок для текста плейсхолдера
-}
-
-.customPasswordInput::placeholder {
-  color: white;
 }

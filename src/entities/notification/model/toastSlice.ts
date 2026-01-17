@@ -31,11 +31,8 @@ const toastSlice = createSlice({
         removeToast: (state, action: PayloadAction<string>) => {
             state.toasts = state.toasts.filter(toast => toast.id !== action.payload);
         },
-        clearAllToasts: (state) => {
-            state.toasts = [];
-        },
     },
 });
 
-export const { addToast, removeToast, clearAllToasts } = toastSlice.actions;
+export const { addToast, removeToast } = toastSlice.actions;
 export default toastSlice.reducer;

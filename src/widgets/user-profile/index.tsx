@@ -22,7 +22,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
     const userInfoRef = useRef<HTMLDivElement | null>(null);
     const getThemeClass = useThemeStyles(styles);
 
-    const getUsernameByEmail = (email: string): string | null => {
+    const getUsernameByEmail = (email: string | null): string | null => {
         // Получаем данные пользователей из localStorage
         const users = JSON.parse(localStorage.getItem('users') || '[]');
 
@@ -33,8 +33,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ circleColor }) => {
         return user ? user.username : null;
     };
 
-    getUsernameByEmail(emailInStore);
-    const userInitials = getUsernameByEmail(emailInStore).slice(0, 2).toUpperCase();
+    const username = getUsernameByEmail(emailInStore);
+    const userInitials = username ? username.slice(0, 2).toUpperCase() : '';
 
     const compUserIfo = isHamburgerOpen
         ? `${styles.userInfo} ${styles.userInfoHumb}`

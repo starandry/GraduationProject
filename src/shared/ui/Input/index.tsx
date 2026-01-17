@@ -3,7 +3,7 @@ import styles from './input.module.scss';
 import { InputProps } from '../../types';
 import {useSelector} from "react-redux";
 
-const Input: FC<InputProps> = ({ type, id, label, value, onChange, onInput, placeholder, required = false, className,
+const Input: FC<InputProps> = ({ type, id, label, value, onChange, placeholder, required = false, className,
                                    containerClassName = '', labelClassName = '' }) => {
     const safeClassName = className || '';
     let inputClassName = `${styles.input} ${safeClassName}`;
@@ -28,7 +28,6 @@ const Input: FC<InputProps> = ({ type, id, label, value, onChange, onInput, plac
                 id={id}
                 value={value}
                 onChange={onChange}
-                onInput={onInput}
                 placeholder={placeholder}
                 required={required}
                 className={inputClassName}

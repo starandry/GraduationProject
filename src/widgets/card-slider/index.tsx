@@ -140,7 +140,7 @@ const CardSlider: React.FC<SliderProps> = ({cards}) => {
     return (
         <Slider {...settings}>
             {cards.map((card) => (
-                <div className={styles.wrapSlider} key={card.imdbID}>
+                <div key={card.imdbID}>
                     <MovieCard movie={card}/>
                 </div>
             ))}

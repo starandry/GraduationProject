@@ -5,9 +5,7 @@ import { useAppSelector } from './app/store/hooks';
 import { ToastContainer } from './entities/notification/ui/Toast';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { RequireAuth, RequireGuest } from './processes/auth/guards';
-import { HomePage } from './pages/home';
-import { TrendsPage } from './pages/trends';
-import { FavoritesPage } from './pages/favorites';
+import { MovieGallery } from './widgets/movie-gallery';
 import { SettingsPage } from './pages/settings';
 import { MovieDetailsPage } from './pages/movie-details';
 import { LoginForm } from './features/auth/ui/LoginForm';
@@ -36,9 +34,9 @@ function App() {
                 </Route>
                 <Route element={<RequireAuth isAuthenticated={isAuthenticated} />}>
                     <Route path="/" element={<MainLayout />}>
-                        <Route index element={<HomePage />} />
-                        <Route path="trends" element={<TrendsPage />} />
-                        <Route path="favorites" element={<FavoritesPage />} />
+                        <Route index element={<MovieGallery />} />
+                        <Route path="trends" element={<MovieGallery />} />
+                        <Route path="favorites" element={<MovieGallery />} />
                         <Route path="settings" element={<SettingsPage />} />
                         <Route path="movie/:imdbID" element={<MovieDetailsPage />} />
                         <Route path="*" element={<Navigate to="/" replace />} />

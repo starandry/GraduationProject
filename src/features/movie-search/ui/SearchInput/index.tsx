@@ -8,10 +8,9 @@ import { useAppSelector } from '../../../../app/store/hooks';
 
 export type SearchInputProps = {
     onChange: (value: string) => void;
-    onInput: (value: string) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ onChange, onInput }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ onChange }) => {
     const [isModalOpen, setModalOpen] = useState(false); // Состояние для модального окна
     const compSearchInput = styles.searchInput;
     const isDark = useAppSelector((state) => state.theme.isDark);
@@ -52,7 +51,6 @@ const SearchInput: React.FC<SearchInputProps> = ({ onChange, onInput }) => {
                 containerClassName={styles.searchField}
                 placeholder="Search"
                 onChange={(e) => onChange(e.target.value)}
-                onInput={(e) => onInput(e.target.value)}
             />
             <Button className={styles.searchButton} onClick={handleButtonClick}>
                 <SortIcon />
