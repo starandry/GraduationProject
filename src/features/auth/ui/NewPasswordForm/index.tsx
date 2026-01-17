@@ -1,13 +1,12 @@
-import React, { FC, useState } from 'react';
-import { Input } from '../../../../shared/ui/Input';
+import React, { FC, useCallback, useState } from 'react';
+import { Input } from '@shared/ui/Input';
 import styles from './newPasswordForm.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { setSuccessMessage } from '../../model/authSlice';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../../app/store/hooks';
-import { PASSWORDREGEX } from '../../../../shared/config/auth';
-import { useThemeStyles } from '../../../../entities/theme/lib/useThemeStyles';
-import { hashPassword } from '../../../../shared/lib/crypto';
+import { useAppSelector } from '@app/store/hooks.ts';
+import { useThemeStyles } from '@entities/theme/lib/useThemeStyles.ts';
+import { AuthService } from '@shared/lib/authService.ts';
 
 const NewPasswordForm: FC = () => {
     const [password, setPassword] = useState<string>('');
@@ -18,7 +17,7 @@ const NewPasswordForm: FC = () => {
     const dispatch = useDispatch();
     const getThemeClass = useThemeStyles(styles);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
@@ -26,28 +25,24 @@ const NewPasswordForm: FC = () => {
             return;
         }
 
-        if (!PASSWORDREGEX.test(password)) {
+        if (!AuthService.validatePassword(password)) {
             setError('Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.');
             return;
         }
 
-        const users = JSON.parse(localStorage.getItem('users'));
+        const success = await AuthService.updatePassword(emailInStore, password);
 
-        const userIndex = users.findIndex((user: { email: string }) => user.email === emailInStore);
-        // Хешируем новый пароль перед сохранением
-        users[userIndex].password = await hashPassword(password);
-        // Сохраняем обновленный массив пользователей обратно в localStorage
-        localStorage.setItem('users', JSON.stringify(users));
+        if (!success) {
+            setError('Не удалось обновить пароль!');
+            return;
+        }
 
         dispatch(setSuccessMessage('Ваш пароль успешно изменён'));
-
-        // Очистка локальных состояний
         setPassword('');
         setConfirmPassword('');
         setError(null);
-
         navigate('/auth');
-    };
+    }, [password, confirmPassword, emailInStore, dispatch, navigate]);
 
 
     return (

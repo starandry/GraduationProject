@@ -13,7 +13,20 @@
         "isolatedModules": true, //Гарантирует, что каждый файл компилируется отдельно, как если бы он был модулем
         "moduleDetection": "force", //Принуждает компилятор считать все файлы с импортами или экспортами модулями
         "noEmit": true, //Отключает генерацию файлов JavaScript это  для vite
-        "jsx": "react-jsx" //Указывает поддержку нового JSX-трансформера React, который не требует явного импорта React в каждом файле.
+        "jsx": "react-jsx", //Указывает поддержку нового JSX-трансформера React, который не требует явного импорта React в каждом файле.
+
+        /* Path Aliases */
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"],
+            "@app/*": ["src/app/*"],
+            "@processes/*": ["src/processes/*"],
+            "@pages/*": ["src/pages/*"],
+            "@widgets/*": ["src/widgets/*"],
+            "@features/*": ["src/features/*"],
+            "@entities/*": ["src/entities/*"],
+            "@shared/*": ["src/shared/*"]
+        }
     },
     "include": ["src"], //TypeScript будет обрабатывать только файлы внутри папки src
     "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/test/**/*"]

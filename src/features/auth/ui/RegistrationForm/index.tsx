@@ -1,14 +1,13 @@
-import React, { FC, useState } from 'react';
-import { Button } from '../../../../shared/ui/Button';
-import { Input } from '../../../../shared/ui/Input';
+import React, { FC, useCallback, useState } from 'react';
+import { Button } from '@shared/ui/Button';
+import { Input } from '@shared/ui/Input';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './registrationForm.module.scss';
 import { useDispatch } from 'react-redux';
 import { setSuccessMessage } from '../../model/authSlice';
-import { EMAILREGEX, PASSWORDREGEX } from '../../../../shared/config/auth';
-import { useThemeStyles } from '../../../../entities/theme/lib/useThemeStyles';
-import { hashPassword } from '../../../../shared/lib/crypto';
-import { useToast } from '../../../../entities/notification/lib/useToast';
+import { useThemeStyles } from '@entities/theme/lib/useThemeStyles.ts';
+import { useToast } from '@entities/notification/lib/useToast.ts';
+import { AuthService } from '@shared/lib/authService.ts';
 
 const RegistrationForm: FC = () => {
     const [localUsername, setLocalUsername] = useState<string>('');
@@ -20,73 +19,37 @@ const RegistrationForm: FC = () => {
     const getThemeClass = useThemeStyles(styles);
     const toast = useToast();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Проверка на совпадение паролей
         if (localPassword !== confirmPassword) {
             toast.error('Пароли не совпадают.');
             return;
         }
 
-        // Проверка формата email
-        if (!EMAILREGEX.test(localEmail)) {
+        if (!AuthService.validateEmail(localEmail)) {
             toast.error('Неверный формат email.');
             return;
         }
 
-        // Проверка на сложность пароля
-        if (!PASSWORDREGEX.test(localPassword)) {
+        if (!AuthService.validatePassword(localPassword)) {
             toast.error(
                 'Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.'
             );
             return;
         }
 
-        const users = JSON.parse(localStorage.getItem('users'));
-
-        function getUsernameOrEmailIfExists(localUsername: string, localEmail: string): string | null {
-            const user = users.find(
-                (user: { username: string; email: string }) =>
-                    user.username === localUsername || user.email === localEmail
-            );
-
-            if (user) {
-                if (user.username === localUsername) {
-                    return 'username';
-                } else {
-                    return 'email';
-                }
-            }
-
-            return null;
-        }
-
-        const field = getUsernameOrEmailIfExists(localUsername, localEmail);
+        const field = AuthService.checkUsernameOrEmailExists(localUsername, localEmail);
 
         if (field) {
             toast.error(`Пользователь с таким ${field} уже существует.`);
             return;
         }
 
-        // Если все проверки прошли успешно, сохраняем данные в localStorage
-        // Хешируем пароль для безопасности
-        const hashedPassword = await hashPassword(localPassword);
-
-        const userObject = {
-            username: localUsername,
-            email: localEmail,
-            password: hashedPassword, // Сохраняем хеш, а не plain text
-        };
-
-        users.push(userObject);
-        localStorage.setItem('users', JSON.stringify(users));
-        // Отправляем сообщение об успехе
+        await AuthService.registerUser(localUsername, localEmail, localPassword);
         dispatch(setSuccessMessage('Вы успешно зарегистрированы в системе!'));
-
-        // Перенаправляем пользователя
         navigate('/auth');
-    };
+    }, [localUsername, localEmail, localPassword, confirmPassword, toast, dispatch, navigate]);
 
     return (
         <form onSubmit={handleSubmit} className={getThemeClass('registrationForm')}>

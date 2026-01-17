@@ -1,14 +1,14 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Button } from '../../../../shared/ui/Button';
-import { Input } from '../../../../shared/ui/Input';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Button } from '@shared/ui/Button';
+import { Input } from '@shared/ui/Input';
 import { Link } from 'react-router-dom';
 import styles from './loginForm.module.scss';
 import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../../app/store/hooks';
+import { useAppSelector } from '@app/store/hooks.ts';
 import { clearSuccessMessage, setAuthenticated, setEmailInStore } from '../../model/authSlice';
-import { useThemeStyles } from '../../../../entities/theme/lib/useThemeStyles';
-import { verifyPassword, hashPassword, isHashed } from '../../../../shared/lib/crypto';
-import { useToast } from '../../../../entities/notification/lib/useToast';
+import { useThemeStyles } from '@entities/theme/lib/useThemeStyles.ts';
+import { useToast } from '@entities/notification/lib/useToast.ts';
+import { AuthService } from '@shared/lib/authService.ts';
 
 const LoginForm: FC = () => {
     const [email, setEmail] = useState<string>('');
@@ -36,50 +36,19 @@ const LoginForm: FC = () => {
         dispatch(clearSuccessMessage());
     }, [successMessage, toast, dispatch]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const checkCredentialsInLocalStorage = async (email: string, password: string): Promise<string | null> => {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const result = await AuthService.checkCredentials(email, password);
 
-            const user = users.find(
-                (user: { email: string; password: string }) => user.email === email
-            );
-
-            if (!user) {
-                return 'email';
-            }
-
-            // Проверяем, хеширован ли пароль
-            if (isHashed(user.password)) {
-                // Сравниваем хеши
-                const isValid = await verifyPassword(password, user.password);
-                if (!isValid) {
-                    return 'password';
-                }
-            } else {
-                // Старый plain text пароль - мигрируем
-                if (user.password !== password) {
-                    return 'password';
-                }
-                // Хешируем и обновляем
-                user.password = await hashPassword(password);
-                localStorage.setItem('users', JSON.stringify(users));
-            }
-
-            return null;  // Если оба поля верны
-        };
-
-        const res = await checkCredentialsInLocalStorage(email, password);
-
-        if (res) {
-            toast.error(`Пользователя с таким ${res} не существует`);
+        if (!result.valid) {
+            toast.error(`Пользователя с таким ${result.error} не существует`);
         } else {
             toast.success('Успешный вход в систему!');
             dispatch(setAuthenticated(true));
             dispatch(setEmailInStore(email));
         }
-    };
+    }, [email, password, toast, dispatch]);
 
     return (
         <form onSubmit={handleSubmit} className={getThemeClass('loginForm')}>

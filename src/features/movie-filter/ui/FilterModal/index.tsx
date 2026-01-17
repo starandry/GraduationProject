@@ -1,22 +1,23 @@
-import React, {useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import { setFilters } from '../../model/filtersSlice';
 import styles from './filterModal.module.scss';
-import {Input} from '../../../../shared/ui/Input';
-import {SubTitle} from '../../../../shared/ui/SubTitle';
-import {Button} from '../../../../shared/ui/Button';
-import { BigCloseIcon } from "../../../../shared/ui/Icon/icon.component";
-import { useAppDispatch } from '../../../../app/store/hooks';
+import {Input} from '@shared/ui/Input';
+import {SubTitle} from '@shared/ui/SubTitle';
+import {Button} from '@shared/ui/Button';
+import { BigCloseIcon } from '@shared/ui/Icon/icon.component.tsx';
+import { useAppDispatch } from '@app/store/hooks.ts';
 
 export type FilterModalProps = {
     isOpen: boolean;
     onClose: () => void;
 }
 
+const INITIAL_GENRES = ['Adventure', 'Drama', 'Documental', 'Thriller'];
+
 const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
     const dispatch = useAppDispatch();
-    const initialGenres = ['Adventure', 'Drama', 'Documental', 'Thriller'];
     const [selectedSort, setSelectedSort] = useState<'Rating' | 'Year'>('Rating');
-    const [genres, setGenres] = useState<string[]>(initialGenres);
+    const [genres, setGenres] = useState<string[]>(INITIAL_GENRES);
     const [movieName, setMovieName] = useState<string>(''); // Состояние для текста поиска
     const [yearFrom, setYearFrom] = useState<string>(''); // Состояние для начала диапазона года
     const [yearTo, setYearTo] = useState<string>('');
@@ -24,29 +25,26 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
     const [ratingTo, setRatingTo] = useState<string>('');
     const [country, setCountry] = useState<string>('');
 
-    if (!isOpen) return null;
+    const handleSortClick = useCallback((sortType: 'Rating' | 'Year') => {
+        setSelectedSort(sortType);
+    }, []);
 
-    const handleSortClick = (sortType: 'Rating' | 'Year') => {
-        setSelectedSort(sortType); // Выбор типа сортировки
-    };
+    const handleGenreRemove = useCallback((genre: string) => {
+        setGenres(prev => prev.filter(g => g !== genre));
+    }, []);
 
-    const handleGenreRemove = (genre: string) => {
-        setGenres(genres.filter(g => g !== genre)); // Удаление жанра из массива
-    };
-
-    const handleClearFilter = () => {
+    const handleClearFilter = useCallback(() => {
         setMovieName('');
         setYearFrom('');
         setYearTo('');
         setRatingFrom('');
         setRatingTo('');
         setCountry('');
-        setGenres(initialGenres);
+        setGenres(INITIAL_GENRES);
         setSelectedSort('Rating');
-    };
+    }, []);
 
-    const handleShowResults = () => {
-        // Отправка фильтров в Redux
+    const handleShowResults = useCallback(() => {
         const filters = {
             movieName,
             genres,
@@ -59,9 +57,10 @@ const FilterModal: React.FC<FilterModalProps> = ({isOpen, onClose}) => {
             showButtons: true,
         };
         dispatch(setFilters(filters));
+        onClose();
+    }, [movieName, genres, yearFrom, yearTo, ratingFrom, ratingTo, country, selectedSort, dispatch, onClose]);
 
-        onClose(); // Закрытие модального окна
-    };
+    if (!isOpen) return null;
 
     return (
         <div className={styles.modalOverlay}>

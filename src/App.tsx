@@ -1,24 +1,27 @@
-import { MainLayout } from './widgets/layout';
-import { AuthPage } from './pages/auth';
+import { MainLayout } from '@widgets/layout';
+import { AuthPage } from '@pages/auth';
 import './app/styles/app.scss';
 import { useAppSelector } from './app/store/hooks';
-import { ToastContainer } from './entities/notification/ui/Toast';
+import { ToastContainer } from '@entities/notification/ui/Toast';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { RequireAuth, RequireGuest } from './processes/auth/guards';
-import { MovieGallery } from './widgets/movie-gallery';
-import { SettingsPage } from './pages/settings';
-import { MovieDetailsPage } from './pages/movie-details';
-import { LoginForm } from './features/auth/ui/LoginForm';
-import { RegistrationForm } from './features/auth/ui/RegistrationForm';
-import { ResetPasswordForm } from './features/auth/ui/ResetPasswordForm';
-import { NewPasswordForm } from './features/auth/ui/NewPasswordForm';
+import { MovieGallery } from '@widgets/movie-gallery';
+import { SettingsPage } from '@pages/settings';
+import { MovieDetailsPage } from '@pages/movie-details';
+import { LoginForm } from '@features/auth/ui/LoginForm';
+import { RegistrationForm } from '@features/auth/ui/RegistrationForm';
+import { ResetPasswordForm } from '@features/auth/ui/ResetPasswordForm';
+import { NewPasswordForm } from '@features/auth/ui/NewPasswordForm';
+import { useEffect } from 'react';
 
 function App() {
     const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-    if (!localStorage.getItem('users')) {
-        localStorage.setItem('users', JSON.stringify([]));
-    }
+    useEffect(() => {
+        if (!localStorage.getItem('users')) {
+            localStorage.setItem('users', JSON.stringify([]));
+        }
+    }, []);
 
     return (
         <>
