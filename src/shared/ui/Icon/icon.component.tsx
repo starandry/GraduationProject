@@ -18,7 +18,6 @@ export const Logo = ({ width = '158', height = '40' }) => {
         logoIcon = `${styles.logo}`;
     }
 
-    // Логика на основе состояния гамбургера
     if (isHamburgerOpen) {
         wrapLogoIcon = `${styles.wrapLogo} ${styles.logoMenuOpen}`; //  класс, если гамбургер открыт
     } else {
@@ -237,8 +236,8 @@ export const CloseIcon: React.FC<BigCloseIconProps> = () => {
     return (
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M11.6569 10.2426L7.41421 5.99999L11.6569 1.75735C12.0472 1.36702 12.0472 0.733456 11.6569 0.343133C11.2665 -0.0471895 10.633 -0.0471895 10.2426 0.343133L6 4.58577L1.75736 0.343133C1.36704 -0.0471895 0.733469 -0.0471895 0.343146 0.343133C-0.0471771 0.733456 -0.0471771 1.36702 0.343146 1.75735L4.58579 5.99999L0.343146 10.2426C-0.0478838 10.6337 -0.0471771 11.2665 0.343146 11.6568C0.733469 12.0472 1.36633 12.0479 1.75736 11.6568L6 7.4142L10.2426 11.6568C10.6337 12.0479 11.2665 12.0472 11.6569 11.6568C12.0472 11.2665 12.0479 10.6337 11.6569 10.2426Z"
                 fill="white"
             />
@@ -255,8 +254,8 @@ export const ArrowDown: React.FC<ArrowDownProps> = ({ className, onClick }) => {
     return (
         <svg className={className} onClick={onClick} width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M11.7808 0.375342C12.1258 0.806604 12.0559 1.4359 11.6247 1.78091L5.99996 6.28066L0.375268 1.78091C-0.0559941 1.4359 -0.125916 0.806603 0.219094 0.375341C0.564103 -0.0559207 1.1934 -0.125842 1.62466 0.219168L5.99996 3.71941L10.3753 0.219168C10.8065 -0.125842 11.4358 -0.0559202 11.7808 0.375342Z"
                 fill="#AFB2B6"
             />
