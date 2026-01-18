@@ -30,27 +30,10 @@ const filtersSlice = createSlice({
     initialState,
     reducers: {
         setFilters(state, action: PayloadAction<FiltersState>) {
-            state.movieName = action.payload.movieName;
-            state.genres = action.payload.genres;
-            state.yearFrom = action.payload.yearFrom;
-            state.yearTo = action.payload.yearTo;
-            state.ratingFrom = action.payload.ratingFrom;
-            state.ratingTo = action.payload.ratingTo;
-            state.country = action.payload.country;
-            state.sortBy = action.payload.sortBy;
-            state.showButtons = action.payload.showButtons;
+            Object.assign(state, action.payload);
         },
         clearFilters(state) {
-            // сброс фильтров до начальных значений
-            state.movieName = '';
-            state.genres = initialState.genres;
-            state.yearFrom = '';
-            state.yearTo = '';
-            state.ratingFrom = '';
-            state.ratingTo = '';
-            state.country = '';
-            state.sortBy = 'Rating';
-            state.showButtons = false;
+            Object.assign(state, { ...initialState, genres: [...initialState.genres] });
         },
         clearFilterByValue(state, action: PayloadAction<string>) {
             const valueToRemove = action.payload;

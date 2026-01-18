@@ -1,9 +1,10 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
+import { ButtonType } from '../../types';
 
 type ButtonProps = {
     className?: string;
-    type?: 'submit' | 'reset' | 'button';
-    children: React.ReactNode;
+    type?: ButtonType;
+    children: ReactNode;
     onClick?: () => void;
 };
 

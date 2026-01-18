@@ -7,9 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { setEmailInStore } from '../../model/authSlice';
 import { useThemeStyles } from '@entities/theme/lib/useThemeStyles.ts';
 import { AuthService } from '@shared/lib/authService.ts';
+import { useForm } from '@shared/lib/useForm.ts';
 
 const ResetPasswordForm: FC = () => {
-    const [email, setEmail] = useState<string>('');
+    const { values, handleChange } = useForm({ email: '' });
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -18,14 +19,14 @@ const ResetPasswordForm: FC = () => {
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!AuthService.checkEmailExists(email)) {
+        if (!AuthService.checkEmailExists(values.email)) {
             setError('Email не совпадает с зарегистрированным!');
             return;
         }
         setError(null);
-        dispatch(setEmailInStore(email));
+        dispatch(setEmailInStore(values.email));
         navigate('/auth/password');
-    }, [email, dispatch, navigate]);
+    }, [values.email, dispatch, navigate]);
 
     return (
         <form onSubmit={handleSubmit} className={getThemeClass('resetPasswordForm')}>
@@ -38,8 +39,8 @@ const ResetPasswordForm: FC = () => {
                 className={styles.inputReset}
                 id="reset-email"
                 label="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={values.email}
+                onChange={handleChange('email')}
                 placeholder="Your email"
                 required
             />

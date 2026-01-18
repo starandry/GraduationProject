@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef } from 'react';
 import { Button } from '@shared/ui/Button';
 import { Input } from '@shared/ui/Input';
 import { Link } from 'react-router-dom';
@@ -9,10 +9,10 @@ import { clearSuccessMessage, setAuthenticated, setEmailInStore } from '../../mo
 import { useThemeStyles } from '@entities/theme/lib/useThemeStyles.ts';
 import { useToast } from '@entities/notification/lib/useToast.ts';
 import { AuthService } from '@shared/lib/authService.ts';
+import { useForm } from '@shared/lib/useForm.ts';
 
 const LoginForm: FC = () => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const { values, handleChange } = useForm({ email: '', password: '' });
     const { successMessage } = useAppSelector((state) => state.auth);
     const dispatch = useDispatch();
     const getThemeClass = useThemeStyles(styles);
@@ -39,16 +39,16 @@ const LoginForm: FC = () => {
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const result = await AuthService.checkCredentials(email, password);
+        const result = await AuthService.checkCredentials(values.email, values.password);
 
         if (!result.valid) {
             toast.error(`Пользователя с таким ${result.error} не существует`);
         } else {
             toast.success('Успешный вход в систему!');
             dispatch(setAuthenticated(true));
-            dispatch(setEmailInStore(email));
+            dispatch(setEmailInStore(values.email));
         }
-    }, [email, password, toast, dispatch]);
+    }, [values.email, values.password, toast, dispatch]);
 
     return (
         <form onSubmit={handleSubmit} className={getThemeClass('loginForm')}>
@@ -59,8 +59,8 @@ const LoginForm: FC = () => {
                 className={styles.inputEmail}
                 id="log-email"
                 label="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={values.email}
+                onChange={handleChange('email')}
                 placeholder="Your email"
                 required
             />
@@ -70,8 +70,8 @@ const LoginForm: FC = () => {
                 className={styles.inputPassword}
                 id="log-password"
                 label="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={values.password}
+                onChange={handleChange('password')}
                 placeholder="Your password"
                 required
             />

@@ -23,6 +23,7 @@ import {
     useFetchMoviesBySearchQuery,
     useFetchMoviesQuery,
 } from '../../entities/movie/api/moviesApi';
+import { cn } from '../../shared/lib/cn';
 
 const MovieGallery: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -54,21 +55,11 @@ const MovieGallery: React.FC = () => {
         };
     }, [filters]);
 
-    // Memoize computed values to prevent unnecessary recalculations
-    const { galleryClass, titleHome, sectionTitleText } = useMemo(() => {
-        const isTrendsOrFavorites = currentPath === '/trends' || currentPath === '/favorites';
-
-        return {
-            galleryClass: isTrendsOrFavorites
-                ? `${styles.movieGallery} ${styles.movieGalleryTrends}`
-                : styles.movieGallery,
-            titleHome: isTrendsOrFavorites
-                ? `${styles.titleHome} ${styles.titleTrends}`
-                : styles.titleHome,
-            sectionTitleText: currentPath === '/trends' ? 'Trends' :
-                currentPath === '/favorites' ? 'Favorites' : undefined
-        };
-    }, [currentPath]);
+    // Memoize computed values
+    const isTrendsOrFavorites = currentPath === '/trends' || currentPath === '/favorites';
+    const galleryClass = useMemo(() => cn(styles.movieGallery, isTrendsOrFavorites && styles.movieGalleryTrends), [isTrendsOrFavorites]);
+    const titleHome = useMemo(() => cn(styles.titleHome, isTrendsOrFavorites && styles.titleTrends), [isTrendsOrFavorites]);
+    const sectionTitleText = currentPath === '/trends' ? 'Trends' : currentPath === '/favorites' ? 'Favorites' : undefined;
 
     useEffect(() => {
         if (selectedButtons === '') {
@@ -114,35 +105,30 @@ const MovieGallery: React.FC = () => {
         skip: currentPath !== '/trends',
     });
 
-    const galleryMovies = currentPath === '/favorites'
-        ? favourites
-        : currentPath === '/trends'
-            ? trendsMovies
-            : showButtons
-                ? filteredMovies
-                : searchQuery.length > 0
-                    ? searchMovies
-                    : moviesData;
+    // Memoize derived data
+    const galleryMovies = useMemo(() => {
+        if (currentPath === '/favorites') return favourites;
+        if (currentPath === '/trends') return trendsMovies;
+        if (showButtons) return filteredMovies;
+        if (searchQuery.length > 0) return searchMovies;
+        return moviesData;
+    }, [currentPath, favourites, trendsMovies, showButtons, filteredMovies, searchQuery, searchMovies, moviesData]);
 
-    const isLoading = currentPath === '/favorites'
-        ? false
-        : currentPath === '/trends'
-            ? isTrendsLoading
-            : showButtons
-                ? isFilterLoading
-                : searchQuery.length > 0
-                    ? isSearchLoading
-                    : isMoviesLoading || isMoviesFetching;
+    const isLoading = useMemo(() => {
+        if (currentPath === '/favorites') return false;
+        if (currentPath === '/trends') return isTrendsLoading;
+        if (showButtons) return isFilterLoading;
+        if (searchQuery.length > 0) return isSearchLoading;
+        return isMoviesLoading || isMoviesFetching;
+    }, [currentPath, isTrendsLoading, showButtons, isFilterLoading, searchQuery, isSearchLoading, isMoviesLoading, isMoviesFetching]);
 
-    const error = currentPath === '/favorites'
-        ? null
-        : currentPath === '/trends'
-            ? trendsError
-            : showButtons
-                ? filterError
-                : searchQuery.length > 0
-                    ? searchError
-                    : moviesError;
+    const error = useMemo(() => {
+        if (currentPath === '/favorites') return null;
+        if (currentPath === '/trends') return trendsError;
+        if (showButtons) return filterError;
+        if (searchQuery.length > 0) return searchError;
+        return moviesError;
+    }, [currentPath, trendsError, showButtons, filterError, searchQuery, searchError, moviesError]);
 
     // Show skeleton loading state
     if (isLoading && galleryMovies.length === 0) {

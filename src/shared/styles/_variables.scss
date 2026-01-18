@@ -1,0 +1,48 @@
+// Color palette
+$color-primary: #7B61FF;
+$color-primary-hover: #6952e0;
+
+$color-dark-bg: #000;
+$color-light-bg: #fff;
+
+$color-text-primary: #fff;
+$color-text-secondary: #afb2b6;
+$color-text-dark: #000;
+$color-text-muted: #46494c;
+
+$color-input-bg: #323537;
+$color-input-border: #323537;
+$color-input-light-bg: #f0f0f0;
+$color-input-light-border: #e0e0e0;
+
+$color-error: #ff4444;
+$color-success: #00c851;
+$color-warning: #ffbb33;
+$color-info: #33b5e5;
+
+$color-rating-high: #00c851;
+$color-rating-medium: #ffbb33;
+$color-rating-low: #ff4444;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Z-index layers
+$z-index-dropdown: 100;
+$z-index-modal: 1000;
+$z-index-toast: 2000;

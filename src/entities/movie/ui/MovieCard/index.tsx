@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styles from './movieCard.module.scss';
-import {useLocation, Link} from "react-router-dom";
-import {FavouriteIcon, FireIcon, PosterPlaceholderIcon} from "../../../../shared/ui/Icon/icon.component";
-import {useDispatch, useSelector} from "react-redux";
-import {toggleFavourite} from "../../model/favouritesSlice";
+import { useLocation, Link } from "react-router-dom";
+import { FavouriteIcon, FireIcon, PosterPlaceholderIcon } from "../../../../shared/ui/Icon/icon.component";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavourite } from "../../model/favouritesSlice";
 import { Movie } from '../../model/types';
 import { useThemeStyles } from '../../../theme/lib/useThemeStyles';
 import { LazyImage } from '../../../../shared/ui/LazyImage';
+import { cn } from '../../../../shared/lib/cn';
 
 type FavouritesState = {
     favourites: Movie[];
@@ -23,61 +24,36 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
     const rating = parseFloat(movie.imdbRating);
     const currentPath = location.pathname;
     const getThemeClass = useThemeStyles(styles);
-    let ratingClass, posterClass, fireIconClass, seriesCard;
     const [posterLoadError, setPosterLoadError] = useState(false);
-    const hasPosterUrl = movie.Poster !== 'N/A' && movie.Poster.trim() !== '';
-    const usePosterPlaceholder = !hasPosterUrl || posterLoadError;
+    const usePosterPlaceholder = movie.Poster === 'N/A' || !movie.Poster.trim() || posterLoadError;
 
-    //лежит ли  фильм в хранилище избранных
     const isFavourite = useSelector((state: FavouritesState) =>
         state.favourites.some(favMovie => favMovie.imdbID === movie.imdbID)
     );
 
-    useEffect(() => {
-        setPosterLoadError(false);
-    }, [movie.Poster, movie.imdbID]);
+    useEffect(() => setPosterLoadError(false), [movie.Poster, movie.imdbID]);
 
-    const handleFavouriteClick = () => {
-        dispatch(toggleFavourite(movie));
-    };
+    const handleFavouriteClick = () => dispatch(toggleFavourite(movie));
 
-    if (rating < 5) {
-        ratingClass = styles.lowRaiting;
-    } else if (rating >= 5 && rating < 6) {
-        ratingClass = styles.middleRating;
-    } else {
-        ratingClass = styles.raiting;
-    }
+    // Rating class based on score
+    const ratingBase = rating < 5 ? styles.lowRaiting : rating < 6 ? styles.middleRating : styles.raiting;
 
-    if (currentPath === '/trends') {
-        posterClass = `${styles.poster} ${styles.trendsPoster}`;
-        fireIconClass = `${styles.fireIcon} ${styles.trendsFireIcon}`;
-        ratingClass += ` ${styles.raitingTrends}`
-        seriesCard = styles.movieCard;
-    } else if (location.pathname === '/favorites' && !isFavourite) {
-        return null //карточка не показывается
-    } else if (currentPath === '/favorites') {
-        posterClass = `${styles.poster} ${styles.trendsPoster}`;
-        seriesCard = styles.movieCard;
-    } else if (currentPath.startsWith('/movie/')) {
-        posterClass = `${styles.poster} ${styles.moviePoster}`;
-        seriesCard = `${styles.movieCard} ${styles.seriesCard}`;
-        fireIconClass = styles.fireIcon;
-    } else {
-        posterClass = styles.poster;
-        fireIconClass = styles.fireIcon;
-        seriesCard = styles.movieCard;
-    }
+    // Path-based styling
+    const isTrends = currentPath === '/trends';
+    const isFavorites = currentPath === '/favorites';
+    const isMoviePage = currentPath.startsWith('/movie/');
+
+    if (isFavorites && !isFavourite) return null;
 
     return (
-        <div className={`${seriesCard} ${usePosterPlaceholder ? styles.movieCardPlaceholder : ''}`}>
-            <span className={ratingClass}>
-                <FireIcon className={fireIconClass}/>
+        <div className={cn(styles.movieCard, isMoviePage && styles.seriesCard, usePosterPlaceholder && styles.movieCardPlaceholder)}>
+            <span className={cn(ratingBase, isTrends && styles.raitingTrends)}>
+                <FireIcon className={cn(styles.fireIcon, isTrends && styles.trendsFireIcon)}/>
                 <span>{movie.imdbRating}</span>
             </span>
             <span className={styles.favouriteIconWrapper} onClick={handleFavouriteClick}>
-                <div className={`${divClassName ? divClassName : ''}`}>
-                    <FavouriteIcon  isActive={isFavourite}/>
+                <div className={divClassName || ''}>
+                    <FavouriteIcon isActive={isFavourite}/>
                 </div>
             </span>
             <Link to={`/movie/${movie.imdbID}`}>
@@ -89,7 +65,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, divClassName }) => {
                     <LazyImage
                         src={movie.Poster}
                         alt={movie.Title}
-                        className={posterClass}
+                        className={cn(styles.poster, (isTrends || isFavorites) && styles.trendsPoster, isMoviePage && styles.moviePoster)}
                         onError={() => setPosterLoadError(true)}
                     />
                 )}

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import styles from './searchInput.module.scss';
 import { Button } from '../../../../shared/ui/Button';
 import { Input } from '../../../../shared/ui/Input';
 import { SortIcon } from '../../../../shared/ui/Icon/icon.component';
 import { FilterModal } from '../../../movie-filter/ui/FilterModal';
 import { useAppSelector } from '../../../../app/store/hooks';
+import { cn } from '../../../../shared/lib/cn';
 
 export type SearchInputProps = {
     onChange: (value: string) => void;
@@ -16,11 +17,11 @@ const SearchInput: React.FC<SearchInputProps> = ({ onChange }) => {
     const isHamburgerOpen = useAppSelector((state) => state.hamburger.isOpen);
     const showButtons = useAppSelector((state) => state.filters.showButtons);
 
-    const containerClass = `${styles.searchInputContainer} ${!isDark ? styles.lightSearchInputContainer : ''} ${isHamburgerOpen ? styles.serachHumb : ''}`;
-    const sortPointClass = `${styles.sortPoint} ${!showButtons ? styles.sortPointNone : ''}`;
+    const openModal = useCallback(() => setModalOpen(true), []);
+    const closeModal = useCallback(() => setModalOpen(false), []);
 
     return (
-        <div className={containerClass}>
+        <div className={cn(styles.searchInputContainer, !isDark && styles.lightSearchInputContainer, isHamburgerOpen && styles.serachHumb)}>
             <Input
                 type="text"
                 className={styles.searchInput}
@@ -28,11 +29,11 @@ const SearchInput: React.FC<SearchInputProps> = ({ onChange }) => {
                 placeholder="Search"
                 onChange={(e) => onChange(e.target.value)}
             />
-            <Button className={styles.searchButton} onClick={() => setModalOpen(true)}>
+            <Button className={styles.searchButton} onClick={openModal}>
                 <SortIcon />
-                <div className={sortPointClass}></div>
+                <div className={cn(styles.sortPoint, !showButtons && styles.sortPointNone)} />
             </Button>
-            <FilterModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+            <FilterModal isOpen={isModalOpen} onClose={closeModal} />
         </div>
     );
 };

@@ -1,7 +1,9 @@
+@use './variables' as *;
+
 .dark {
-  background-color: #000;
+  background-color: $color-dark-bg;
 }
 
 .light {
-  background-color: #fff;
+  background-color: $color-light-bg;
 }

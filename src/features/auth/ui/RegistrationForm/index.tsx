@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Button } from '@shared/ui/Button';
 import { Input } from '@shared/ui/Input';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,12 +8,15 @@ import { setSuccessMessage } from '../../model/authSlice';
 import { useThemeStyles } from '@entities/theme/lib/useThemeStyles.ts';
 import { useToast } from '@entities/notification/lib/useToast.ts';
 import { AuthService } from '@shared/lib/authService.ts';
+import { useForm } from '@shared/lib/useForm.ts';
 
 const RegistrationForm: FC = () => {
-    const [localUsername, setLocalUsername] = useState<string>('');
-    const [localEmail, setEmail] = useState<string>('');
-    const [localPassword, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const { values, handleChange } = useForm({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const getThemeClass = useThemeStyles(styles);
@@ -22,34 +25,34 @@ const RegistrationForm: FC = () => {
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (localPassword !== confirmPassword) {
+        if (values.password !== values.confirmPassword) {
             toast.error('Пароли не совпадают.');
             return;
         }
 
-        if (!AuthService.validateEmail(localEmail)) {
+        if (!AuthService.validateEmail(values.email)) {
             toast.error('Неверный формат email.');
             return;
         }
 
-        if (!AuthService.validatePassword(localPassword)) {
+        if (!AuthService.validatePassword(values.password)) {
             toast.error(
                 'Пароль должен содержать минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.'
             );
             return;
         }
 
-        const field = AuthService.checkUsernameOrEmailExists(localUsername, localEmail);
+        const field = AuthService.checkUsernameOrEmailExists(values.username, values.email);
 
         if (field) {
             toast.error(`Пользователь с таким ${field} уже существует.`);
             return;
         }
 
-        await AuthService.registerUser(localUsername, localEmail, localPassword);
+        await AuthService.registerUser(values.username, values.email, values.password);
         dispatch(setSuccessMessage('Вы успешно зарегистрированы в системе!'));
         navigate('/auth');
-    }, [localUsername, localEmail, localPassword, confirmPassword, toast, dispatch, navigate]);
+    }, [values, toast, dispatch, navigate]);
 
     return (
         <form onSubmit={handleSubmit} className={getThemeClass('registrationForm')}>
@@ -60,8 +63,8 @@ const RegistrationForm: FC = () => {
                 className={styles.inputUsername}
                 id="username"
                 label="Username"
-                value={localUsername}
-                onChange={(e) => setLocalUsername(e.target.value)}
+                value={values.username}
+                onChange={handleChange('username')}
                 placeholder="Your username"
                 required
             />
@@ -71,8 +74,8 @@ const RegistrationForm: FC = () => {
                 className={styles.inputEmail}
                 id="email"
                 label="Email"
-                value={localEmail}
-                onChange={(e) => setEmail(e.target.value)}
+                value={values.email}
+                onChange={handleChange('email')}
                 placeholder="Your email"
                 required
             />
@@ -82,8 +85,8 @@ const RegistrationForm: FC = () => {
                 className={styles.inputPassword}
                 id="password"
                 label="Password"
-                value={localPassword}
-                onChange={(e) => setPassword(e.target.value)}
+                value={values.password}
+                onChange={handleChange('password')}
                 placeholder="Your password"
                 required
             />
@@ -93,8 +96,8 @@ const RegistrationForm: FC = () => {
                 className={styles.inputConfirmPassword}
                 id="confirmPassword"
                 label="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={values.confirmPassword}
+                onChange={handleChange('confirmPassword')}
                 placeholder="Confirm your password"
                 required
             />

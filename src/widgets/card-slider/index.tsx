@@ -8,6 +8,7 @@ import styles from './cardSlider.module.scss';
 import './cardSlider.scss';
 import { ArrowLeft, ArrowRigth } from "../../shared/ui/Icon/icon.component";
 import { useAppSelector } from '../../app/store/hooks';
+import { cn } from '../../shared/lib/cn';
 
 export type SliderProps = {
     cards: Movie[];
@@ -15,11 +16,12 @@ export type SliderProps = {
 
 const CustomPrevArrow = ({ onClick, disabled }: { onClick?: () => void, disabled?: boolean }) => {
     const isDark = useAppSelector((state) => state.theme.isDark);
-    const baseClass = `${styles.customPrev} ${!isDark ? styles.customPrevLight : ''}`;
-    const disabledClass = disabled ? `${styles.disabled} ${!isDark ? styles.disabledPrevLight : ''}` : '';
-
     return (
-        <button onClick={onClick} className={`${baseClass} ${disabledClass}`} disabled={disabled}>
+        <button
+            onClick={onClick}
+            className={cn(styles.customPrev, !isDark && styles.customPrevLight, disabled && styles.disabled, disabled && !isDark && styles.disabledPrevLight)}
+            disabled={disabled}
+        >
             <ArrowLeft/>
         </button>
     );
@@ -27,11 +29,12 @@ const CustomPrevArrow = ({ onClick, disabled }: { onClick?: () => void, disabled
 
 const CustomNextArrow = ({ onClick, disabled }: { onClick?: () => void, disabled?: boolean }) => {
     const isDark = useAppSelector((state) => state.theme.isDark);
-    const baseClass = `${styles.customNext} ${!isDark ? styles.customNextLight : ''}`;
-    const disabledClass = disabled ? `${styles.disabled} ${!isDark ? styles.disabledNextLight : ''}` : '';
-
     return (
-        <button onClick={onClick} className={`${baseClass} ${disabledClass}`} disabled={disabled}>
+        <button
+            onClick={onClick}
+            className={cn(styles.customNext, !isDark && styles.customNextLight, disabled && styles.disabled, disabled && !isDark && styles.disabledNextLight)}
+            disabled={disabled}
+        >
             <ArrowRigth/>
         </button>
     );
