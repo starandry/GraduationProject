@@ -53,11 +53,6 @@ export class AuthService {
         return users.some(u => u.email === email);
     }
 
-    static checkUsernameExists(username: string): boolean {
-        const users = this.getUsers();
-        return users.some(u => u.username === username);
-    }
-
     static checkUsernameOrEmailExists(username: string, email: string): 'username' | 'email' | null {
         const users = this.getUsers();
         const user = users.find(u => u.username === username || u.email === email);

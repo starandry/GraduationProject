@@ -11,11 +11,8 @@ const moviesSlice = createSlice({
         incrementPage(state) {
             state.page += 1;
         },
-        setSearchTrue(state) {
-            state.search = true;
-        },
-        setSearchFalse(state) {
-            state.search = false;
+        setSearch(state, action: PayloadAction<boolean>) {
+            state.search = action.payload;
         },
         setSearchQuery(state, action: PayloadAction<string>) {
             state.searchQuery = action.payload;
@@ -23,5 +20,5 @@ const moviesSlice = createSlice({
     },
 });
 
-export const { incrementPage, setSearchTrue, setSearchFalse, setSearchQuery } = moviesSlice.actions;
+export const { incrementPage, setSearch, setSearchQuery } = moviesSlice.actions;
 export default moviesSlice.reducer;

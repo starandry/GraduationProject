@@ -27,41 +27,13 @@ const Toast: React.FC<ToastProps> = ({ toast }) => {
         return () => clearTimeout(timer);
     }, [duration, handleClose]);
 
-    const getIcon = () => {
-        switch (toast.type) {
-            case 'success':
-                return '✓';
-            case 'error':
-                return '✕';
-            case 'warning':
-                return '⚠';
-            case 'info':
-                return 'ℹ';
-            default:
-                return 'ℹ';
-        }
-    };
-
-    const getToastClass = () => {
-        const baseClass = isExiting ? `${styles.toast} ${styles.toastExiting}` : styles.toast;
-
-        switch (toast.type) {
-            case 'success':
-                return `${baseClass} ${styles.toastSuccess}`;
-            case 'error':
-                return `${baseClass} ${styles.toastError}`;
-            case 'warning':
-                return `${baseClass} ${styles.toastWarning}`;
-            case 'info':
-                return `${baseClass} ${styles.toastInfo}`;
-            default:
-                return `${baseClass} ${styles.toastInfo}`;
-        }
-    };
+    const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+    const typeStyles = { success: styles.toastSuccess, error: styles.toastError, warning: styles.toastWarning, info: styles.toastInfo };
+    const baseClass = `${styles.toast} ${isExiting ? styles.toastExiting : ''} ${typeStyles[toast.type] || styles.toastInfo}`;
 
     return (
-        <div className={getToastClass()}>
-            <span className={styles.toastIcon}>{getIcon()}</span>
+        <div className={baseClass}>
+            <span className={styles.toastIcon}>{icons[toast.type] || 'ℹ'}</span>
             <span className={styles.toastContent}>{toast.message}</span>
             <button className={styles.toastClose} onClick={handleClose}>
                 ×

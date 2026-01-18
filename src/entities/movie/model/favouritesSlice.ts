@@ -13,17 +13,10 @@ const favouritesSlice = createSlice({
     reducers: {
         toggleFavourite(state, action: PayloadAction<Movie>) {
             const movie = action.payload;
-            const existingIndex = state.findIndex((fav) => fav.imdbID === movie.imdbID);
-
-            if (existingIndex >= 0) {
-                // Если фильм есть, удалить его
-                for (let i = state.length - 1; i >= 0; i -= 1) {
-                    if (state[i].imdbID === movie.imdbID) {
-                        state.splice(i, 1);
-                    }
-                }
+            const idx = state.findIndex((fav) => fav.imdbID === movie.imdbID);
+            if (idx >= 0) {
+                state.splice(idx, 1);
             } else {
-                // Если фильма нет, добавить его
                 state.push(movie);
             }
         },

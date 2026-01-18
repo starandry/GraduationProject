@@ -42,27 +42,6 @@ class ApiCache {
             timestamp: Date.now(),
         });
     }
-
-    /**
-     * Clear all cached data
-     */
-    clear(): void {
-        this.cache.clear();
-    }
-
-    /**
-     * Remove specific cache entry
-     */
-    remove(key: string): void {
-        this.cache.delete(key);
-    }
-
-    /**
-     * Get cache size
-     */
-    size(): number {
-        return this.cache.size;
-    }
 }
 
 // Export singleton instance

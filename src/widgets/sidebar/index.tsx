@@ -9,26 +9,18 @@ type SidebarProps = {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-    const location = useLocation();
+    const currentPath = useLocation().pathname;
     const { search } = useAppSelector((state) => state.movies);
-    const currentPath = location.pathname;
-    let sidebarClass, itemSearch;
 
-    if (currentPath === '/trends' || currentPath === '/favorites') {
-        sidebarClass = `${styles.sidebarWrapp}   ${styles.trendsSidebar}`;
-    } else if (currentPath === '/settings') {
-        sidebarClass = `${styles.sidebarWrapp}  ${styles.trendsSidebar} ${styles.settingsSidebar}`;
-    } else if (currentPath.startsWith('/movie/')) {
-        sidebarClass = `${styles.sidebarWrapp}   ${styles.movieSidebar}`;
-    } else {
-        sidebarClass =  styles.sidebarWrapp;
-    }
+    const sidebarClass = currentPath === '/trends' || currentPath === '/favorites'
+        ? `${styles.sidebarWrapp} ${styles.trendsSidebar}`
+        : currentPath === '/settings'
+        ? `${styles.sidebarWrapp} ${styles.trendsSidebar} ${styles.settingsSidebar}`
+        : currentPath.startsWith('/movie/')
+        ? `${styles.sidebarWrapp} ${styles.movieSidebar}`
+        : styles.sidebarWrapp;
 
-    if (search) {
-        itemSearch = `${styles.active} ${styles.activeSearch}`;
-    } else {
-        itemSearch = styles.active
-    }
+    const activeClass = search ? `${styles.active} ${styles.activeSearch}` : styles.active;
 
     return (
         <div className={sidebarClass}>
@@ -38,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                         <li key={index} className={styles.navItem}>
                             <Link
                                 to={item.path}
-                                className={`${styles.menuLink} ${currentPath === item.path ? itemSearch : ''}`}
+                                className={`${styles.menuLink} ${currentPath === item.path ? activeClass : ''}`}
                             >
                                 {item.icon}
                                 <span className={styles.text}>{item.label}</span>
@@ -52,4 +44,4 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     );
 };
 
-export {Sidebar};
+export { Sidebar };

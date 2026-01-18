@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styles from './searchInput.module.scss';
 import { Button } from '../../../../shared/ui/Button';
 import { Input } from '../../../../shared/ui/Input';
@@ -11,52 +11,28 @@ export type SearchInputProps = {
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({ onChange }) => {
-    const [isModalOpen, setModalOpen] = useState(false); // Состояние для модального окна
-    const compSearchInput = styles.searchInput;
+    const [isModalOpen, setModalOpen] = useState(false);
     const isDark = useAppSelector((state) => state.theme.isDark);
-    const isHamburgerOpen = useAppSelector((state) => state.hamburger.isOpen); // состояние гамбургера
+    const isHamburgerOpen = useAppSelector((state) => state.hamburger.isOpen);
     const showButtons = useAppSelector((state) => state.filters.showButtons);
-    let compWrapp, sortPoint;
 
-    if (showButtons) {
-        sortPoint = styles.sortPoint;
-    } else {
-        sortPoint = `${styles.sortPoint} ${styles.sortPointNone}`;
-    }
-
-    if (isDark) {
-        compWrapp = styles.searchInputContainer;
-    } else {
-        compWrapp = `${styles.searchInputContainer} ${styles.lightSearchInputContainer}`;
-    }
-
-    const handleButtonClick = () => {
-        setModalOpen(true); // Открываем модальное окно
-    };
-
-    const handleCloseModal = () => {
-        setModalOpen(false); // Закрываем модальное окно
-    };
-
-    // Логика на основе состояния гамбургера
-    if (isHamburgerOpen) {
-        compWrapp = `${compWrapp} ${styles.serachHumb}`; // класс, если гамбургер открыт
-    }
+    const containerClass = `${styles.searchInputContainer} ${!isDark ? styles.lightSearchInputContainer : ''} ${isHamburgerOpen ? styles.serachHumb : ''}`;
+    const sortPointClass = `${styles.sortPoint} ${!showButtons ? styles.sortPointNone : ''}`;
 
     return (
-        <div className={compWrapp}>
+        <div className={containerClass}>
             <Input
                 type="text"
-                className={compSearchInput}
+                className={styles.searchInput}
                 containerClassName={styles.searchField}
                 placeholder="Search"
                 onChange={(e) => onChange(e.target.value)}
             />
-            <Button className={styles.searchButton} onClick={handleButtonClick}>
+            <Button className={styles.searchButton} onClick={() => setModalOpen(true)}>
                 <SortIcon />
-                <div className={sortPoint}></div>
+                <div className={sortPointClass}></div>
             </Button>
-            <FilterModal isOpen={isModalOpen} onClose={handleCloseModal} />
+            <FilterModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
         </div>
     );
 };

@@ -6,12 +6,10 @@ type FooterProps = {
     className?: string;
 };
 
-const Footer: React.FC<FooterProps> = ({ children, className }) => {
-    return (
-        <div className={`${styles.footer} ${className || ''}`}>
-            {children}
-        </div>
-    );
-};
+const Footer: React.FC<FooterProps> = ({ children, className }) => (
+    <div className={`${styles.footer} ${className || ''}`}>
+        {children}
+    </div>
+);
 
 export { Footer };

@@ -15,37 +15,27 @@ export type SliderProps = {
 
 const CustomPrevArrow = ({ onClick, disabled }: { onClick?: () => void, disabled?: boolean }) => {
     const isDark = useAppSelector((state) => state.theme.isDark);
-    let compPrev, disPrev;
+    const baseClass = `${styles.customPrev} ${!isDark ? styles.customPrevLight : ''}`;
+    const disabledClass = disabled ? `${styles.disabled} ${!isDark ? styles.disabledPrevLight : ''}` : '';
 
-    if (isDark) {
-        compPrev = `${styles.customPrev}`;
-        disPrev = `${styles.disabled}`;
-    } else {
-        compPrev = `${styles.customPrev} ${styles.customPrevLight}`;
-        disPrev = `${styles.disabled} ${styles.disabledPrevLight}`;
-    }
+    return (
+        <button onClick={onClick} className={`${baseClass} ${disabledClass}`} disabled={disabled}>
+            <ArrowLeft/>
+        </button>
+    );
+};
 
-    return <button onClick={onClick} className={`${compPrev} ${disabled ? disPrev : ''}`} disabled={disabled}>
-        <ArrowLeft/>
-    </button>
-}
-
-const CustomNextArrow = ({onClick, disabled}: { onClick?: () => void, disabled?: boolean }) => {
+const CustomNextArrow = ({ onClick, disabled }: { onClick?: () => void, disabled?: boolean }) => {
     const isDark = useAppSelector((state) => state.theme.isDark);
-    let compNext, disNext;
+    const baseClass = `${styles.customNext} ${!isDark ? styles.customNextLight : ''}`;
+    const disabledClass = disabled ? `${styles.disabled} ${!isDark ? styles.disabledNextLight : ''}` : '';
 
-    if (isDark) {
-        compNext = `${styles.customNext}`;
-        disNext = `${styles.disabled}`;
-    } else {
-        compNext = `${styles.customNext} ${styles.customNextLight}`;
-        disNext = `${styles.disabled} ${styles.disabledNextLight}`;
-    }
-
-    return <button onClick={onClick} className={`${compNext} ${disabled ? disNext : ''}`} disabled={disabled}>
-        <ArrowRigth/>
-    </button>
-}
+    return (
+        <button onClick={onClick} className={`${baseClass} ${disabledClass}`} disabled={disabled}>
+            <ArrowRigth/>
+        </button>
+    );
+};
 
 const CardSlider: React.FC<SliderProps> = ({cards}) => {
     const getSlidesToShowByWidth = (width: number) => {

@@ -7,13 +7,10 @@ type ButtonProps = {
     onClick?: () => void;
 };
 
-const Button: FC<ButtonProps> = ({ className = '', type = 'submit', children, onClick }) => {
-
-    return (
-        <button type={type} className={className} onClick={onClick}>
-            {children}
-        </button>
-    );
-};
+const Button: FC<ButtonProps> = ({ className = '', type = 'submit', children, onClick }) => (
+    <button type={type} className={className} onClick={onClick}>
+        {children}
+    </button>
+);
 
 export { Button };

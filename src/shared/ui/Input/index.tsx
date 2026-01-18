@@ -1,28 +1,17 @@
 import React, { FC } from 'react';
 import styles from './input.module.scss';
 import { InputProps } from '../../types';
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 const Input: FC<InputProps> = ({ type, id, label, value, onChange, placeholder, required = false, className,
                                    containerClassName = '', labelClassName = '' }) => {
-    const safeClassName = className || '';
-    let inputClassName = `${styles.input} ${safeClassName}`;
-    const containerClass = `${styles.inputContainer} ${containerClassName}`;
-    let labelClass = `${styles.label} ${labelClassName}`;
     const isDark = useSelector((state: { theme: { isDark: boolean } }) => state.theme.isDark);
-
-    if (!isDark) {
-        labelClass = `${styles.label} ${labelClassName} ${styles.labelLight}`;
-        inputClassName = `${styles.input} ${safeClassName} ${styles.inputLight}`;
-    }
+    const inputClassName = `${styles.input} ${className || ''} ${!isDark ? styles.inputLight : ''}`;
+    const labelClass = `${styles.label} ${labelClassName} ${!isDark ? styles.labelLight : ''}`;
 
     return (
-        <div className={containerClass}>
-            {label ? (
-                <label htmlFor={id} className={labelClass}>
-                    {label}
-                </label>
-            ) : null}
+        <div className={`${styles.inputContainer} ${containerClassName}`}>
+            {label && <label htmlFor={id} className={labelClass}>{label}</label>}
             <input
                 type={type}
                 id={id}

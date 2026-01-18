@@ -15,14 +15,11 @@ const hamburgerSlice = createSlice({
         toggleMenu(state) {
             state.isOpen = !state.isOpen;
         },
-        openHamburger(state) {
-            state.isOpen = true;
-        },
         closeMenu(state) {
             state.isOpen = false;
         },
     },
 });
 
-export const { toggleMenu, openHamburger, closeMenu } = hamburgerSlice.actions;
+export const { toggleMenu, closeMenu } = hamburgerSlice.actions;
 export default hamburgerSlice.reducer;

@@ -10,7 +10,7 @@ import { UserProfile } from "../user-profile";
 import { Header } from "../header";
 import { Sidebar } from "../sidebar";
 import styles from './main.module.scss';
-import { incrementPage, setSearchTrue, setSearchFalse, setSearchQuery } from '../../features/movie-search/model/moviesSlice';
+import { incrementPage, setSearch, setSearchQuery } from '../../features/movie-search/model/moviesSlice';
 import { useAppDispatch, useAppSelector } from '../../app/store/hooks';
 
 const MainLayout: React.FC = () => {
@@ -42,11 +42,7 @@ const MainLayout: React.FC = () => {
 
     const handleSearchChange = (value: string) => {
         dispatch(setSearchQuery(value));
-        if (value.trim().length > 0) {
-            dispatch(setSearchTrue());
-        } else {
-            dispatch(setSearchFalse());
-        }
+        dispatch(setSearch(value.trim().length > 0));
     };
 
     return (

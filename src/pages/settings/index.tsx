@@ -22,33 +22,18 @@ const SettingsPage: React.FC = () => {
     const isDark = useAppSelector((state) => state.theme.isDark);
     const emailInStore = useAppSelector((state) => state.auth.emailInStore);
     const navigate = useNavigate();
-    let compWrProfile, compTitleProfile, compWrapPassword, compWrapColor, compCancelButton,
-    compLabelUseSet, compInputName, compInputPassword;
 
+    const light = (base: string, lightClass: string) => `${base} ${!isDark ? lightClass : ''}`;
+    const compWrProfile = light(styles.wrapProfile, styles.lightWrapProfile);
+    const compTitleProfile = light(styles.titleProfile, styles.lightTitleProfile);
+    const compWrapPassword = light(styles.wrapPassword, styles.lightWrapPassword);
+    const compWrapColor = light(styles.wrapColor, styles.lightWrapColor);
+    const compCancelButton = light(styles.cancelButton, styles.lightCancelButton);
+    const compLabelUseSet = light(styles.labelUsSet, styles.lightLabelUsSet);
+    const compInputName = light(styles.inputName, styles.lightInputName);
+    const compInputPassword = light(styles.inputPassword, styles.lightInputPassword);
 
-    const handleChange = (checked: boolean) => {
-        dispatch(setDarkMode(checked)); // переключение темы
-    };
-
-    if (isDark) {
-        compWrProfile = styles.wrapProfile;
-        compTitleProfile = styles.titleProfile;
-        compWrapPassword = styles.wrapPassword;
-        compWrapColor = styles.wrapColor;
-        compCancelButton = styles.cancelButton;
-        compLabelUseSet = styles.labelUsSet;
-        compInputName = styles.inputName;
-        compInputPassword = styles.inputPassword;
-    } else {
-        compWrProfile = `${styles.wrapProfile} ${styles.lightWrapProfile}`;
-        compTitleProfile = `${styles.titleProfile} ${styles.lightTitleProfile}`;
-        compWrapPassword = `${styles.wrapPassword} ${styles.lightWrapPassword}`;
-        compWrapColor = `${styles.wrapColor} ${styles.lightWrapColor}`;
-        compCancelButton = `${styles.cancelButton} ${styles.lightCancelButton}`;
-        compLabelUseSet = `${styles.labelUsSet} ${styles.lightLabelUsSet}`;
-        compInputName = `${styles.inputName} ${styles.lightInputName}`;
-        compInputPassword = `${styles.inputPassword} ${styles.lightInputPassword}`;
-    }
+    const handleChange = (checked: boolean) => dispatch(setDarkMode(checked));
 
     const users = JSON.parse(localStorage.getItem('users'));
 
